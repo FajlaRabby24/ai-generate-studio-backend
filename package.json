@@ -1,0 +1,45 @@
+{
+  "name": "backend",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.6.0",
+    "@types/pg": "^8.20.0",
+    "prisma": "^7.8.0",
+    "tsx": "^4.21.0"
+  },
+  "peerDependencies": {
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "pg": "^8.20.0"
+  },
+   "scripts": {
+    "build": "prisma generate && tsup",
+    "postinstall": "prisma generate",
+    "start": "bun dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "lint": "eslint ./src/**/*",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "typecheck": "tsc --noEmit",
+    "migrate": "prisma migrate dev",
+    "migrate:deploy": "prisma migrate deploy",
+    "reset": "prisma migrate reset",
+    "generate": "prisma generate",
+    "studio": "prisma studio",
+    "push": "prisma db push",
+    "pull": "prisma db pull",
+    "format": "prisma format",
+    "seed:admin": "tsx ./src/app/scripts/seed_superAdmin.ts",
+    "stripe:webhook": "stripe listen --forward-to localhost:5000/api/v1/webhook",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:routes": "tsx ./src/app/scripts/testAllRoutes.ts"
+  }
+}
