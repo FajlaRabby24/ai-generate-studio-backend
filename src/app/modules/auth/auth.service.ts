@@ -1,5 +1,11 @@
+import type { Request } from "express";
+import { UAParser } from "ua-parser-js";
+import { UserStatus } from "../../../generated/prisma/enums";
+import { AppError } from "../../errors/AppError";
 import { auth } from "../../lib/auth";
-import type { TRegisterUser } from "./auth.type";
+import { prisma } from "../../lib/prisma";
+import { tokenUtils } from "../../utils/tokenUtils";
+import type { TLoginUser, TRegisterUser } from "./auth.type";
 
 const registerUser = async (payload: TRegisterUser) => {
   const { name, email, password, image } = payload;
@@ -13,16 +19,85 @@ const registerUser = async (payload: TRegisterUser) => {
     },
   });
 
-
   return {
     id: result.user.id,
     name: result.user.name,
     email: result.user.email,
     image: result.user.image,
+  };
+};
 
+const loginUser = async (req: Request, payload: TLoginUser) => {
+  const { email, password, userAgent: clientUserAgent } = payload;
+
+  const data = await auth.api.signInEmail({
+    body: { email, password },
+  });
+
+  if (!data?.token) {
+    throw new AppError(401, "Invalid credentials");
+  }
+
+  // Check user status (BANNED or DELETED)
+  if (data.user.status === UserStatus.BANNED || data.user.status === UserStatus.INACTIVE || data.user.isDeleted) {
+    throw new AppError(403, "User is banned or account is deleted");
+  }
+
+  const session = await prisma.session.findFirst({
+    where: { token: data.token },
+    select: { id: true },
+  });
+
+  const rawUserAgent = clientUserAgent ?? req.headers["user-agent"] ?? "unknown";
+  const parser = new UAParser(rawUserAgent);
+  const os = parser.getOS();
+  const device = parser.getDevice();
+
+  const formattedUserAgent =
+    device.type === "mobile" || device.type === "tablet"
+      ? `${device.vendor ?? ""} ${device.model ?? ""} (${os.name ?? "Unknown"})`.trim()
+      : `${os.name ?? "Unknown"} ${os.version ?? ""}`.trim() || rawUserAgent;
+
+  const rawIp = req.ip ?? req.socket.remoteAddress ?? null;
+  const ipAddress = rawIp === "::1" ? "127.0.0.1" : rawIp;
+
+  // Update session with IP and User Agent
+  await prisma.session.updateMany({
+    where: { token: data.token },
+    data: {
+      ipAddress,
+      userAgent: formattedUserAgent,
+    },
+  });
+
+  const tokenInfo = {
+    id: data.user.id,
+    role: data.user.role,
+    name: data.user.name,
+    email: data.user.email,
+    image: data.user.image,
+    status: data.user.status,
+    sessionId: session?.id,
+  };
+
+  const accessToken = await tokenUtils.getAccessToken(tokenInfo);
+  const refreshToken = await tokenUtils.getRefreshToken(tokenInfo);
+
+  return {
+    user: {
+      id: data.user.id,
+      name: data.user.name,
+      email: data.user.email,
+      image: data.user.image,
+      role: data.user.role,
+    },
+    token: data.token,
+    accessToken,
+    refreshToken,
   };
 };
 
 export const AuthService = {
   registerUser,
+  loginUser,
 };

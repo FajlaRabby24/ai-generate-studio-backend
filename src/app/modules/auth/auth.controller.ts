@@ -10,6 +10,15 @@ const registerUser = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, status.CREATED, true, "User registered successfully", result);
 });
 
+const loginUser = catchAsync(async (req: Request, res: Response) => {
+  const result = await AuthService.loginUser(req, req.body);
+
+
+
+  sendResponse(res, status.OK, true, "User logged in successfully", result);
+});
+
 export const AuthController = {
   registerUser,
+  loginUser,
 };

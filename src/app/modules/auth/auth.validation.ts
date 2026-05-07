@@ -17,6 +17,21 @@ const registerValidationSchema = z.object({
   image: z.string().optional(),
 });
 
+const loginValidationSchema = z.object({
+  email: z
+    .string({
+      error: "Email is required",
+    })
+    .email("Invalid email address"),
+  password: z
+    .string({
+      error: "Password is required",
+    })
+    .min(6, "Password must be at least 6 characters long"),
+  userAgent: z.string().optional(),
+});
+
 export const AuthValidation = {
   registerValidationSchema,
+  loginValidationSchema,
 };
