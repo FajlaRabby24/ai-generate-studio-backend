@@ -23,7 +23,9 @@
     "better-auth": "^1.6.9",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "pg": "^8.20.0"
+    "http-status": "^2.1.0",
+    "pg": "^8.20.0",
+    "zod": "^4.4.3"
   },
   "scripts": {
     "build": "prisma generate && tsup",

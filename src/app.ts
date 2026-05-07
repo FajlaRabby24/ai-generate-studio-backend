@@ -1,9 +1,18 @@
+import type { Application, Request, Response } from "express";
 import express from "express";
+import { indexRoute } from "./app/routes";
 
-const app = express();
+const app: Application = express();
 
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-})
+// Parsers
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Application routes
+app.use("/api/v1", indexRoute);
+
+app.get("/", (req: Request, res: Response) => {
+  res.send("AI Generate Studio Server is running!");
+});
 
 export default app;
