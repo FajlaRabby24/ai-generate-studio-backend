@@ -1,0 +1,32 @@
+enum Plan {
+  FREE
+  PRO
+}
+
+enum GenerationType {
+  TEXT_TO_IMAGE
+  TEXT_TO_VIDEO
+  IMAGE_TO_VIDEO
+  IMAGE_TO_IMAGE
+  TEXT_TO_SPEECH
+}
+
+enum GenerationStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum PaymentGateway {
+  STRIPE
+  SSLCOMMERZ
+  PAYPAL
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
