@@ -8,6 +8,7 @@ model Payment {
   transactionId   String?        @unique            // gateway transaction ref
   stripeSessionId String?
   planActivated   Plan
+  metadata        Json?                             // Raw gateway response data
   createdAt       DateTime       @default(now())
 
   user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)

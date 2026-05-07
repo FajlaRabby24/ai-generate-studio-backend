@@ -5,11 +5,14 @@ model Generation {
   status       GenerationStatus @default(PENDING)
   prompt       String
   inputUrl     String?                              // for image input types
-  outputUrl    String?                              // final result URL
+  outputUrls   String[]                             // final result URLs (ModelsLab returns an array)
   fetchUrl     String?                              // ModelsLab fetch_result URL
   model        String?                              // which AI model was used
   settings     Json?                                // width, height, steps, etc.
   errorMsg     String?
+  isPublic     Boolean          @default(false)     // for community gallery
+  isFeatured   Boolean          @default(false)     // for landing page showcase
+  isDeleted    Boolean          @default(false)     // soft delete
   createdAt    DateTime         @default(now())
   updatedAt    DateTime         @updatedAt
 
