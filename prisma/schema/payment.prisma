@@ -1,0 +1,16 @@
+model Payment {
+  id              String         @id @default(uuid())
+  userId          String
+  gateway         PaymentGateway
+  status          PaymentStatus  @default(PENDING)
+  amount          Float
+  currency        String         @default("USD")
+  transactionId   String?        @unique            // gateway transaction ref
+  stripeSessionId String?
+  planActivated   Plan
+  createdAt       DateTime       @default(now())
+
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}

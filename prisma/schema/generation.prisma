@@ -1,0 +1,19 @@
+model Generation {
+  id           String           @id @default(uuid())
+  userId       String
+  type         GenerationType
+  status       GenerationStatus @default(PENDING)
+  prompt       String
+  inputUrl     String?                              // for image input types
+  outputUrl    String?                              // final result URL
+  fetchUrl     String?                              // ModelsLab fetch_result URL
+  model        String?                              // which AI model was used
+  settings     Json?                                // width, height, steps, etc.
+  errorMsg     String?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("generations")
+}
