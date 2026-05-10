@@ -6,7 +6,7 @@ import { AppError } from "../../errors/AppError";
 import { auth } from "../../lib/auth";
 import { prisma } from "../../lib/prisma";
 import { tokenUtils } from "../../utils/tokenUtils";
-import type { TLoginUser, TRegisterUser } from "./auth.type";
+import type { TLoginUser, TRegisterUser, TUpdateProfile } from "./auth.type";
 
 const registerUser = async (payload: TRegisterUser) => {
   const { name, email, password, image } = payload;
@@ -121,8 +121,21 @@ const getMeFromDB = async (userId: string) => {
   return result;
 };
 
+const updateProfileInDB = async (userId: string, payload: TUpdateProfile) => {
+  const result = await prisma.user.update({
+    where: {
+      id: userId,
+      isDeleted: false,
+    },
+    data: payload,
+  });
+
+  return result;
+};
+
 export const AuthService = {
   registerUser,
   loginUser,
   getMeFromDB,
+  updateProfileInDB,
 };

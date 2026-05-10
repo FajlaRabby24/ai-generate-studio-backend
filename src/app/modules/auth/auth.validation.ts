@@ -31,7 +31,26 @@ const loginValidationSchema = z.object({
   userAgent: z.string().optional(),
 });
 
+const updateProfileSchema = z.object({
+  name: z
+    .string({
+      error: "Name must be a string",
+    })
+    .optional(),
+  image: z
+    .string({
+      error: "Image must be a string",
+    })
+    .optional(),
+  phone: z
+    .string({
+      error: "Phone must be a string",
+    })
+    .optional(),
+});
+
 export const AuthValidation = {
   registerValidationSchema,
   loginValidationSchema,
+  updateProfileSchema,
 };

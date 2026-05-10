@@ -21,12 +21,12 @@ router.post(
 router.get("/me", checkAuth(), AuthController.getMe);
 // router.get("/my-profile", checkAuth(), AuthController.getMyProfile);
 
-// router.patch(
-//   "/me",
-//   checkAuth(),
-//   validateRequest(authValidation.updateProfileSchema),
-//   authController.profileUpdate,
-// );
+router.patch(
+  "/me",
+  checkAuth(),
+  validateRequest(AuthValidation.updateProfileSchema),
+  AuthController.updateProfile,
+);
 
 // router.post(
 //   "/change-password",
