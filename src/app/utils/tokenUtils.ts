@@ -1,31 +1,67 @@
-import { jwtVerify, SignJWT } from "jose";
+import type { Response } from "express";
+import type { JwtPayload, SignOptions } from "jsonwebtoken";
+import { envVars } from "../config/env";
+import { cookieUtils } from "./cookie";
+import { jwtUtils } from "./jwt";
 
-const getAccessToken = async (payload: any) => {
-  const secret = new TextEncoder().encode(process.env.JWT_SECRET as string);
-  return await new SignJWT(payload)
-    .setProtectedHeader({ alg: "HS256" })
-    .setIssuedAt()
-    .setExpirationTime(process.env.JWT_ACCESS_EXPIRES_IN as string)
-    .sign(secret);
+const isProduction = process.env.NODE_ENV === "production";
+
+const getAccessToken = (payload: JwtPayload) => {
+  const accessToken = jwtUtils.createToken(
+    payload,
+    envVars.ACCESS_TOKEN_SECRET,
+    { expiresIn: envVars.ACCESS_TOKEN_EXPIRES_IN } as SignOptions,
+  );
+
+  return accessToken;
 };
 
-const getRefreshToken = async (payload: any) => {
-  const secret = new TextEncoder().encode(process.env.JWT_SECRET as string);
-  return await new SignJWT(payload)
-    .setProtectedHeader({ alg: "HS256" })
-    .setIssuedAt()
-    .setExpirationTime(process.env.JWT_REFRESH_EXPIRES_IN as string)
-    .sign(secret);
+const getRefreshToken = (payload: JwtPayload) => {
+  const refreshToken = jwtUtils.createToken(
+    payload,
+    envVars.REFRESH_TOKEN_SECRET,
+    { expiresIn: envVars.REFRESH_TOKEN_EXPIRES_IN } as SignOptions,
+  );
+
+  return refreshToken;
 };
 
-const verifyToken = async (token: string) => {
-  const secret = new TextEncoder().encode(process.env.JWT_SECRET as string);
-  const { payload } = await jwtVerify(token, secret);
-  return payload;
+const setAccessTokenCookie = (res: Response, token: string) => {
+  cookieUtils.setCookie(res, "accessToken", token, {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? "lax" : "none",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 1000,
+  });
+};
+
+const setRefreshTokenCookie = (res: Response, token: string) => {
+  cookieUtils.setCookie(res, "refreshToken", token, {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? "lax" : "none",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 7 * 1000,
+  });
+};
+
+export const betterAuthSessionCookieName = "__Secure-better-auth.session_token";
+
+const setBetterAuthSessionCookie = (res: Response, token: string) => {
+  cookieUtils.setCookie(res, betterAuthSessionCookieName, token, {
+    httpOnly: true,
+    secure: isProduction,
+    path: "/",
+    sameSite: isProduction ? "lax" : "none",
+    maxAge: 60 * 60 * 24 * 1000,
+  });
 };
 
 export const tokenUtils = {
   getAccessToken,
   getRefreshToken,
-  verifyToken,
+  setAccessTokenCookie,
+  setRefreshTokenCookie,
+  setBetterAuthSessionCookie,
 };
