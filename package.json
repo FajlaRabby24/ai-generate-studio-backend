@@ -30,13 +30,14 @@
     "http-status": "^2.1.0",
     "jsonwebtoken": "^9.0.3",
     "pg": "^8.20.0",
+    "tsup": "^8.5.1",
     "ua-parser-js": "^2.0.9",
     "zod": "^4.4.3"
   },
   "scripts": {
     "build": "prisma generate && tsup",
     "postinstall": "prisma generate",
-    "start": "bun dist/index.js",
+    "start": "bun dist/server.js",
     "dev": "tsx watch src/index.ts",
     "lint": "eslint ./src/**/*",
     "lint:fix": "eslint . --ext .ts --fix",

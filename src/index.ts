@@ -1,8 +1,6 @@
 import app from "./app";
+import { envVars } from "./app/config/env";
 
-
-const PORT =  8000;
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(envVars.PORT, () => {
+  console.log(`Server running on port ${envVars.PORT}`);
 });

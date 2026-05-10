@@ -10,4 +10,5 @@ export const envVars = {
   ACCESS_TOKEN_EXPIRES_IN: process.env.ACCESS_TOKEN_EXPIRES_IN || "1d",
   REFRESH_TOKEN_EXPIRES_IN: process.env.REFRESH_TOKEN_EXPIRES_IN || "7d",
   NODE_ENV: process.env.NODE_ENV as string,
+  PORT: Number(process.env.PORT) || 5000,
 };
