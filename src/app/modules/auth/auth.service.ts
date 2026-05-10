@@ -1,4 +1,5 @@
 import type { Request } from "express";
+import status from "http-status";
 import { UAParser } from "ua-parser-js";
 import { UserStatus } from "../../../generated/prisma/enums";
 import { AppError } from "../../errors/AppError";
@@ -97,7 +98,31 @@ const loginUser = async (req: Request, payload: TLoginUser) => {
   };
 };
 
+const getMeFromDB = async (userId: string) => {
+  const result = await prisma.user.findUnique({
+    where: {
+      id: userId,
+      isDeleted: false,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      status: true,
+      isDeleted: true,
+    },
+  });
+
+  if (!result) {
+    throw new AppError(status.NOT_FOUND, "User not found");
+  }
+
+  return result;
+};
+
 export const AuthService = {
   registerUser,
   loginUser,
+  getMeFromDB,
 };

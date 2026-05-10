@@ -55,7 +55,7 @@ export const checkAuth =
           if (session?.user) {
             const user = session.user;
 
-            if (!user.isDeleted) {
+            if (user.isDeleted) {
               throw new AppError(
                 status.FORBIDDEN,
                 "Your account is deactivated. Please contact support.",
