@@ -54,16 +54,7 @@ router.patch(
 // );
 
 // router.get("/sessions", checkAuth(), authController.getSessions);
-// router.delete(
-//   "/logout/all-sessions",
-//   checkAuth(),
-//   authController.logoutAllSession,
-// );
-// router.delete(
-//   "/logout/:sessionId/:token",
-//   checkAuth(),
-//   authController.logoutSession,
-// );
+router.post("/logout", checkAuth(), AuthController.logoutUser);
 
 // router.get("/login/google", authController.googleLogin);
 // router.get("/google/success", authController.googleLoginSuccess);

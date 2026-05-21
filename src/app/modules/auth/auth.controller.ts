@@ -2,32 +2,47 @@ import type { Request, Response } from "express";
 import status from "http-status";
 import { catchAsync } from "../../shared/catchAsync";
 import { sendResponse } from "../../shared/sendResponse";
+import { tokenUtils } from "../../utils/tokenUtils";
 import { AuthService } from "./auth.service";
 
+// * register user
 const registerUser = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.registerUser(req.body);
 
   sendResponse(res, status.CREATED, true, "User registered successfully", result);
 });
 
+// * login user
 const loginUser = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.loginUser(req, req.body);
+  const { accessToken, refreshToken, token } = result;
 
-
+  tokenUtils.setAccessTokenCookie(res, accessToken);
+  tokenUtils.setRefreshTokenCookie(res, refreshToken);
+  tokenUtils.setBetterAuthSessionCookie(res, token);
 
   sendResponse(res, status.OK, true, "User logged in successfully", result);
 });
 
+// * get me
 const getMe = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.getMeFromDB(req.user.id);
 
   sendResponse(res, status.OK, true, "User data fetched successfully", result);
 });
 
+// * update profile
 const updateProfile = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.updateProfileInDB(req.user.id, req.body);
 
   sendResponse(res, status.OK, true, "Profile updated successfully", result);
+});
+
+// * logout user
+const logoutUser = catchAsync(async (req: Request, res: Response) => {
+  tokenUtils.clearSessionCookie(res);
+
+  sendResponse(res, status.OK, true, "User logged out successfully", null);
 });
 
 export const AuthController = {
@@ -35,4 +50,7 @@ export const AuthController = {
   loginUser,
   getMe,
   updateProfile,
+  logoutUser,
 };
+
+

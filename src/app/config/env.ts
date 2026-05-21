@@ -11,4 +11,9 @@ export const envVars = {
   REFRESH_TOKEN_EXPIRES_IN: process.env.REFRESH_TOKEN_EXPIRES_IN || "7d",
   NODE_ENV: process.env.NODE_ENV as string,
   PORT: Number(process.env.PORT) || 5000,
+  EMAIL_SENDER_SMTP_HOST: process.env.EMAIL_SENDER_SMTP_HOST as string,
+  EMAIL_SENDER_SMTP_PORT: Number(process.env.EMAIL_SENDER_SMTP_PORT),
+  EMAIL_SENDER_SMTP_USER: process.env.EMAIL_SENDER_SMTP_USER as string,
+  EMAIL_SENDER_SMTP_PASS: process.env.EMAIL_SENDER_SMTP_PASS as string,
+  EMAIL_SENDER_SMTP_FROM: process.env.EMAIL_SENDER_SMTP_FROM as string,
 };
