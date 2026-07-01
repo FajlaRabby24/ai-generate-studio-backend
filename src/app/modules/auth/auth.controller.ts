@@ -9,7 +9,13 @@ import { AuthService } from "./auth.service";
 const registerUser = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.registerUser(req.body);
 
-  sendResponse(res, status.CREATED, true, "User registered successfully", result);
+  sendResponse(
+    res,
+    status.CREATED,
+    true,
+    "User registered successfully",
+    result,
+  );
 });
 
 // * login user
@@ -26,7 +32,17 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
 
 // * get me
 const getMe = catchAsync(async (req: Request, res: Response) => {
-  const result = await AuthService.getMeFromDB(req.user.id);
+  const userId = req.user.id;
+  if (!userId) {
+    return sendResponse(
+      res,
+      status.UNAUTHORIZED,
+      false,
+      "User not found",
+      null,
+    );
+  }
+  const result = await AuthService.getMeFromDB(userId);
 
   sendResponse(res, status.OK, true, "User data fetched successfully", result);
 });
@@ -52,5 +68,3 @@ export const AuthController = {
   updateProfile,
   logoutUser,
 };
-
-

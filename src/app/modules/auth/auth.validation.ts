@@ -13,7 +13,7 @@ const registerValidationSchema = z.object({
     .string({
       error: "Password is required",
     })
-    .min(6, "Password must be at least 6 characters long"),
+    .min(8, "Password must be at least 8 characters long"),
   image: z.string().optional(),
 });
 
@@ -27,7 +27,7 @@ const loginValidationSchema = z.object({
     .string({
       error: "Password is required",
     })
-    .min(6, "Password must be at least 6 characters long"),
+    .min(8, "Password must be at least 8 characters long"),
   userAgent: z.string().optional(),
 });
 

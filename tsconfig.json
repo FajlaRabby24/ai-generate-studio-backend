@@ -7,8 +7,9 @@
     "moduleDetection": "force",
     "jsx": "react-jsx",
     "allowJs": true,
+    "types": ["node"],
 
-     "module": "ESNext",
+    "module": "ESNext",
     "moduleResolution": "bundler",
     "target": "ES2023",
     "strict": true,
@@ -31,6 +32,6 @@
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false
   },
-   "include": ["src/**/*"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "./src/generated/prisma"]
 }

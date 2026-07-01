@@ -40,7 +40,11 @@ const loginUser = async (req: Request, payload: TLoginUser) => {
   }
 
   // Check user status (BANNED or DELETED)
-  if (data.user.status === UserStatus.BANNED || data.user.status === UserStatus.INACTIVE || data.user.isDeleted) {
+  if (
+    data.user.status === UserStatus.BANNED ||
+    data.user.status === UserStatus.INACTIVE ||
+    data.user.isDeleted
+  ) {
     throw new AppError(403, "User is banned or account is deleted");
   }
 
@@ -49,7 +53,8 @@ const loginUser = async (req: Request, payload: TLoginUser) => {
     select: { id: true },
   });
 
-  const rawUserAgent = clientUserAgent ?? req.headers["user-agent"] ?? "unknown";
+  const rawUserAgent =
+    clientUserAgent ?? req.headers["user-agent"] ?? "unknown";
   const parser = new UAParser(rawUserAgent);
   const os = parser.getOS();
   const device = parser.getDevice();
@@ -81,8 +86,8 @@ const loginUser = async (req: Request, payload: TLoginUser) => {
     sessionId: session?.id,
   };
 
-  const accessToken = await tokenUtils.getAccessToken(tokenInfo);
-  const refreshToken = await tokenUtils.getRefreshToken(tokenInfo);
+  const accessToken = tokenUtils.getAccessToken(tokenInfo);
+  const refreshToken = tokenUtils.getRefreshToken(tokenInfo);
 
   return {
     user: {
@@ -90,7 +95,6 @@ const loginUser = async (req: Request, payload: TLoginUser) => {
       name: data.user.name,
       email: data.user.email,
       image: data.user.image,
-      role: data.user.role,
     },
     token: data.token,
     accessToken,
