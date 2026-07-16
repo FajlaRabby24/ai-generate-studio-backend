@@ -16,4 +16,8 @@ export const envVars = {
   EMAIL_SENDER_SMTP_USER: process.env.EMAIL_SENDER_SMTP_USER as string,
   EMAIL_SENDER_SMTP_PASS: process.env.EMAIL_SENDER_SMTP_PASS as string,
   EMAIL_SENDER_SMTP_FROM: process.env.EMAIL_SENDER_SMTP_FROM as string,
+  HP_TOKEN: process.env.HP_TOKEN as string,
+  CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME as string,
+  CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY as string,
+  CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET as string,
 };
