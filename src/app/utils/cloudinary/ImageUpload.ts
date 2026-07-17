@@ -1,12 +1,21 @@
 import cloudinary from "../../config/cloudinary.config";
 
 const CloudinaryImageUpload = async (image: string) => {
+  if (!image) {
+    return {
+      success: false,
+      message: "Image is required",
+    };
+  }
+
   const uploadResponse = await cloudinary.uploader.upload(image, {
     folder: "AI Generate Studio/Image History",
     resource_type: "image",
   });
 
   return {
+    success: true,
+    message: "Image uploaded successfully",
     format: uploadResponse.format,
     resourceType: uploadResponse.resource_type,
     publicId: uploadResponse.public_id,
