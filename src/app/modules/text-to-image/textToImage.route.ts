@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { validateRequest } from "../../middleware/validateRequest";
 import { TextToImageController } from "./textToImage.controller";
-import { TextToImageValidation } from "./textToImage.schema";
+import { TextToImageValidation } from "./textToImage.zod";
 
 const router = Router();
 
