@@ -1,5 +1,10 @@
 import { GoogleGenAI } from "@google/genai";
+import {
+  GenerationStatus,
+  GenerationType,
+} from "../../../generated/prisma/enums";
 import { envVars } from "../../config/env";
+import { prisma } from "../../lib/prisma";
 
 const ai = new GoogleGenAI({ apiKey: envVars.GEMINI_API_KEY });
 
@@ -17,34 +22,34 @@ const ChatbotService = async (
   const responseText = response.text || "";
 
   // Perform background DB updates to store history and decrement quota
-  // setImmediate(() => {
-  //   (async () => {
-  //     try {
-  //       await prisma.generation.create({
-  //         data: {
-  //           outputUrls: responseText,
-  //           type: GenerationType.AI_CHATBOT,
-  //           prompt: userMessage,
-  //           userId,
-  //           status: GenerationStatus.COMPLETED,
-  //         },
-  //       });
+  setImmediate(() => {
+    (async () => {
+      try {
+        await prisma.generation.create({
+          data: {
+            outputUrls: responseText,
+            type: GenerationType.AI_CHATBOT,
+            prompt: userMessage,
+            userId,
+            status: GenerationStatus.COMPLETED,
+          },
+        });
 
-  //       await prisma.user.update({
-  //         where: {
-  //           id: userId,
-  //         },
-  //         data: {
-  //           aiChatbot: {
-  //             decrement: 1,
-  //           },
-  //         },
-  //       });
-  //     } catch (dbError) {
-  //       console.error("[Background DB Error - AI Chatbot]:", dbError);
-  //     }
-  //   })();
-  // });
+        await prisma.user.update({
+          where: {
+            id: userId,
+          },
+          data: {
+            aiChatbot: {
+              decrement: 1,
+            },
+          },
+        });
+      } catch (dbError) {
+        console.error("[Background DB Error - AI Chatbot]:", dbError);
+      }
+    })();
+  });
 
   return responseText;
 };

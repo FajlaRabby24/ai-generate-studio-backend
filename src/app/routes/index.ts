@@ -5,6 +5,7 @@ import { checkGenerateAuth } from "../middleware/checkGenerateAuth";
 import { AiChatBotRoutes } from "../modules/ai-chat-bot/aiChatBot.routes";
 import { AuthRoutes } from "../modules/auth/auth.route";
 import { BackgroundRoutes } from "../modules/background-remover/backgroundRemover.routes";
+import { ResumeAnalyzerRoutes } from "../modules/resume-analyzer/resumeAnalyzer.routes";
 import { TextToImageRoutes } from "../modules/text-to-image/textToImage.route";
 
 const router = Router();
@@ -23,6 +24,18 @@ router.use(
   AiChatBotRoutes,
 );
 
-router.use("/background-remove", BackgroundRoutes);
+router.use(
+  "/background-remove",
+  checkAuth(),
+  checkGenerateAuth(GenerationType.IMAGE_BACKGROUND_REMOVER),
+  BackgroundRoutes,
+);
+
+router.use(
+  "/resume-analyzer",
+  // checkAuth(),
+  // checkGenerateAuth(GenerationType.RESUME_ANALYZER),
+  ResumeAnalyzerRoutes,
+);
 
 export const indexRoute = router;

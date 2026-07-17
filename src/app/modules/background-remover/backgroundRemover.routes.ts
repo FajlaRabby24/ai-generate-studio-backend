@@ -1,15 +1,12 @@
 import { Router } from "express";
-import multer from "multer";
+import { multerUpload } from "../../config/multer.config";
 import { BackgroundRemover } from "./backgroundRemover.controller";
 
 const router = Router();
-const upload = multer();
 
 router.post(
   "/",
-  //   checkAuth(),
-  upload.single("singleFile"),
-  //   checkGenerateAuth(GenerationType.IMAGE_BACKGROUND_REMOVER),
+  multerUpload.single("singleFile"),
   BackgroundRemover.backgroundRemover,
 );
 
