@@ -2,9 +2,10 @@ import { Router } from "express";
 import { GenerationType } from "../../generated/prisma/enums";
 import { checkAuth } from "../middleware/checkAuth";
 import { checkGenerateAuth } from "../middleware/checkGenerateAuth";
-import { AuthRoutes } from "../modules/auth/auth.route";
-import { TextToImageRoutes } from "../modules/text-to-image/textToImage.route";
 import { AiChatBotRoutes } from "../modules/ai-chat-bot/aiChatBot.routes";
+import { AuthRoutes } from "../modules/auth/auth.route";
+import { BackgroundRoutes } from "../modules/background-remover/backgroundRemover.routes";
+import { TextToImageRoutes } from "../modules/text-to-image/textToImage.route";
 
 const router = Router();
 
@@ -21,5 +22,7 @@ router.use(
   checkGenerateAuth(GenerationType.AI_CHATBOT),
   AiChatBotRoutes,
 );
+
+router.use("/background-remove", BackgroundRoutes);
 
 export const indexRoute = router;

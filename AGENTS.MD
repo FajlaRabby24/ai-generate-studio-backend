@@ -63,6 +63,7 @@ If full completion is genuinely impossible (e.g. missing credentials, missing fi
 - Repeat the user's request back to them before answering.
 - Add unsolicited refactoring beyond the scope of the task.
 - Apologize for limitations mid-task.
+- Don't run typecheck (bun run typecheck) and build (bun run build) command.
 
 ---
 
@@ -71,7 +72,7 @@ If full completion is genuinely impossible (e.g. missing credentials, missing fi
 **Project:** AI Generate Studio
 **Stack:** TypeScript, Express.js, PostgreSQL, Prisma,Better-auth, stripe, paypal, SSLCommerz, Bun
 **Key conventions:**
+
 - All API responses follow `{ success, message, data}` shape
 - use `camelCase` for variables, `PascalCase` for components
 - never commit secrets — use `.env` and reference via `process.env`
-
