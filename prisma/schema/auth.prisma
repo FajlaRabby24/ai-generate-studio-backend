@@ -18,6 +18,19 @@ model User {
   isDeleted        Boolean    @default(false)
   deletedAt        DateTime?
 
+  textToImage            Int @default(3)
+  aiChatbot              Int @default(3)
+  codeChecker            Int @default(3)
+  imageBackgroundRemover Int @default(3)
+  imageCaptionGenerator  Int @default(3)
+  resumeAnalyzer         Int @default(3)
+  languageTranslator     Int @default(3)
+  grammarChecker         Int @default(3)
+  textToSpeech           Int @default(3)
+  speechToText           Int @default(3)
+  imageToVideo           Int @default(3)
+  textToVideo            Int @default(3)
+
   generations Generation[]
   payments    Payment[]
   sessions    Session[]
