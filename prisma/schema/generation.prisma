@@ -1,17 +1,17 @@
 model Generation {
-  id           String           @id @default(uuid())
-  userId       String
-  type         GenerationType
-  status       GenerationStatus @default(PENDING)
-  prompt       String
-  outputUrls   String[]                             // final result URLs (ModelsLab returns an array)
-  isPublic     Boolean          @default(false)     // for community gallery
-  isFeatured   Boolean          @default(false)     // for landing page showcase
-  isDeleted    Boolean          @default(false)     // soft delete
-  createdAt    DateTime         @default(now())
-  updatedAt    DateTime         @updatedAt
+  id         String           @id @default(uuid())
+  userId     String
+  type       GenerationType
+  status     GenerationStatus @default(PENDING)
+  prompt     String
+  outputUrls String // final result URLs (ModelsLab returns an array)
+  isPublic   Boolean          @default(false) // for community gallery
+  isFeatured Boolean          @default(false) // for landing page showcase
+  isDeleted  Boolean          @default(false) // soft delete
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
 
-  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("generations")
 }

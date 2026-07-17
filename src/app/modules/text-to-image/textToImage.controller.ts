@@ -6,6 +6,7 @@ import { TextToImageService } from "./textToImage.service";
 
 const generateImage = catchAsync(async (req: Request, res: Response) => {
   const { prompt } = req.body;
+  const userId = req.user?.id;
 
   if (!prompt) {
     return sendResponse(
@@ -17,15 +18,18 @@ const generateImage = catchAsync(async (req: Request, res: Response) => {
     );
   }
 
-  const resultBlob = await TextToImageService.GenerateTextToImage(prompt);
+  const result = await TextToImageService.GenerateTextToImage(userId, prompt);
+  if (!result) {
+    return sendResponse(
+      res,
+      status.INTERNAL_SERVER_ERROR,
+      false,
+      "Failed to generate image",
+      null,
+    );
+  }
 
-  const arrayBuffer = await (resultBlob as any).arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
-  const base64Image = `data:image/png;base64,${buffer.toString("base64")}`;
-
-  sendResponse(res, status.OK, true, "Image generated successfully", {
-    image: base64Image,
-  });
+  sendResponse(res, status.OK, true, "Image generated successfully", result);
 });
 
 export const TextToImageController = {
