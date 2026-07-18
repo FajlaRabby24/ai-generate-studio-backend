@@ -8,11 +8,14 @@ import { auth } from "./app/lib/auth";
 import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
 import { notFound } from "./app/middleware/notFound";
 import { indexRoute } from "./app/routes";
+import { rateLimiters } from "./app/utils/rate-limit";
 
 const app: Application = express();
 
-// Security headers
+// Security headers and rate limiting
 app.use(helmet());
+app.use(rateLimiters.globalLimiter);
+
 app.use(
   cors({
     origin: "https://hoppscotch.io", // Allow Hoppscotch web client

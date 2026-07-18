@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { checkAuth } from "../../middleware/checkAuth";
 import { validateRequest } from "../../middleware/validateRequest";
+import { rateLimiters } from "../../utils/rate-limit";
 import { AuthController } from "./auth.controller";
 import { AuthValidation } from "./auth.validation";
 
@@ -8,15 +9,18 @@ const router = Router();
 
 router.post(
   "/register",
+  rateLimiters.authLimiter,
   validateRequest(AuthValidation.registerValidationSchema),
   AuthController.registerUser,
 );
 
 router.post(
   "/login",
+  rateLimiters.authLimiter,
   validateRequest(AuthValidation.loginValidationSchema),
   AuthController.loginUser,
 );
+
 
 router.get("/me", checkAuth(), AuthController.getMe);
 // router.get("/my-profile", checkAuth(), AuthController.getMyProfile);
