@@ -43,7 +43,9 @@ const removeBackground = async (
       try {
         const uploadImage = await CloudinaryImageUpload(base64Image);
         if (!uploadImage.success || !uploadImage.secureUrl) {
-          throw new Error("Failed to upload background-removed image to Cloudinary");
+          throw new Error(
+            "Failed to upload background-removed image to Cloudinary",
+          );
         }
 
         const secureUrl = uploadImage.secureUrl;

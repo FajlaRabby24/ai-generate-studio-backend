@@ -4,6 +4,7 @@ model Generation {
   type       GenerationType
   status     GenerationStatus @default(PENDING)
   prompt     String
+  projectId  String?
   outputUrls String // final result URLs (ModelsLab returns an array)
   isPublic   Boolean          @default(false) // for community gallery
   isFeatured Boolean          @default(false) // for landing page showcase

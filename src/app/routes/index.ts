@@ -7,6 +7,7 @@ import { AuthRoutes } from "../modules/auth/auth.route";
 import { BackgroundRoutes } from "../modules/background-remover/backgroundRemover.routes";
 import { ResumeAnalyzerRoutes } from "../modules/resume-analyzer/resumeAnalyzer.routes";
 import { TextToImageRoutes } from "../modules/text-to-image/textToImage.route";
+import { TextToVideoRoutes } from "../modules/text-to-video/textToVideo.routes";
 
 const router = Router();
 
@@ -33,9 +34,16 @@ router.use(
 
 router.use(
   "/resume-analyzer",
-  // checkAuth(),
-  // checkGenerateAuth(GenerationType.RESUME_ANALYZER),
+  checkAuth(),
+  checkGenerateAuth(GenerationType.RESUME_ANALYZER),
   ResumeAnalyzerRoutes,
+);
+
+router.use(
+  "/text-to-video",
+  checkAuth(),
+  checkGenerateAuth(GenerationType.TEXT_TO_VIDEO),
+  TextToVideoRoutes,
 );
 
 export const indexRoute = router;

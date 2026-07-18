@@ -22,4 +22,6 @@ export const envVars = {
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET as string,
   GEMINI_API_KEY: process.env.GEMINI_API_KEY as string,
   BACKGROUND_REMOVE_API_KEY: process.env.BACKGROUND_REMOVE_API_KEY as string,
+  API_LAYER_API_KEY: process.env.API_LAYER_API_KEY as string,
+  JSON2_VIDEO_API_KEY: process.env.JSON2_VIDEO_API_KEY as string,
 };
