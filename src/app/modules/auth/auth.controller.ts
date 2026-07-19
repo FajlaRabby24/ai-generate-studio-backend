@@ -34,13 +34,7 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
 const getMe = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user.id;
   if (!userId) {
-    return sendResponse(
-      res,
-      status.UNAUTHORIZED,
-      false,
-      "User not found",
-      null,
-    );
+    return sendResponse(res, status.UNAUTHORIZED, false, "User ID required!");
   }
   const result = await AuthService.getMeFromDB(userId);
 
