@@ -18,7 +18,7 @@ app.use(rateLimiters.globalLimiter);
 
 app.use(
   cors({
-    origin: "https://hoppscotch.io", // Allow Hoppscotch web client
+    origin: ["https://hoppscotch.io", "http://localhost:3000"], // Allow Hoppscotch web client
     credentials: true, // Required to allow the browser to accept/send cookies
   }),
 );
