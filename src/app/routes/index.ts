@@ -26,7 +26,6 @@ router.use(
   "/ai-chat-bot",
   rateLimiters.generationLimiter,
   checkAuth(),
-  checkGenerateAuth(GenerationType.AI_CHATBOT),
   AiChatBotRoutes,
 );
 

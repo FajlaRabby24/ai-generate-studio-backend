@@ -35,6 +35,7 @@ model User {
   payments    Payment[]
   sessions    Session[]
   accounts    Account[]
+  chatHistories ChatHistory[]
 
   @@unique([email])
   @@map("user")

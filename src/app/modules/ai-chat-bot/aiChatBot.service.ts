@@ -14,7 +14,7 @@ const ChatbotService = async (
   chatHistory: any[],
 ) => {
   const chat = ai.chats.create({
-    model: "gemini-2.5-flash",
+    model: "gemini-3.6-flash",
     history: chatHistory,
   });
 
@@ -31,6 +31,7 @@ const ChatbotService = async (
             type: GenerationType.AI_CHATBOT,
             prompt: userMessage,
             userId,
+            isPublic: true,
             status: GenerationStatus.COMPLETED,
           },
         });
@@ -51,7 +52,9 @@ const ChatbotService = async (
     })();
   });
 
-  return responseText;
+  return {
+    response: responseText,
+  };
 };
 
 export const AiChatBot = {
