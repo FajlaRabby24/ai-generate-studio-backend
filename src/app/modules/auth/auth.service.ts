@@ -137,9 +137,57 @@ const updateProfileInDB = async (userId: string, payload: TUpdateProfile) => {
   return result;
 };
 
+const generationType = {
+  TEXT_TO_IMAGE: "textToImage",
+  AI_CHATBOT: "aiChatbot",
+  CODE_CHECKER: "codeChecker",
+  IMAGE_BACKGROUND_REMOVER: "imageBackgroundRemover",
+  IMAGE_CAPTION_GENERATOR: "imageCaptionGenerator",
+  RESUME_ANALYZER: "resumeAnalyzer",
+  LANGUAGE_TRANSLATOR: "languageTranslator",
+  GRAMMER_IMPROVER: "grammarChecker",
+  TEXT_TO_SPEECH: "textToSpeech",
+  SPEECH_TO_TEXT: "speechToText",
+  IMAGE_TO_VIDEO: "imageToVideo",
+  TEXT_TO_VIDEO: "textToVideo",
+};
+
+const getGenerationLeftCount = async (
+  userId: string,
+  generationTypeKey: string,
+) => {
+  const normalizedKey = generationTypeKey.toUpperCase();
+  const dbField =
+    (generationType as Record<string, string>)[normalizedKey] ||
+    Object.values(generationType).find(
+      (val) => val.toLowerCase() === generationTypeKey.toLowerCase(),
+    );
+
+  if (!dbField) {
+    throw new AppError(
+      status.BAD_REQUEST,
+      `Invalid generation type. Valid types are: ${Object.keys(generationType).join(", ")} or their database fields.`,
+    );
+  }
+
+  const result = await prisma.user.findUnique({
+    where: {
+      id: userId,
+      isDeleted: false,
+    },
+    select: {
+      id: true,
+      [dbField]: true,
+    },
+  });
+
+  return result;
+};
+
 export const AuthService = {
   registerUser,
   loginUser,
   getMeFromDB,
   updateProfileInDB,
+  getGenerationLeftCount,
 };

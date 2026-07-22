@@ -30,6 +30,8 @@ export const checkGenerateAuth = (requiredType: GenerationType) => {
     try {
       const { type } = req.body;
 
+      console.log("type", type);
+
       // 1. Check if the required generation type and the one in req.body match.
       if (type !== requiredType) {
         return sendResponse(

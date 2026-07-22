@@ -21,8 +21,12 @@ router.post(
   AuthController.loginUser,
 );
 
-
 router.get("/me", checkAuth(), AuthController.getMe);
+router.get(
+  "/generation-left",
+  checkAuth(),
+  AuthController.getGenerationLeftCount,
+);
 // router.get("/my-profile", checkAuth(), AuthController.getMyProfile);
 
 router.patch(

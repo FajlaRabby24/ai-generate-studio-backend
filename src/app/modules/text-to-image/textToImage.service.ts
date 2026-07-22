@@ -23,17 +23,24 @@ const GenerateTextToImage = async (userId: string, prompt: string) => {
   const buffer = Buffer.from(arrayBuffer);
   const base64Image = `data:image/png;base64,${buffer.toString("base64")}`;
 
+  const uploadImage = await CloudinaryImageUpload(base64Image);
+  if (!uploadImage.success || !uploadImage.secureUrl) {
+    throw new Error("Failed to upload text-to-image result to Cloudinary");
+  }
+
+  const creditRemainig = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+    select: {
+      textToImage: true,
+    },
+  });
+
   // Perform Cloudinary upload and database updates in the background
   setImmediate(() => {
     (async () => {
       try {
-        const uploadImage = await CloudinaryImageUpload(base64Image);
-        if (!uploadImage.success || !uploadImage.secureUrl) {
-          throw new Error(
-            "Failed to upload text-to-image result to Cloudinary",
-          );
-        }
-
         // generate history
         await prisma.generation.create({
           data: {
@@ -63,7 +70,10 @@ const GenerateTextToImage = async (userId: string, prompt: string) => {
   });
 
   // Return base64 string immediately
-  return base64Image;
+  return {
+    imageUrl: uploadImage.secureUrl,
+    creditRemainig: creditRemainig?.textToImage,
+  };
 };
 
 export const TextToImageService = {

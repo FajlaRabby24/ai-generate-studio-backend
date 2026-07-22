@@ -17,7 +17,7 @@ export const checkAuth =
         betterAuthSessionCookieName,
       );
       const accessToken = cookieUtils.getCookie(req, "accessToken");
-
+      console.log("cookie", { accessToken }, { sessionToken });
       if (!sessionToken && !accessToken) {
         throw new AppError(
           status.UNAUTHORIZED,

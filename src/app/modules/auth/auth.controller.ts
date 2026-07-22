@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import status from "http-status";
+import type { GenerationType } from "../../../generated/prisma/enums";
 import { catchAsync } from "../../shared/catchAsync";
 import { sendResponse } from "../../shared/sendResponse";
 import { tokenUtils } from "../../utils/tokenUtils";
@@ -55,10 +56,42 @@ const logoutUser = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, status.OK, true, "User logged out successfully", null);
 });
 
+// * get generation left count
+const getGenerationLeftCount = catchAsync(
+  async (req: Request, res: Response) => {
+    const userId = req.user.id;
+    const type = req.query.type as GenerationType;
+
+    if (!userId) {
+      return sendResponse(res, status.UNAUTHORIZED, false, "User ID required!");
+    }
+
+    if (!type) {
+      return sendResponse(
+        res,
+        status.BAD_REQUEST,
+        false,
+        "Generation type is required as a query parameter (e.g. ?type=textToImage)!",
+      );
+    }
+
+    const result = await AuthService.getGenerationLeftCount(userId, type);
+
+    sendResponse(
+      res,
+      status.OK,
+      true,
+      "Generation left count fetched successfully",
+      result,
+    );
+  },
+);
+
 export const AuthController = {
   registerUser,
   loginUser,
   getMe,
   updateProfile,
   logoutUser,
+  getGenerationLeftCount,
 };

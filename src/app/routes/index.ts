@@ -20,7 +20,6 @@ router.use(
   "/text-to-image",
   rateLimiters.generationLimiter,
   checkAuth(),
-  checkGenerateAuth(GenerationType.TEXT_TO_IMAGE),
   TextToImageRoutes,
 );
 router.use(
