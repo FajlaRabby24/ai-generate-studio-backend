@@ -7,6 +7,7 @@ This is the backend for the **AI Generate Studio**, a full-stack AI SaaS platfor
 A REST API server built with Express.js and TypeScript, handling authentication, AI generation requests, subscription billing, and history management.
 
 **Core Features:**
+
 - JWT Authentication & Session Management
 - ModelsLab API Integration for AI Image/Video/Audio generation
 - Freemium model with daily request limits (3/day for free users)
@@ -15,26 +16,29 @@ A REST API server built with Express.js and TypeScript, handling authentication,
 
 ## 2. Tech Stack
 
-| Layer | Technology | Purpose |
-|---|---|---|
-| Runtime | Bun | Fast JavaScript runtime |
-| Framework | Express.js + TypeScript | REST API server |
-| ORM | Prisma | Database queries |
-| Database | PostgreSQL | Data storage |
-| Payment | Stripe, SSLCommerz, PayPal | Subscription billing |
-| AI API | ModelsLab | Generation engine |
+| Layer     | Technology                 | Purpose                 |
+| --------- | -------------------------- | ----------------------- |
+| Runtime   | Bun                        | Fast JavaScript runtime |
+| Framework | Express.js + TypeScript    | REST API server         |
+| ORM       | Prisma                     | Database queries        |
+| Database  | PostgreSQL                 | Data storage            |
+| Payment   | Stripe, SSLCommerz, PayPal | Subscription billing    |
+| AI API    | ModelsLab                  | Generation engine       |
 
 ## 3. Getting Started
 
 ### Prerequisites
+
 - [Bun](https://bun.sh/) installed
 
 ### Installation
+
 ```bash
 bun install
 ```
 
 ### Environment Setup
+
 Create a `.env` file in the `backend` root and add the following:
 
 ```env
@@ -67,6 +71,7 @@ FRONTEND_URL=http://localhost:3000
 ```
 
 ### Running the Server
+
 ```bash
 # Development mode (with auto-reload)
 bun run dev
@@ -79,6 +84,7 @@ bun run start
 ```
 
 ### Database Management (Prisma)
+
 ```bash
 # Run migrations
 bun run migrate
@@ -93,56 +99,61 @@ bun run generate
 ## 4. API Endpoints
 
 ### 4.1 Auth Routes — `/api/auth`
-| Method | Endpoint | Description | Auth |
-|---|---|---|---|
-| POST | `/api/auth/register` | Register new user | No |
-| POST | `/api/auth/login` | Login, returns JWT | No |
-| GET | `/api/auth/me` | Get current user info | Yes |
-| POST | `/api/auth/logout` | Logout | Yes |
+
+| Method | Endpoint             | Description           | Auth |
+| ------ | -------------------- | --------------------- | ---- |
+| POST   | `/api/auth/register` | Register new user     | No   |
+| POST   | `/api/auth/login`    | Login, returns JWT    | No   |
+| GET    | `/api/auth/me`       | Get current user info | Yes  |
+| POST   | `/api/auth/logout`   | Logout                | Yes  |
 
 ### 4.2 Generate Routes — `/api/generate`
-| Method | Endpoint | Description | Auth | Rate Limit |
-|---|---|---|---|---|
-| POST | `/api/generate/text-to-image` | Generate image from text | Yes | Free: 3/day |
-| POST | `/api/generate/text-to-video` | Generate video from text | Yes | Free: 3/day |
-| POST | `/api/generate/image-to-video` | Generate video from image | Yes | Free: 3/day |
-| POST | `/api/generate/image-to-image` | Edit image with prompt | Yes | Free: 3/day |
-| GET | `/api/generate/status/:fetchUrl` | Poll generation status | Yes | No |
+
+| Method | Endpoint                         | Description               | Auth | Rate Limit  |
+| ------ | -------------------------------- | ------------------------- | ---- | ----------- |
+| POST   | `/api/generate/text-to-image`    | Generate image from text  | Yes  | Free: 3/day |
+| POST   | `/api/generate/text-to-video`    | Generate video from text  | Yes  | Free: 3/day |
+| POST   | `/api/generate/image-to-video`   | Generate video from image | Yes  | Free: 3/day |
+| POST   | `/api/generate/image-to-image`   | Edit image with prompt    | Yes  | Free: 3/day |
+| GET    | `/api/generate/status/:fetchUrl` | Poll generation status    | Yes  | No          |
 
 ### 4.3 User Routes — `/api/user`
-| Method | Endpoint | Description | Auth |
-|---|---|---|---|
-| GET | `/api/user/profile` | Get profile | Yes |
-| PUT | `/api/user/profile` | Update name/avatar | Yes |
-| GET | `/api/user/history` | Get all generations | Yes |
-| DELETE | `/api/user/history/:id` | Delete one generation | Yes |
-| DELETE | `/api/user/account` | Delete account | Yes |
+
+| Method | Endpoint                | Description           | Auth |
+| ------ | ----------------------- | --------------------- | ---- |
+| GET    | `/api/user/profile`     | Get profile           | Yes  |
+| PUT    | `/api/user/profile`     | Update name/avatar    | Yes  |
+| GET    | `/api/user/history`     | Get all generations   | Yes  |
+| DELETE | `/api/user/history/:id` | Delete one generation | Yes  |
+| DELETE | `/api/user/account`     | Delete account        | Yes  |
 
 ### 4.4 Billing Routes — `/api/billing`
-| Method | Endpoint | Description | Auth |
-|---|---|---|---|
-| POST | `/api/billing/stripe/checkout` | Create Stripe checkout session | Yes |
-| POST | `/api/billing/sslcommerz/init` | Initiate SSLCommerz payment | Yes |
-| POST | `/api/billing/paypal/create-order` | Create PayPal order | Yes |
-| POST | `/api/billing/paypal/capture` | Capture PayPal payment | Yes |
-| GET | `/api/billing/invoices` | Get payment history | Yes |
+
+| Method | Endpoint                           | Description                    | Auth |
+| ------ | ---------------------------------- | ------------------------------ | ---- |
+| POST   | `/api/billing/stripe/checkout`     | Create Stripe checkout session | Yes  |
+| POST   | `/api/billing/sslcommerz/init`     | Initiate SSLCommerz payment    | Yes  |
+| POST   | `/api/billing/paypal/create-order` | Create PayPal order            | Yes  |
+| POST   | `/api/billing/paypal/capture`      | Capture PayPal payment         | Yes  |
+| GET    | `/api/billing/invoices`            | Get payment history            | Yes  |
 
 ### 4.5 Webhook Routes — `/api/webhook`
-| Method | Endpoint | Description | Auth |
-|---|---|---|---|
-| POST | `/api/webhook/stripe` | Stripe event handler | Stripe sig |
-| POST | `/api/webhook/sslcommerz/success` | SSLCommerz success IPN | No |
-| POST | `/api/webhook/sslcommerz/fail` | SSLCommerz fail IPN | No |
+
+| Method | Endpoint                          | Description            | Auth       |
+| ------ | --------------------------------- | ---------------------- | ---------- |
+| POST   | `/api/webhook/stripe`             | Stripe event handler   | Stripe sig |
+| POST   | `/api/webhook/sslcommerz/success` | SSLCommerz success IPN | No         |
+| POST   | `/api/webhook/sslcommerz/fail`    | SSLCommerz fail IPN    | No         |
 
 ## 5. ModelsLab API Integration
 
-| Feature | ModelsLab API Endpoint | Input | Output |
-|---|---|---|---|
-| Text to Image | `/v6/images/text2img` | prompt, model, size | Image URL |
-| Text to Video | `/v6/video/text2video` | prompt, duration | Video URL |
-| Image to Video | `/v6/video/img2video` | image file, prompt | Video URL |
-| Image to Image | `/v6/images/img2img` | image file, prompt | Image URL |
-| Text to Speech | `/v6/voice/text2speech` | text, voice | Audio URL |
+| Feature        | ModelsLab API Endpoint  | Input               | Output    |
+| -------------- | ----------------------- | ------------------- | --------- |
+| Text to Image  | `/v6/images/text2img`   | prompt, model, size | Image URL |
+| Text to Video  | `/v6/video/text2video`  | prompt, duration    | Video URL |
+| Image to Video | `/v6/video/img2video`   | image file, prompt  | Video URL |
+| Image to Image | `/v6/images/img2img`    | image file, prompt  | Image URL |
+| Text to Speech | `/v6/voice/text2speech` | text, voice         | Audio URL |
 
 ## 6. Folder Structure
 
@@ -163,12 +174,14 @@ prisma/
 ## 7. Database Schema
 
 The project uses Prisma with PostgreSQL. Key models include:
+
 - `User`: Handles accounts, plans, and request counting.
 - `Generation`: Stores history of AI outputs.
 - `Payment`: Tracks transaction history across multiple gateways.
 - `Account`: Manages OAuth provider links.
 
 Run migrations using:
+
 ```bash
 bunx prisma migrate dev
 ```
