@@ -13,4 +13,10 @@ router.post(
   SubscriptionController.createCheckoutSession
 );
 
+router.post(
+  "/cancel-subscription",
+  checkAuth(),
+  SubscriptionController.cancelSubscription
+);
+
 export const SubscriptionRoutes = router;

@@ -1,13 +1,16 @@
 import status from "http-status";
-import { stripe } from "../../config/stripe.config";
+import {
+  SubscriptionPlan,
+  SubscriptionStatus,
+} from "../../../generated/prisma/enums";
 import { envVars } from "../../config/env";
-import { prisma } from "../../lib/prisma";
+import { stripe } from "../../config/stripe.config";
 import { AppError } from "../../errors/AppError";
-import { SubscriptionPlan, SubscriptionStatus } from "../../../generated/prisma/enums";
+import { prisma } from "../../lib/prisma";
 
 const createCheckoutSession = async (
   userId: string,
-  plan: SubscriptionPlan
+  plan: SubscriptionPlan,
 ) => {
   // 3. Check if plan === Free.
   if (plan === SubscriptionPlan.FREE) {
@@ -33,7 +36,7 @@ const createCheckoutSession = async (
   if (subscription && subscription.plan !== SubscriptionPlan.FREE) {
     throw new AppError(
       status.BAD_REQUEST,
-      `You already have an active ${subscription.plan} plan. Use Manage Subscription to change it.`
+      `You already have an active ${subscription.plan} plan. Use Manage Subscription to change it.`,
     );
   }
 
@@ -113,6 +116,47 @@ const createCheckoutSession = async (
   return { sessionId: session.id, paymentUrl: session.url };
 };
 
+const cancelSubscription = async (userId: string) => {
+  const subscription = await prisma.subscription.findUnique({
+    where: { userId },
+  });
+
+  if (!subscription?.stripeSubscriptionId) {
+    throw new AppError(status.NOT_FOUND, "Subscription not found");
+  }
+
+  const stripeSubscription = await stripe.subscriptions.retrieve(
+    subscription.stripeSubscriptionId,
+  );
+
+  if (stripeSubscription.status === "canceled") {
+    throw new AppError(status.BAD_REQUEST, "Subscription already cancelled");
+  }
+
+  if (stripeSubscription.cancel_at_period_end) {
+    throw new AppError(
+      status.BAD_REQUEST,
+      "Subscription is already set to cancel at period end",
+    );
+  }
+
+  await stripe.subscriptions.update(subscription.stripeSubscriptionId, {
+    cancel_at_period_end: true,
+  });
+
+  const updated = await prisma.subscription.update({
+    where: { userId },
+    data: {
+      status: SubscriptionStatus.CANCELLED,
+      cancelAtPeriodEnd: true,
+      cancelledAt: new Date(),
+    },
+  });
+
+  return updated;
+};
+
 export const SubscriptionService = {
   createCheckoutSession,
+  cancelSubscription,
 };

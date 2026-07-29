@@ -19,6 +19,21 @@ const createCheckoutSession = catchAsync(async (req: Request, res: Response) => 
   );
 });
 
+const cancelSubscription = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.user.id;
+
+  const result = await SubscriptionService.cancelSubscription(userId);
+
+  sendResponse(
+    res,
+    status.OK,
+    true,
+    "Subscription cancelled successfully",
+    result
+  );
+});
+
 export const SubscriptionController = {
   createCheckoutSession,
+  cancelSubscription,
 };
