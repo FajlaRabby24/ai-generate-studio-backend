@@ -37,3 +37,4 @@ src/generated/prisma
 AGENTS.md
 requirements.md
 modelslab-guide.md
+src/app/modules/webhook

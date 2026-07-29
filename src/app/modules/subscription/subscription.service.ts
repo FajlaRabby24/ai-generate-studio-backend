@@ -156,7 +156,28 @@ const cancelSubscription = async (userId: string) => {
   return updated;
 };
 
+const createCustomerPortalSession = async (userId: string) => {
+  const subscription = await prisma.subscription.findUnique({
+    where: { userId },
+  });
+
+  if (!subscription?.stripeCustomerId) {
+    throw new AppError(
+      status.NOT_FOUND,
+      "Stripe customer not found for this user",
+    );
+  }
+
+  const session = await stripe.billingPortal.sessions.create({
+    customer: subscription.stripeCustomerId,
+    return_url: `${envVars.FRONTEND_URL}/dashboard/payments/success`,
+  });
+
+  return { url: session.url };
+};
+
 export const SubscriptionService = {
   createCheckoutSession,
   cancelSubscription,
+  createCustomerPortalSession,
 };

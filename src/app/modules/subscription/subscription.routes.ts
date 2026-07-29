@@ -10,13 +10,19 @@ router.post(
   "/create-checkout-session",
   checkAuth(),
   validateRequest(SubscriptionValidation.checkoutSchema),
-  SubscriptionController.createCheckoutSession
+  SubscriptionController.createCheckoutSession,
 );
 
 router.post(
   "/cancel-subscription",
   checkAuth(),
-  SubscriptionController.cancelSubscription
+  SubscriptionController.cancelSubscription,
+);
+
+router.post(
+  "/create-customer-portal",
+  checkAuth(),
+  SubscriptionController.createCustomerPortal,
 );
 
 export const SubscriptionRoutes = router;
