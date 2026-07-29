@@ -10,12 +10,14 @@ import { BackgroundRoutes } from "../modules/background-remover/backgroundRemove
 import { ResumeAnalyzerRoutes } from "../modules/resume-analyzer/resumeAnalyzer.routes";
 import { TextToImageRoutes } from "../modules/text-to-image/textToImage.route";
 import { TextToVideoRoutes } from "../modules/text-to-video/textToVideo.routes";
+import { SubscriptionRoutes } from "../modules/subscription/subscription.routes";
 import { sendResponse } from "../shared/sendResponse";
 import { rateLimiters } from "../utils/rate-limit";
 
 const router = Router();
 
 router.use("/auth", AuthRoutes);
+router.use("/subscription", SubscriptionRoutes);
 router.use(
   "/text-to-image",
   rateLimiters.generationLimiter,

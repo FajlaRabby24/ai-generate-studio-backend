@@ -24,4 +24,10 @@ export const envVars = {
   BACKGROUND_REMOVE_API_KEY: process.env.BACKGROUND_REMOVE_API_KEY as string,
   API_LAYER_API_KEY: process.env.API_LAYER_API_KEY as string,
   JSON2_VIDEO_API_KEY: process.env.JSON2_VIDEO_API_KEY as string,
+  STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY as string,
+  STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY as string,
+  STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET as string,
+  STRIPE_MONTLY_PRODUCT_ID: process.env.STRIPE_MONTLY_PRODUCT_ID as string,
+  STRIPE_YEARLY_PRODUCT_ID: process.env.STRIPE_YEARLY_PRODUCT_ID as string,
+  FRONTEND_URL: process.env.FRONTEND_URL as string,
 };
