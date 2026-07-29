@@ -8,6 +8,7 @@ import { auth } from "./app/lib/auth";
 import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
 import { notFound } from "./app/middleware/notFound";
 import { indexRoute } from "./app/routes";
+import { WebhookRoutes } from "./app/modules/webhook/webhook.route";
 import { rateLimiters } from "./app/utils/rate-limit";
 
 const app: Application = express();
@@ -25,6 +26,13 @@ app.use(
 
 // Mount better-auth
 app.all("/api/auth/*splat", toNodeHandler(auth));
+
+// Stripe Webhook Raw Body Parser
+app.use(
+  "/api/v1/webhook",
+  express.raw({ type: "application/json" }),
+  WebhookRoutes,
+);
 
 // Parsers
 app.use(express.json());
