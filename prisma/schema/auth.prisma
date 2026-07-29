@@ -31,11 +31,12 @@ model User {
   imageToVideo           Int @default(3)
   textToVideo            Int @default(3)
 
-  generations Generation[]
-  payments    Payment[]
-  sessions    Session[]
-  accounts    Account[]
+  generations   Generation[]
+  payments      Payment[]
+  sessions      Session[]
+  accounts      Account[]
   chatHistories ChatHistory[]
+  subscription  Subscription?
 
   @@unique([email])
   @@map("user")

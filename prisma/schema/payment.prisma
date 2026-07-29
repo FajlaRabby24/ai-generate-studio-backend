@@ -1,17 +1,18 @@
 model Payment {
-  id              String         @id @default(uuid())
-  userId          String
-  gateway         PaymentGateway
-  status          PaymentStatus  @default(PENDING)
-  amount          Float
-  currency        String         @default("USD")
-  transactionId   String?        @unique            // gateway transaction ref
-  stripeSessionId String?
-  planActivated   Plan
-  metadata        Json?                             // Raw gateway response data
-  createdAt       DateTime       @default(now())
+  id            String         @id @default(uuid())
+  userId        String
+  gateway       PaymentGateway
+  status        PaymentStatus  @default(PENDING)
+  amount        Float
+  currency      String         @default("USD")
+  transactionId String?        @unique // gateway transaction ref
+  planActivated Plan
+  metadata      Json? // Raw gateway response data
+  createdAt     DateTime       @default(now())
 
-  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
+  subscriptionId String?
 
   @@map("payments")
 }
