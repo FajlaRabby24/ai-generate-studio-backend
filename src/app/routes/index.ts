@@ -7,10 +7,11 @@ import { checkGenerateAuth } from "../middleware/checkGenerateAuth";
 import { AiChatBotRoutes } from "../modules/ai-chat-bot/aiChatBot.routes";
 import { AuthRoutes } from "../modules/auth/auth.route";
 import { BackgroundRoutes } from "../modules/background-remover/backgroundRemover.routes";
+import { DashboardRoutes } from "../modules/dashboard/dashboard.route";
 import { ResumeAnalyzerRoutes } from "../modules/resume-analyzer/resumeAnalyzer.routes";
+import { SubscriptionRoutes } from "../modules/subscription/subscription.routes";
 import { TextToImageRoutes } from "../modules/text-to-image/textToImage.route";
 import { TextToVideoRoutes } from "../modules/text-to-video/textToVideo.routes";
-import { SubscriptionRoutes } from "../modules/subscription/subscription.routes";
 import { sendResponse } from "../shared/sendResponse";
 import { rateLimiters } from "../utils/rate-limit";
 
@@ -18,6 +19,7 @@ const router = Router();
 
 router.use("/auth", AuthRoutes);
 router.use("/subscription", SubscriptionRoutes);
+router.use("/dashboard", DashboardRoutes);
 router.use(
   "/text-to-image",
   rateLimiters.generationLimiter,
