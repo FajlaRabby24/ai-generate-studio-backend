@@ -1,6 +1,7 @@
 import status from "http-status";
-import { prisma } from "../../lib/prisma";
+import { GenerationType } from "../../../generated/prisma/enums";
 import { AppError } from "../../errors/AppError";
+import { prisma } from "../../lib/prisma";
 
 const userDashboardStats = async (userId: string) => {
   const user = await prisma.user.findUnique({
@@ -16,7 +17,7 @@ const userDashboardStats = async (userId: string) => {
 
   // Get recent generations (last 5)
   const recentGenerations = await prisma.generation.findMany({
-    where: { userId, isDeleted: false },
+    where: { userId, isDeleted: false, type: GenerationType.TEXT_TO_IMAGE },
     orderBy: { createdAt: "desc" },
     take: 5,
   });
@@ -27,9 +28,25 @@ const userDashboardStats = async (userId: string) => {
     const date = new Date();
     date.setDate(date.getDate() - i);
     const dayName = date.toLocaleDateString("en-US", { weekday: "short" });
-    
-    const startOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
-    const endOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
+
+    const startOfDay = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      0,
+      0,
+      0,
+      0,
+    );
+    const endOfDay = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      23,
+      59,
+      59,
+      999,
+    );
 
     const count = await prisma.generation.count({
       where: {
@@ -46,34 +63,34 @@ const userDashboardStats = async (userId: string) => {
       generations: count,
     });
   }
-
+  const limit = user.plan === "FREE" ? 3 : 5;
   // Retrieve limits / quotas configuration
   const quotas = [
     {
       name: "Text to Image",
-      used: Math.max(0, 20 - user.textToImage),
-      limit: 20,
+      used: Math.max(0, limit - user.textToImage),
+      limit,
       remaining: user.textToImage,
       color: "from-purple-500 to-pink-500",
     },
     {
       name: "AI Chatbot",
-      used: Math.max(0, 50 - user.aiChatbot),
-      limit: 50,
+      used: Math.max(0, limit - user.aiChatbot),
+      limit,
       remaining: user.aiChatbot,
       color: "from-emerald-500 to-teal-500",
     },
     {
       name: "Remove Background",
-      used: Math.max(0, 10 - user.imageBackgroundRemover),
-      limit: 10,
+      used: Math.max(0, limit - user.imageBackgroundRemover),
+      limit,
       remaining: user.imageBackgroundRemover,
       color: "from-sky-500 to-blue-500",
     },
     {
       name: "Resume Analyzer",
-      used: Math.max(0, 5 - user.resumeAnalyzer),
-      limit: 5,
+      used: Math.max(0, limit - user.resumeAnalyzer),
+      limit,
       remaining: user.resumeAnalyzer,
       color: "from-amber-500 to-orange-500",
     },
