@@ -28,7 +28,7 @@ const loginValidationSchema = z.object({
       error: "Password is required",
     })
     .min(8, "Password must be at least 8 characters long"),
-  userAgent: z.string().optional(),
+  device: z.string().optional(),
 });
 
 const updateProfileSchema = z.object({

@@ -29,7 +29,7 @@ const registerUser = async (payload: TRegisterUser) => {
 };
 
 const loginUser = async (req: Request, payload: TLoginUser) => {
-  const { email, password, userAgent: clientUserAgent } = payload;
+  const { email, password, device: clientUserAgent } = payload;
 
   const data = await auth.api.signInEmail({
     body: { email, password },
@@ -113,8 +113,27 @@ const getMeFromDB = async (userId: string) => {
       name: true,
       email: true,
       role: true,
+      plan: true,
       status: true,
       isDeleted: true,
+      textToImage: true,
+      aiChatbot: true,
+      codeChecker: true,
+      imageBackgroundRemover: true,
+      imageCaptionGenerator: true,
+      resumeAnalyzer: true,
+      languageTranslator: true,
+      grammarChecker: true,
+      textToSpeech: true,
+      speechToText: true,
+      imageToVideo: true,
+      textToVideo: true,
+      sessions: {
+        select: {
+          id: true,
+          userAgent: true,
+        },
+      },
     },
   });
 
