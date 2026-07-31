@@ -3,7 +3,7 @@ model PricingPlan {
   name          String // "Free", "Monthly", "Yearly"
   plan          SubscriptionPlan @unique
   price         Float // 0.00 for FREE plan
-  currency      String           @default("usd")
+  currency      String           @default("USD")
   features      String[] // list of feature bullets shown on pricing card
   isActive      Boolean          @default(true)
   isPopular     Boolean          @default(false) // highlights "Most Popular" badge
