@@ -30,4 +30,9 @@ export const envVars = {
   STRIPE_MONTLY_PRODUCT_ID: process.env.STRIPE_MONTLY_PRODUCT_ID as string,
   STRIPE_YEARLY_PRODUCT_ID: process.env.STRIPE_YEARLY_PRODUCT_ID as string,
   FRONTEND_URL: process.env.FRONTEND_URL as string,
+
+  // admin
+  ADMIN_NAME: process.env.ADMIN_NAME as string,
+  ADMIN_EMAIL: process.env.ADMIN_EMAIL as string,
+  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD as string,
 };
