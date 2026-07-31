@@ -29,7 +29,7 @@ const getAllPricePlans = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getPricePlanById = catchAsync(async (req: Request, res: Response) => {
-  const { id: pricingId } = req.params;
+  const { pricingId } = req.params;
   if (!pricingId) {
     return sendResponse(
       res,

@@ -62,6 +62,10 @@ const deletePricePlanFromDB = async (pricingId: string) => {
       isActive: false,
       isPopular: false,
     },
+    select: {
+      id: true,
+      updatedAt: true,
+    },
   });
   return result;
 };
