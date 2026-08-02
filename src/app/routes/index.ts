@@ -11,6 +11,7 @@ import { DashboardRoutes } from "../modules/dashboard/dashboard.route";
 import { ResumeAnalyzerRoutes } from "../modules/resume-analyzer/resumeAnalyzer.routes";
 import { SubscriptionRoutes } from "../modules/subscription/subscription.routes";
 import { PricePlanRoutes } from "../modules/pricePlan/pricePlan.routes";
+import { NotificationRoutes } from "../modules/notification/notification.routes";
 import { TextToImageRoutes } from "../modules/text-to-image/textToImage.route";
 import { TextToVideoRoutes } from "../modules/text-to-video/textToVideo.routes";
 import { sendResponse } from "../shared/sendResponse";
@@ -22,6 +23,7 @@ router.use("/auth", AuthRoutes);
 router.use("/subscription", SubscriptionRoutes);
 router.use("/dashboard", DashboardRoutes);
 router.use("/price-plan", PricePlanRoutes);
+router.use("/notification", NotificationRoutes);
 router.use(
   "/text-to-image",
   rateLimiters.generationLimiter,

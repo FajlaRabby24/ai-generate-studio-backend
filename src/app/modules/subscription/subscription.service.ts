@@ -256,6 +256,15 @@ const handleWebhookEvent = async (event: Stripe.Event) => {
                 metadata: session as any,
               },
             });
+
+            await prisma.notification.create({
+              data: {
+                userId,
+                title: "Payment Successful",
+                message: `Thank you! Your payment of $${session.amount_total ? session.amount_total / 100 : 0} was successful. Your ${userPlan} plan is now active.`,
+                type: "BILLING",
+              },
+            });
           }
         }
       } catch (error) {
@@ -353,6 +362,15 @@ const handleWebhookEvent = async (event: Stripe.Event) => {
               metadata: invoice as any,
             },
           });
+
+          await tx.notification.create({
+            data: {
+              userId: subscription.userId,
+              title: "Payment Successful",
+              message: `Your recurring subscription payment of $${invoice.amount_paid / 100} was successful.`,
+              type: "BILLING",
+            },
+          });
         });
       } catch (error) {
         console.error("Error handling invoice.payment_succeeded:", error);
@@ -397,6 +415,15 @@ const handleWebhookEvent = async (event: Stripe.Event) => {
               gateway: PaymentGateway.STRIPE,
               planActivated: userPlan,
               metadata: invoice as any,
+            },
+          });
+
+          await tx.notification.create({
+            data: {
+              userId: subscription.userId,
+              title: "Payment Failed",
+              message: `We were unable to process your payment of $${invoice.amount_due / 100} for subscription renewal.`,
+              type: "BILLING",
             },
           });
         });
@@ -471,6 +498,15 @@ const handleWebhookEvent = async (event: Stripe.Event) => {
               data: {
                 plan: Plan.FREE,
                 stripeSubId: null,
+              },
+            });
+
+            await tx.notification.create({
+              data: {
+                userId: subscription.userId,
+                title: "Subscription Cancelled",
+                message: "Your subscription has expired or been cancelled. Your account has reverted to the FREE plan.",
+                type: "BILLING",
               },
             });
           });
