@@ -8,7 +8,6 @@ const generateImage = catchAsync(async (req: Request, res: Response) => {
   const { prompt } = req.body;
   const userId = req.user?.id;
   const field = req.currentGenerationField;
-  console.log("controller", userId, req.body);
 
   if (!prompt) {
     return sendResponse(
@@ -19,6 +18,8 @@ const generateImage = catchAsync(async (req: Request, res: Response) => {
       null,
     );
   }
+
+  // return;
 
   const result = await TextToImageService.GenerateTextToImage(
     userId,
@@ -35,10 +36,8 @@ const generateImage = catchAsync(async (req: Request, res: Response) => {
     );
   }
 
-  console.log("result", result);
-
+  // console.log("result", result);
   sendResponse(res, status.OK, true, "Image generated successfully", result);
-  sendResponse(res, status.OK, true, "Image generated successfully");
 });
 
 export const TextToImageController = {

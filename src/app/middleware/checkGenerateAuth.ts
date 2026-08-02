@@ -127,6 +127,8 @@ export const checkGenerateAuth = (requiredType: GenerationType) => {
 
       let count = (user as any)[countField];
 
+      // console.log("count", count);
+
       // check count before refresh at
       if (count <= 0) {
         const lastRefreshAt = (user as any)[refreshField] as Date;
@@ -155,6 +157,7 @@ export const checkGenerateAuth = (requiredType: GenerationType) => {
           });
           count = (updatedUser as any)[countField];
         } else {
+          console.log("hello, no credit");
           return sendResponse(
             res,
             status.FORBIDDEN,
@@ -170,6 +173,7 @@ export const checkGenerateAuth = (requiredType: GenerationType) => {
 
       next();
     } catch (error) {
+      console.error("Error in checkGenerateAuth middleware:", error);
       next(error);
     }
   };

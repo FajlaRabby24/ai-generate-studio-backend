@@ -21,7 +21,9 @@ const registerUser = catchAsync(async (req: Request, res: Response) => {
 
 // * login user
 const loginUser = catchAsync(async (req: Request, res: Response) => {
-  const result = await AuthService.loginUser(req, req.body);
+  const payload = req.body;
+  console.log("payload", payload);
+  const result = await AuthService.loginUser(req, payload);
   const { accessToken, refreshToken, token } = result;
 
   tokenUtils.setAccessTokenCookie(res, accessToken);

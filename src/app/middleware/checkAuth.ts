@@ -12,6 +12,7 @@ export const checkAuth =
   (...authRoles: UserRole[]) =>
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      // console.log("checkAuth middleware called", req.body, req.cookies);
       const sessionToken = cookieUtils.getCookie(
         req,
         betterAuthSessionCookieName,
