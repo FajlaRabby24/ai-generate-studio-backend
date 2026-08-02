@@ -10,7 +10,8 @@ const globalLimiter = rateLimit({
   handler: (req, res) => {
     res.status(status.TOO_MANY_REQUESTS).json({
       success: false,
-      message: "Too many requests from this IP, please try again after 15 minutes",
+      message:
+        "Too many requests from this IP, please try again after 15 minutes",
       data: null,
     });
   },
@@ -25,7 +26,8 @@ const authLimiter = rateLimit({
   handler: (req, res) => {
     res.status(status.TOO_MANY_REQUESTS).json({
       success: false,
-      message: "Too many authentication attempts, please try again after 15 minutes",
+      message:
+        "Too many authentication attempts, please try again after 15 minutes",
       data: null,
     });
   },
@@ -40,7 +42,8 @@ const generationLimiter = rateLimit({
   handler: (req, res) => {
     res.status(status.TOO_MANY_REQUESTS).json({
       success: false,
-      message: "Too many generation requests. Please wait a moment before trying again.",
+      message:
+        "Too many generation requests. Please wait a moment before trying again.",
       data: null,
     });
   },
