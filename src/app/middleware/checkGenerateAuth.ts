@@ -1,38 +1,72 @@
 import type { NextFunction, Request, Response } from "express";
 import status from "http-status";
-import { GenerationType } from "../../generated/prisma/enums";
+import {
+  GenerationType,
+  SubscriptionStatus,
+} from "../../generated/prisma/enums";
 import { prisma } from "../lib/prisma";
 import { sendResponse } from "../shared/sendResponse";
 
 // Mapping GenerationType enum values to the corresponding User model database fields
-const generationTypeFieldMap: Record<GenerationType, string> = {
-  [GenerationType.TEXT_TO_IMAGE]: "textToImage",
-  [GenerationType.AI_CHATBOT]: "aiChatbot",
-  [GenerationType.CODE_CHECKER]: "codeChecker",
-  [GenerationType.IMAGE_BACKGROUND_REMOVER]: "imageBackgroundRemover",
-  [GenerationType.IMAGE_CAPTION_GENERATOR]: "imageCaptionGenerator",
-  [GenerationType.RESUME_ANALYZER]: "resumeAnalyzer",
-  [GenerationType.LANGUAGE_TRANSLATOR]: "languageTranslator",
-  [GenerationType.GRAMMER_IMPROVER]: "grammarChecker",
-  [GenerationType.TEXT_TO_SPEECH]: "textToSpeech",
-  [GenerationType.SPEECH_TO_TEXT]: "speechToText",
-  [GenerationType.IMAGE_TO_VIDEO]: "imageToVideo",
-  [GenerationType.TEXT_TO_VIDEO]: "textToVideo",
+const generationFieldMap: Record<
+  GenerationType,
+  { countField: string; refreshField: string }
+> = {
+  [GenerationType.TEXT_TO_IMAGE]: {
+    countField: "textToImage",
+    refreshField: "textToImageLastRefreshAT",
+  },
+  [GenerationType.AI_CHATBOT]: {
+    countField: "aiChatbot",
+    refreshField: "aiChatbotLastRefreshAT",
+  },
+  [GenerationType.CODE_CHECKER]: {
+    countField: "codeChecker",
+    refreshField: "codeCheckerLastRefreshAT",
+  },
+  [GenerationType.IMAGE_BACKGROUND_REMOVER]: {
+    countField: "imageBackgroundRemover",
+    refreshField: "imageBackgroundRemoverLastRefreshAT",
+  },
+  [GenerationType.IMAGE_CAPTION_GENERATOR]: {
+    countField: "imageCaptionGenerator",
+    refreshField: "imageCaptionGeneratorLastRefreshAT",
+  },
+  [GenerationType.RESUME_ANALYZER]: {
+    countField: "resumeAnalyzer",
+    refreshField: "resumeAnalyzerLastRefreshAT",
+  },
+  [GenerationType.LANGUAGE_TRANSLATOR]: {
+    countField: "languageTranslator",
+    refreshField: "languageTranslatorLastRefreshAT",
+  },
+  [GenerationType.GRAMMER_IMPROVER]: {
+    countField: "grammarChecker",
+    refreshField: "grammarCheckerLastRefreshAT",
+  },
+  [GenerationType.TEXT_TO_SPEECH]: {
+    countField: "textToSpeech",
+    refreshField: "textToSpeechLastRefreshAT",
+  },
+  [GenerationType.SPEECH_TO_TEXT]: {
+    countField: "speechToText",
+    refreshField: "speechToTextLastRefreshAT",
+  },
+  [GenerationType.IMAGE_TO_VIDEO]: {
+    countField: "imageToVideo",
+    refreshField: "imageToVideoLastRefreshAT",
+  },
+  [GenerationType.TEXT_TO_VIDEO]: {
+    countField: "textToVideo",
+    refreshField: "textToVideoLastRefreshAT",
+  },
 };
 
-/**
- * Middleware to check user's remaining generations count before allowing access to AI tools.
- *
- * @param requiredType The expected GenerationType for the specific endpoint
- */
 export const checkGenerateAuth = (requiredType: GenerationType) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { type } = req.body;
 
-      console.log("type", type);
-
-      // 1. Check if the required generation type and the one in req.body match.
       if (type !== requiredType) {
         return sendResponse(
           res,
@@ -43,7 +77,6 @@ export const checkGenerateAuth = (requiredType: GenerationType) => {
         );
       }
 
-      // Ensure req.user exists (checkAuth middleware should run before this middleware)
       if (!req.user || !req.user.id) {
         return sendResponse(
           res,
@@ -54,8 +87,8 @@ export const checkGenerateAuth = (requiredType: GenerationType) => {
         );
       }
 
-      const dbField = generationTypeFieldMap[requiredType];
-      if (!dbField) {
+      const fieldConfig = generationFieldMap[requiredType];
+      if (!fieldConfig) {
         return sendResponse(
           res,
           status.INTERNAL_SERVER_ERROR,
@@ -65,13 +98,22 @@ export const checkGenerateAuth = (requiredType: GenerationType) => {
         );
       }
 
-      // Fetch the latest count directly from the database for data accuracy
-      const user = await prisma.user.findUnique({
+      const { countField, refreshField } = fieldConfig;
+
+      const user = (await prisma.user.findUnique({
         where: { id: req.user.id },
         select: {
-          [dbField]: true,
+          subscription: {
+            select: {
+              id: true,
+              status: true,
+            },
+          },
+          id: true,
+          [countField]: true,
+          [refreshField]: true,
         },
-      });
+      })) as any;
 
       if (!user) {
         return sendResponse(
@@ -83,20 +125,49 @@ export const checkGenerateAuth = (requiredType: GenerationType) => {
         );
       }
 
-      const count = (user as any)[dbField];
+      let count = (user as any)[countField];
 
-      // 2. Check if the remaining generation count is greater than 0.
+      // check count before refresh at
       if (count <= 0) {
-        return sendResponse(
-          res,
-          status.FORBIDDEN,
-          false,
-          `You have run out of generation quota for ${requiredType.toLowerCase().replace(/_/g, " ")}. Please upgrade your plan.`,
-          null,
-        );
+        const lastRefreshAt = (user as any)[refreshField] as Date;
+
+        const now = new Date();
+        const timeSinceLastRefresh =
+          now.getTime() - new Date(lastRefreshAt).getTime();
+
+        const ONE_DAY_MS = 24 * 60 * 60 * 1000; // 24 hours in milliseconds > 86400000
+
+        if (timeSinceLastRefresh >= ONE_DAY_MS) {
+          // reset count + refresh field for this feature
+          const updatedUser = await prisma.user.update({
+            where: { id: req.user.id },
+            data: {
+              [countField]:
+                user?.subscription?.status === SubscriptionStatus.ACTIVE
+                  ? 5
+                  : 3,
+              [refreshField]: now,
+            },
+            select: {
+              id: true,
+              [countField]: true,
+            },
+          });
+          count = (updatedUser as any)[countField];
+        } else {
+          return sendResponse(
+            res,
+            status.FORBIDDEN,
+            false,
+            `You have run out of generation quota for ${requiredType.toLowerCase().replace(/_/g, " ")}. Please upgrade your plan.`,
+            null,
+          );
+        }
       }
 
-      // 3. If count >= 1, proceed to the controller.
+      // pass field name to next middleware/controller, use it when decrementing
+      req.currentGenerationField = countField;
+
       next();
     } catch (error) {
       next(error);

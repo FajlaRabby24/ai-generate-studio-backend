@@ -7,6 +7,7 @@ import { TextToImageService } from "./textToImage.service";
 const generateImage = catchAsync(async (req: Request, res: Response) => {
   const { prompt } = req.body;
   const userId = req.user?.id;
+  const field = req.currentGenerationField;
   console.log("controller", userId, req.body);
 
   if (!prompt) {
@@ -19,7 +20,11 @@ const generateImage = catchAsync(async (req: Request, res: Response) => {
     );
   }
 
-  const result = await TextToImageService.GenerateTextToImage(userId, prompt);
+  const result = await TextToImageService.GenerateTextToImage(
+    userId,
+    prompt,
+    field as string,
+  );
   if (!result) {
     return sendResponse(
       res,

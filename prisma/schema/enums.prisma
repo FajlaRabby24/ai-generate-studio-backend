@@ -15,7 +15,6 @@ enum Plan {
 }
 
 enum SubscriptionPlan {
-  FREE
   MONTHLY
   YEARLY
 }
@@ -60,4 +59,11 @@ enum SubscriptionStatus {
   CANCELLED
   EXPIRED
   PAST_DUE
+}
+
+enum NotificationType {
+  SYSTEM
+  BILLING
+  PROMOTION
+  ALERT
 }

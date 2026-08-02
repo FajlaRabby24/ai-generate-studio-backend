@@ -31,12 +31,26 @@ model User {
   imageToVideo           Int @default(3)
   textToVideo            Int @default(3)
 
+  textToImageLastRefreshAT            DateTime @default(now())
+  aiChatbotLastRefreshAT              DateTime @default(now())
+  codeCheckerLastRefreshAT            DateTime @default(now())
+  imageBackgroundRemoverLastRefreshAT DateTime @default(now())
+  imageCaptionGeneratorLastRefreshAT  DateTime @default(now())
+  resumeAnalyzerLastRefreshAT         DateTime @default(now())
+  languageTranslatorLastRefreshAT     DateTime @default(now())
+  grammarCheckerLastRefreshAT         DateTime @default(now())
+  textToSpeechLastRefreshAT           DateTime @default(now())
+  speechToTextLastRefreshAT           DateTime @default(now())
+  imageToVideoLastRefreshAT           DateTime @default(now())
+  textToVideoLastRefreshAT            DateTime @default(now())
+
   generations   Generation[]
   payments      Payment[]
   sessions      Session[]
   accounts      Account[]
   chatHistories ChatHistory[]
   subscription  Subscription?
+  notifications Notification[]
 
   @@unique([email])
   @@map("user")

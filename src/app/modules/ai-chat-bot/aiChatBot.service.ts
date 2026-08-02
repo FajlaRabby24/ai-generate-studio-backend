@@ -41,6 +41,7 @@ const ChatbotService = async (
             id: userId,
           },
           data: {
+            aiChatbotLastRefreshAT: new Date(),
             aiChatbot: {
               decrement: 1,
             },

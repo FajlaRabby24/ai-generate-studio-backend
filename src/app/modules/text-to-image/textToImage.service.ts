@@ -9,7 +9,11 @@ import CloudinaryImageUpload from "../../utils/cloudinary/ImageUpload";
 
 const client = new InferenceClient(envVars.HP_TOKEN);
 
-const GenerateTextToImage = async (userId: string, prompt: string) => {
+const GenerateTextToImage = async (
+  userId: string,
+  prompt: string,
+  field: string,
+) => {
   const image = await client.textToImage({
     provider: "nscale",
     model: "black-forest-labs/FLUX.1-schnell",
@@ -27,15 +31,6 @@ const GenerateTextToImage = async (userId: string, prompt: string) => {
   if (!uploadImage.success || !uploadImage.secureUrl) {
     throw new Error("Failed to upload text-to-image result to Cloudinary");
   }
-
-  const creditRemainig = await prisma.user.findUnique({
-    where: {
-      id: userId,
-    },
-    select: {
-      textToImage: true,
-    },
-  });
 
   // Perform Cloudinary upload and database updates in the background
   setImmediate(() => {
@@ -58,7 +53,8 @@ const GenerateTextToImage = async (userId: string, prompt: string) => {
             id: userId,
           },
           data: {
-            textToImage: {
+            textToImageLastRefreshAT: new Date(),
+            [field]: {
               decrement: 1,
             },
           },
@@ -72,7 +68,7 @@ const GenerateTextToImage = async (userId: string, prompt: string) => {
   // Return base64 string immediately
   return {
     imageUrl: uploadImage.secureUrl,
-    creditRemainig: creditRemainig?.textToImage,
+    // creditRemainig: creditRemainig?.textToImage,
   };
 };
 
