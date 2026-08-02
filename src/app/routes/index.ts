@@ -8,6 +8,7 @@ import { AiChatBotRoutes } from "../modules/ai-chat-bot/aiChatBot.routes";
 import { AuthRoutes } from "../modules/auth/auth.route";
 import { BackgroundRoutes } from "../modules/background-remover/backgroundRemover.routes";
 import { DashboardRoutes } from "../modules/dashboard/dashboard.route";
+import { HistoryRoutes } from "../modules/history/history.routes";
 import { NotificationRoutes } from "../modules/notification/notification.routes";
 import { PricePlanRoutes } from "../modules/pricePlan/pricePlan.routes";
 import { ResumeAnalyzerRoutes } from "../modules/resume-analyzer/resumeAnalyzer.routes";
@@ -24,6 +25,7 @@ router.use("/subscription", SubscriptionRoutes);
 router.use("/dashboard", DashboardRoutes);
 router.use("/price-plan", PricePlanRoutes);
 router.use("/notification", NotificationRoutes);
+router.use("/history", checkAuth(), HistoryRoutes);
 router.use(
   "/text-to-image",
   rateLimiters.generationLimiter,
