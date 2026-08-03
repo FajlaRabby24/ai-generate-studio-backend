@@ -102,6 +102,44 @@ const loginUser = async (req: Request, payload: TLoginUser) => {
   };
 };
 
+// * logout session
+const logoutSession = async (
+  userId: string,
+  sessionId: string,
+  token: string,
+) => {
+  const session = await prisma.session.findFirst({
+    where: { id: sessionId, userId, token },
+  });
+
+  if (!session) {
+    throw new AppError(404, "Session not found");
+  }
+
+  try {
+    await auth.api.signOut({
+      headers: new Headers({
+        Authorization: `Bearer ${session.id}`,
+      }),
+    });
+  } catch (_) {}
+
+  const result = await prisma.session.delete({
+    where: { id: sessionId, token, userId },
+    select: {
+      id: true,
+    },
+  });
+
+  if (!result) {
+    throw new AppError(404, "Session does not exist");
+  }
+  return {
+    id: result.id,
+    logout: true,
+  };
+};
+
 const getMeFromDB = async (userId: string) => {
   const result = await prisma.user.findUnique({
     where: {
@@ -206,6 +244,7 @@ const getGenerationLeftCount = async (
 export const AuthService = {
   registerUser,
   loginUser,
+  logoutSession,
   getMeFromDB,
   updateProfileInDB,
   getGenerationLeftCount,

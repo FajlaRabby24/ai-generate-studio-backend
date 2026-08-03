@@ -3,7 +3,12 @@ import status from "http-status";
 import type { GenerationType } from "../../../generated/prisma/enums";
 import { catchAsync } from "../../shared/catchAsync";
 import { sendResponse } from "../../shared/sendResponse";
-import { tokenUtils } from "../../utils/tokenUtils";
+import type { IRequestUser } from "../../types";
+import { cookieUtils } from "../../utils/cookie";
+import {
+  betterAuthSessionCookieName,
+  tokenUtils,
+} from "../../utils/tokenUtils";
 import { AuthService } from "./auth.service";
 
 // * register user
@@ -22,7 +27,6 @@ const registerUser = catchAsync(async (req: Request, res: Response) => {
 // * login user
 const loginUser = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
-  console.log("payload", payload);
   const result = await AuthService.loginUser(req, payload);
   const { accessToken, refreshToken, token } = result;
 
@@ -53,9 +57,23 @@ const updateProfile = catchAsync(async (req: Request, res: Response) => {
 
 // * logout user
 const logoutUser = catchAsync(async (req: Request, res: Response) => {
-  tokenUtils.clearSessionCookie(res);
+  const { id: userId, sessionId } = req.user as IRequestUser;
+  const token = cookieUtils.getCookie(req, betterAuthSessionCookieName);
+  if (!userId && !token) {
+    return sendResponse(res, status.UNAUTHORIZED, false, "User ID required!");
+  }
+  if (!sessionId) throw new Error("Session id not found");
 
-  sendResponse(res, status.OK, true, "User logged out successfully", null);
+  const result = await AuthService.logoutSession(
+    userId,
+    sessionId as string,
+    token as string,
+  );
+  if (!result) {
+    return sendResponse(res, status.NOT_FOUND, false, "Session not found!");
+  }
+
+  sendResponse(res, status.OK, true, "Logged out successfully", null);
 });
 
 // * get generation left count
