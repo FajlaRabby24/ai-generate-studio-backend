@@ -1,7 +1,10 @@
 import { prisma } from "../../lib/prisma";
 import { QueryBuilder } from "../../utils/QueryBuilder";
 
-const getMyHistoryFromDB = async (userId: string, query: Record<string, any>) => {
+const getMyHistoryFromDB = async (
+  userId: string,
+  query: Record<string, any>,
+) => {
   const historyQuery = new QueryBuilder(prisma.generation, query, {
     searchableFields: ["prompt"],
     filterableFields: ["type"],
@@ -24,6 +27,9 @@ const deleteHistoryItemFromDB = async (userId: string, id: string) => {
     },
     data: {
       isDeleted: true,
+    },
+    select: {
+      id: true,
     },
   });
   return result;
