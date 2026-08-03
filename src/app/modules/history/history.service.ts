@@ -1,42 +1,19 @@
 import { prisma } from "../../lib/prisma";
-import { GenerationType } from "../../../generated/prisma/enums";
+import { QueryBuilder } from "../../utils/QueryBuilder";
 
-const getMyHistoryFromDB = async (
-  userId: string,
-  query: { type?: GenerationType; page?: number; limit?: number },
-) => {
-  const { type, page = 1, limit = 10 } = query;
-  const skip = (Number(page) - 1) * Number(limit);
+const getMyHistoryFromDB = async (userId: string, query: Record<string, any>) => {
+  const historyQuery = new QueryBuilder(prisma.generation, query, {
+    searchableFields: ["prompt"],
+    filterableFields: ["type"],
+  })
+    .where({ userId, isDeleted: false })
+    .search()
+    .filter()
+    .sort()
+    .paginate();
 
-  const whereCondition: any = {
-    userId,
-    isDeleted: false,
-  };
-
-  if (type) {
-    whereCondition.type = type;
-  }
-
-  const result = await prisma.generation.findMany({
-    where: whereCondition,
-    orderBy: { createdAt: "desc" },
-    skip,
-    take: Number(limit),
-  });
-
-  const total = await prisma.generation.count({
-    where: whereCondition,
-  });
-
-  return {
-    meta: {
-      page: Number(page),
-      limit: Number(limit),
-      total,
-      totalPage: Math.ceil(total / Number(limit)),
-    },
-    data: result,
-  };
+  const result = await historyQuery.execute();
+  return result;
 };
 
 const deleteHistoryItemFromDB = async (userId: string, id: string) => {

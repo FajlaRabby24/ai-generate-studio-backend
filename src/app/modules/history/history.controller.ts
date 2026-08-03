@@ -6,20 +6,15 @@ import { HistoryService } from "./history.service";
 
 const getMyHistory = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user.id;
-  const { type, page, limit } = req.query;
-
-  const result = await HistoryService.getMyHistoryFromDB(userId, {
-    type: type as any,
-    page: page ? Number(page) : undefined,
-    limit: limit ? Number(limit) : undefined,
-  });
+  const result = await HistoryService.getMyHistoryFromDB(userId, req.query);
 
   sendResponse(
     res,
     status.OK,
     true,
     "User history fetched successfully",
-    result,
+    result.data,
+    result.meta,
   );
 });
 
