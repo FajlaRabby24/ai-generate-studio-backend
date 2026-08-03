@@ -11,7 +11,7 @@ router.post(
   "/",
   validateRequest(TextToVideoOmniValidation.generateTextToVideoSchema),
   checkGenerateAuth(GenerationType.TEXT_TO_VIDEO),
-  TextToVideoOmniController.generateVideo
+  TextToVideoOmniController.generateVideo,
 );
 
 export const TextToVideoOmniRoutes = router;

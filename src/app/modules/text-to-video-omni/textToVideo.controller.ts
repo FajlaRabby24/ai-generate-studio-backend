@@ -5,6 +5,7 @@ import { sendResponse } from "../../shared/sendResponse";
 import { textToVideoOmniService } from "./textToVideo.service";
 
 const generateVideo = catchAsync(async (req: Request, res: Response) => {
+  console.log("controller hit", req.body);
   const { prompt, ratio } = req.body;
   const userId = req.user?.id;
   const field = req.currentGenerationField;
@@ -15,7 +16,7 @@ const generateVideo = catchAsync(async (req: Request, res: Response) => {
       status.BAD_REQUEST,
       false,
       "Prompt is required",
-      null
+      null,
     );
   }
 
@@ -25,7 +26,7 @@ const generateVideo = catchAsync(async (req: Request, res: Response) => {
       status.BAD_REQUEST,
       false,
       "Aspect ratio (ratio) is required",
-      null
+      null,
     );
   }
 
@@ -33,7 +34,7 @@ const generateVideo = catchAsync(async (req: Request, res: Response) => {
     userId,
     prompt,
     ratio,
-    field as string
+    field as string,
   );
 
   if (!result) {
@@ -42,7 +43,7 @@ const generateVideo = catchAsync(async (req: Request, res: Response) => {
       status.INTERNAL_SERVER_ERROR,
       false,
       "Failed to generate video",
-      null
+      null,
     );
   }
 
@@ -51,7 +52,7 @@ const generateVideo = catchAsync(async (req: Request, res: Response) => {
     status.OK,
     true,
     "Video generated successfully using Gemini Omni",
-    result
+    result,
   );
 });
 

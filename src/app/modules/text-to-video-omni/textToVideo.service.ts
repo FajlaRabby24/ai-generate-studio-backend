@@ -3,17 +3,16 @@ import {
   GenerationStatus,
   GenerationType,
 } from "../../../generated/prisma/enums";
-import { envVars } from "../../config/env";
 import { prisma } from "../../lib/prisma";
 import CloudinaryVideoUpload from "../../utils/cloudinary/videoUpload";
 
-const client = new GoogleGenAI({ apiKey: envVars.GEMINI_API_KEY });
+const client = new GoogleGenAI({});
 
 const textToVideoOmni = async (
   userId: string,
   prompt: string,
   ratio: string,
-  field: string
+  field: string,
 ) => {
   const interaction = await client.interactions.create({
     model: "gemini-omni-flash-preview",
@@ -29,6 +28,7 @@ const textToVideoOmni = async (
   }
 
   const base64Video = `data:video/mp4;base64,${interaction.output_video.data}`;
+  // console.log("base 64 video", base64Video);
   const uploadVideo = await CloudinaryVideoUpload(base64Video);
 
   if (!uploadVideo.success || !uploadVideo.secureUrl) {

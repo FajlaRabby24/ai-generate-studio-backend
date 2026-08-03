@@ -15,7 +15,6 @@ import { ResumeAnalyzerRoutes } from "../modules/resume-analyzer/resumeAnalyzer.
 import { SubscriptionRoutes } from "../modules/subscription/subscription.routes";
 import { TextToImageRoutes } from "../modules/text-to-image/textToImage.route";
 import { TextToSpeechRoutes } from "../modules/text-to-speech/textToSpeech.routes";
-import { TextToVideoRoutes } from "../modules/text-to-video/textToVideo.routes";
 import { TextToVideoOmniRoutes } from "../modules/text-to-video-omni/textToVideo.routes";
 import { sendResponse } from "../shared/sendResponse";
 import { rateLimiters } from "../utils/rate-limit";
@@ -65,7 +64,7 @@ router.use(
   TextToSpeechRoutes,
 );
 
-router.use("/text-to-video", TextToVideoRoutes);
+// router.use("/text-to-video", TextToVideoRoutes);
 
 router.use(
   "/text-to-video-omni",
