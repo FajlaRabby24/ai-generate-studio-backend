@@ -140,6 +140,27 @@ const logoutSession = async (
   };
 };
 
+// * logout all session
+
+const logoutAllSession = async (userId: string, token: string) => {
+  const currentSession = await prisma.session.findFirst({
+    where: { userId, token },
+  });
+
+  if (!currentSession) {
+    throw new AppError(401, "Current session invalid");
+  }
+
+  await prisma.session.deleteMany({
+    where: {
+      userId,
+      OR: [{ NOT: { token } }, { expiresAt: { lt: new Date() } }],
+    },
+  });
+
+  return true;
+};
+
 const getMeFromDB = async (userId: string) => {
   const result = await prisma.user.findUnique({
     where: {
@@ -245,6 +266,7 @@ export const AuthService = {
   registerUser,
   loginUser,
   logoutSession,
+  logoutAllSession,
   getMeFromDB,
   updateProfileInDB,
   getGenerationLeftCount,

@@ -63,6 +63,7 @@ router.patch(
 
 // router.get("/sessions", checkAuth(), authController.getSessions);
 router.post("/logout", checkAuth(), AuthController.logoutUser);
+router.post("/logout/all", checkAuth(), AuthController.logoutAllSession);
 
 // router.get("/login/google", authController.googleLogin);
 // router.get("/google/success", authController.googleLoginSuccess);

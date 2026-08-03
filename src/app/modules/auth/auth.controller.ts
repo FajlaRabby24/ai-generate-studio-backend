@@ -76,6 +76,29 @@ const logoutUser = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, status.OK, true, "Logged out successfully", null);
 });
 
+// * logout all session
+const logoutAllSession = catchAsync(async (req: Request, res: Response) => {
+  const { id: userId } = req.user as IRequestUser;
+  if (!userId) {
+    return sendResponse(res, status.UNAUTHORIZED, false, "Unauthorized");
+  }
+  const token = cookieUtils.getCookie(req, betterAuthSessionCookieName);
+  if (!token) throw new Error("Session token not found");
+
+  const result = await AuthService.logoutAllSession(userId, token as string);
+  if (!result) {
+    return sendResponse(res, status.NOT_FOUND, false, "Session not found!");
+  }
+
+  sendResponse(
+    res,
+    status.OK,
+    true,
+    "Logged out from other sessions successfully",
+    null,
+  );
+});
+
 // * get generation left count
 const getGenerationLeftCount = catchAsync(
   async (req: Request, res: Response) => {
@@ -110,6 +133,7 @@ const getGenerationLeftCount = catchAsync(
 export const AuthController = {
   registerUser,
   loginUser,
+  logoutAllSession,
   getMe,
   updateProfile,
   logoutUser,
