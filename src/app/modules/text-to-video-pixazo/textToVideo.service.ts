@@ -1,6 +1,7 @@
 import {
   GenerationStatus,
   GenerationType,
+  NotificationType,
 } from "../../../generated/prisma/enums";
 import { envVars } from "../../config/env";
 import { prisma } from "../../lib/prisma";
@@ -112,6 +113,16 @@ const updateVideoStatusFromWebhook = async (payload: {
         },
       },
     });
+    // Create success notification
+    await prisma.notification.create({
+      data: {
+        userId: generation.userId,
+        title: "Video Generation Success",
+        message: `Your generated video for prompt: "${generation.prompt.substring(0, 60)}..." is ready!`,
+        type: NotificationType.SYSTEM,
+      },
+    });
+
     return true;
   } else {
     // Update generation status to failed
@@ -122,6 +133,16 @@ const updateVideoStatusFromWebhook = async (payload: {
         outputUrls: error || "Generation failed",
       },
     });
+    // Create failure notification
+    await prisma.notification.create({
+      data: {
+        userId: generation.userId,
+        title: "Video Generation Failed",
+        message: `Your video generation request for prompt: "${generation.prompt.substring(0, 60)}..." failed. Error: ${error || "Unknown error"}.`,
+        type: NotificationType.ALERT,
+      },
+    });
+
     return false;
   }
 };
