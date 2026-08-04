@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "user" ALTER COLUMN "imageToVideo" SET DEFAULT 1,
+ALTER COLUMN "textToImage" SET DEFAULT 2,
+ALTER COLUMN "textToVideo" SET DEFAULT 1;

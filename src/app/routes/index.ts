@@ -9,6 +9,7 @@ import { AuthRoutes } from "../modules/auth/auth.route";
 import { BackgroundRoutes } from "../modules/background-remover/backgroundRemover.routes";
 import { DashboardRoutes } from "../modules/dashboard/dashboard.route";
 import { HistoryRoutes } from "../modules/history/history.routes";
+import { ImageToVideoRoutes } from "../modules/image-to-video/imageToVideo.routes";
 import { NotificationRoutes } from "../modules/notification/notification.routes";
 import { PricePlanRoutes } from "../modules/pricePlan/pricePlan.routes";
 import { ResumeAnalyzerRoutes } from "../modules/resume-analyzer/resumeAnalyzer.routes";
@@ -66,6 +67,7 @@ router.use(
 );
 
 router.use("/text-to-video", TextToVideoRoutes);
+router.use("/image-to-video", ImageToVideoRoutes);
 
 router.use(
   "/text-to-video-omni",

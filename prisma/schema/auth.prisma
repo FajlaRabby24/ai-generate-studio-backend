@@ -18,7 +18,7 @@ model User {
   isDeleted        Boolean    @default(false)
   deletedAt        DateTime?
 
-  textToImage            Int @default(3)
+  textToImage            Int @default(2)
   aiChatbot              Int @default(3)
   codeChecker            Int @default(3)
   imageBackgroundRemover Int @default(3)
@@ -28,8 +28,8 @@ model User {
   grammarChecker         Int @default(3)
   textToSpeech           Int @default(3)
   speechToText           Int @default(3)
-  imageToVideo           Int @default(3)
-  textToVideo            Int @default(3)
+  imageToVideo           Int @default(1)
+  textToVideo            Int @default(1)
 
   textToImageLastRefreshAT            DateTime @default(now())
   aiChatbotLastRefreshAT              DateTime @default(now())
@@ -51,6 +51,7 @@ model User {
   chatHistories ChatHistory[]
   subscription  Subscription?
   notifications Notification[]
+  imageToVideos ImageToVideo[]
 
   @@unique([email])
   @@map("user")

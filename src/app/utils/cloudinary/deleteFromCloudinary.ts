@@ -1,6 +1,9 @@
 import cloudinary from "../../config/cloudinary.config";
 
-const DeleteFromCloudinary = async (publicId: string, resourceType: string) => {
+const DeleteFromCloudinary = async (
+  publicId: string,
+  resourceType: "image" | "video",
+) => {
   if (!publicId || !resourceType) {
     return {
       success: false,
