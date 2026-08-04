@@ -68,6 +68,7 @@
     "format": "prisma format",
     "seed:admin": "tsx ./src/app/utils/seedAdmin.ts",
     "stripe:webhook": "stripe listen --forward-to localhost:5000/api/v1/webhook",
+    "ngrok": "ngrok http --url=excluding-likely-underrate.ngrok-free.dev 5000",
     "test": "echo \"Error: no test specified\" && exit 1",
     "test:routes": "tsx ./src/app/scripts/testAllRoutes.ts"
   }

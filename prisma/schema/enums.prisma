@@ -35,10 +35,12 @@ enum GenerationType {
 }
 
 enum GenerationStatus {
+  QUEUED
   PENDING
   PROCESSING
   COMPLETED
   FAILED
+  ERROR
 }
 
 enum PaymentGateway {

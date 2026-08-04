@@ -7,6 +7,7 @@ import { prisma } from "../../lib/prisma";
 import type {
   IGenerateTextToVideo,
   IJson2VideoProjectResponse,
+  IWebhookResponse,
 } from "./textToVideo.types";
 
 const generateTextToVideo = async (
@@ -27,12 +28,38 @@ const generateTextToVideo = async (
   const webhookUrl =
     "https://your-ngrok-subdomain.ngrok-free.app/api/v1/text-to-video/webhook";
   const url = "https://api.json2video.com/v2/movies";
+
+  /**
+   * "exports": [
+    {
+      "destinations": [
+        {
+          "type": "webhook",
+          "endpoint": "https://your-app.example/json2video-callback"
+        }
+      ]
+    }
+  ],
+   */
+
+  const myAppUrl = "";
+
   const movieData = {
     comment: "Text to video generation for Ai Generate Studio",
     width,
     height,
     fps,
-    webhook: webhookUrl,
+    // webhook: webhookUrl,
+    exports: [
+      {
+        destinations: [
+          {
+            type: "webhook",
+            endpoint: myAppUrl,
+          },
+        ],
+      },
+    ],
     scenes: [
       {
         duration,
@@ -78,22 +105,24 @@ const generateTextToVideo = async (
   return project.project;
 };
 
-const updateVideoStatusFromWebhook = async (webhookPayload: any) => {
-  const { project, movie } = webhookPayload;
+const updateVideoStatusFromWebhook = async (
+  webhookPayload: IWebhookResponse,
+) => {
+  const { project, status, url } = webhookPayload;
 
   console.log(
-    `[Webhook Event Received] Project: ${project}, Status: ${movie?.status}`,
+    `[Webhook Event Received] Project: ${project}, Status: ${status}`,
   );
 
-  if (movie?.status === "done") {
+  if (status === "done") {
     return await prisma.generation.updateMany({
       where: { projectId: project },
       data: {
-        outputUrls: movie.url,
+        outputUrls: url,
         status: GenerationStatus.COMPLETED,
       },
     });
-  } else if (movie?.status === "error") {
+  } else if (status === "error") {
     return await prisma.generation.updateMany({
       where: { projectId: project },
       data: {

@@ -1,0 +1,132 @@
+import {
+  GenerationStatus,
+  GenerationType,
+} from "../../../generated/prisma/enums";
+import { envVars } from "../../config/env";
+import { prisma } from "../../lib/prisma";
+
+const textToVideoGeneratePixazo = async (
+  userId: string,
+  prompt: string,
+  aspectRatio?: string,
+  numFrames?: number,
+  frameRate?: number,
+) => {
+  const webhookUrl = `${envVars.BACKEND_SERVER_URL}/api/v1/text-to-video/webhook/callback`;
+  const url = "https://gateway.pixazo.ai/ltx-video/v1/text-to-video";
+  const headers = {
+    "Content-Type": "application/json",
+    "Ocp-Apim-Subscription-Key": envVars.PIXAZO_SUBSCRIPTION_KEY || "",
+    "X-Webhook-URL": webhookUrl,
+    "X-Webhook-Mode": "sync",
+  };
+  const data = {
+    prompt: prompt,
+    aspect: aspectRatio,
+    num_frames: numFrames,
+    frame_rate: frameRate,
+    enhance_prompt: true,
+  };
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    throw new Error(`Pixazo API request failed: ${res.statusText}`);
+  }
+
+  const responseJson = (await res.json()) as {
+    request_id?: string;
+    status?: string;
+    polling_url?: string;
+  };
+
+  // Save the queued generation record in database
+  if (responseJson && responseJson.request_id) {
+    await prisma.generation.create({
+      data: {
+        userId,
+        type: GenerationType.TEXT_TO_VIDEO,
+        status: GenerationStatus.QUEUED,
+        prompt,
+        requestId: responseJson.request_id,
+        outputUrls: "", // placeholder until webhook/polling completes
+      },
+    });
+  }
+
+  return responseJson;
+};
+
+// * webhook
+const updateVideoStatusFromWebhook = async (payload: {
+  request_id: string;
+  status: string;
+  output?: {
+    media_url: string[];
+    media_type: string;
+  };
+  error?: string | null;
+}) => {
+  const { request_id, status, output, error } = payload;
+
+  // 1. Locate the generation record by requestId
+  const generation = await prisma.generation.findFirst({
+    where: { requestId: request_id },
+  });
+
+  if (!generation) {
+    throw new Error(
+      `Generation log with requestId: ${request_id} not found in database.`,
+    );
+  }
+
+  // 2. Handle completed vs failed statuses
+  if (
+    status === GenerationStatus.COMPLETED &&
+    output?.media_url &&
+    output.media_url[0]
+  ) {
+    const videoUrl = output.media_url[0];
+    let secureUrl = videoUrl;
+
+    // Update generation state to completed
+    await prisma.generation.update({
+      where: { id: generation.id },
+      data: {
+        status: GenerationStatus.COMPLETED,
+        outputUrls: secureUrl,
+      },
+    });
+
+    // Deduct user limits for the successful generation
+    await prisma.user.update({
+      where: { id: generation.userId },
+      data: {
+        textToVideoLastRefreshAT: new Date(),
+        textToVideo: {
+          decrement: 1,
+        },
+      },
+    });
+    return true;
+  } else {
+    // Update generation status to failed
+    await prisma.generation.update({
+      where: { id: generation.id },
+      data: {
+        status: GenerationStatus.FAILED,
+        outputUrls: error || "Generation failed",
+      },
+    });
+    return false;
+  }
+};
+
+export const TextToVideoService = {
+  textToVideoGeneratePixazo,
+  updateVideoStatusFromWebhook,
+};

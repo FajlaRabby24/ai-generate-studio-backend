@@ -35,4 +35,9 @@ export const envVars = {
   ADMIN_NAME: process.env.ADMIN_NAME as string,
   ADMIN_EMAIL: process.env.ADMIN_EMAIL as string,
   ADMIN_PASSWORD: process.env.ADMIN_PASSWORD as string,
+
+  // pixazo
+  PIXAZO_SUBSCRIPTION_KEY: process.env.PIXAZO_SUBSCRIPTION_KEY as string,
+
+  BACKEND_SERVER_URL: process.env.BACKEND_SERVER_URL as string,
 };

@@ -7,8 +7,8 @@ import helmet from "helmet";
 import { auth } from "./app/lib/auth";
 import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
 import { notFound } from "./app/middleware/notFound";
-import { indexRoute } from "./app/routes";
 import { WebhookRoutes } from "./app/modules/webhook/webhook.route";
+import { indexRoute } from "./app/routes";
 import { rateLimiters } from "./app/utils/rate-limit";
 
 const app: Application = express();
@@ -43,7 +43,7 @@ app.use(cookieParser());
 app.use("/api/v1", indexRoute);
 
 app.get("/", (_: Request, res: Response) => {
-  res.send("AI Generate Studio Server is running!");
+  res.send("AI Generate Studio Server is running");
 });
 
 app.use(globalErrorHandler);
