@@ -63,7 +63,48 @@ const streamChatResponse = catchAsync(async (req: Request, res: Response) => {
   );
 });
 
+const getConversationChatsController = catchAsync(
+  async (req: Request, res: Response) => {
+    const { conversationId } = req.params;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return sendResponse(
+        res,
+        status.UNAUTHORIZED,
+        false,
+        "Unauthorized: User not found in request context",
+        null,
+      );
+    }
+
+    if (!conversationId) {
+      return sendResponse(
+        res,
+        status.BAD_REQUEST,
+        false,
+        "Conversation ID is required",
+        null,
+      );
+    }
+
+    const conversation = await AiChatBot.getConversationChats(
+      userId,
+      conversationId as string,
+    );
+
+    sendResponse(
+      res,
+      status.OK,
+      true,
+      "Chats retrieved successfully",
+      conversation,
+    );
+  },
+);
+
 export const AiChatBotController = {
   chatResponse,
   streamChatResponse,
+  getConversationChatsController,
 };

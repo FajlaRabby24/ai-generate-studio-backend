@@ -23,4 +23,10 @@ router.post(
   AiChatBotController.streamChatResponse,
 );
 
+router.get(
+  "/conversations/:conversationId",
+  checkAuth(),
+  AiChatBotController.getConversationChatsController,
+);
+
 export const AiChatBotRoutes = router;

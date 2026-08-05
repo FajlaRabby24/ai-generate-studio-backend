@@ -274,7 +274,33 @@ export const StreamChatbotService = async (
   });
 };
 
+const getConversationChats = async (userId: string, conversationId: string) => {
+  const conversation = await prisma.aIChat.findFirst({
+    where: {
+      id: conversationId,
+      generated: {
+        userId,
+        isDeleted: false,
+      },
+    },
+    select: {
+      id: true,
+      title: true,
+      chatHistory: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+
+  if (!conversation) {
+    throw new Error("Conversation not found");
+  }
+
+  return conversation;
+};
+
 export const AiChatBot = {
   ChatbotService,
   StreamChatbotService,
+  getConversationChats,
 };
