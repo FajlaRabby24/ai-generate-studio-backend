@@ -40,4 +40,6 @@ export const envVars = {
   PIXAZO_SUBSCRIPTION_KEY: process.env.PIXAZO_SUBSCRIPTION_KEY as string,
 
   BACKEND_SERVER_URL: process.env.BACKEND_SERVER_URL as string,
+
+  GROQ_API_KEY: process.env.GROQ_API_KEY as string,
 };

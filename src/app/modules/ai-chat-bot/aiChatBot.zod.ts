@@ -17,6 +17,23 @@ const chatValidationSchema = z.object({
   }),
 });
 
+const streamChatValidationSchema = z.object({
+  message: z
+    .string({
+      error: "Message is required and must be a string",
+    })
+    .min(1, "Message cannot be empty"),
+  conversationId: z
+    .string({
+      error: "conversationId is required and must be a string",
+    })
+    .optional(),
+  type: z.nativeEnum(GenerationType, {
+    error: "Invalid generation type",
+  }),
+});
+
 export const AiChatBotValidation = {
   chatValidationSchema,
+  streamChatValidationSchema,
 };

@@ -1,9 +1,7 @@
 import type { Request, Response } from "express";
 import { Router } from "express";
 import status from "http-status";
-import { GenerationType } from "../../generated/prisma/enums";
 import { checkAuth } from "../middleware/checkAuth";
-import { checkGenerateAuth } from "../middleware/checkGenerateAuth";
 import { AiChatBotRoutes } from "../modules/ai-chat-bot/aiChatBot.routes";
 import { AuthRoutes } from "../modules/auth/auth.route";
 import { BackgroundRoutes } from "../modules/background-remover/backgroundRemover.routes";
@@ -36,12 +34,7 @@ router.use(
   checkAuth(),
   TextToImageRoutes,
 );
-router.use(
-  "/ai-chat-bot",
-  rateLimiters.generationLimiter,
-  checkAuth(),
-  AiChatBotRoutes,
-);
+router.use("/ai-chat-bot", rateLimiters.generationLimiter, AiChatBotRoutes);
 
 router.use(
   "/background-remove",
@@ -52,8 +45,6 @@ router.use(
 router.use(
   "/resume-analyzer",
   rateLimiters.generationLimiter,
-  checkAuth(),
-  checkGenerateAuth(GenerationType.RESUME_ANALYZER),
   ResumeAnalyzerRoutes,
 );
 

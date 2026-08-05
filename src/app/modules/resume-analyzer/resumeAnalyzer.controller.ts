@@ -40,6 +40,45 @@ const resumeAnalyzer = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, status.OK, true, "Resume analyzed successfully", result);
 });
 
+const analyzeResumeWithGroqController = catchAsync(
+  async (req: Request, res: Response) => {
+    const pdfBuffer = req.file?.buffer;
+    const userId = req.user?.id;
+    const { prompt, isGenerateResume } = req.body;
+
+    if (!pdfBuffer) {
+      return sendResponse(
+        res,
+        status.BAD_REQUEST,
+        false,
+        "No PDF file uploaded.",
+      );
+    }
+
+    if (!userId) {
+      return sendResponse(
+        res,
+        status.UNAUTHORIZED,
+        false,
+        "Authorization token is required.",
+      );
+    }
+
+    const parser = new PDFParse({ data: pdfBuffer });
+    const parseResult = (await parser.getText()).text;
+
+    const result = await ResumeAnalyzerService.analyzeResumeWithGroq(
+      userId,
+      parseResult,
+      prompt,
+      Boolean(isGenerateResume),
+    );
+
+    sendResponse(res, status.OK, true, "Resume analyzed successfully", result);
+  },
+);
+
 export const ResumeAnalyzer = {
   resumeAnalyzer,
+  analyzeResumeWithGroqController,
 };

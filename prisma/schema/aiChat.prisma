@@ -1,10 +1,9 @@
 model AIChat {
     id          String           @id @default(uuid())
+    title       String?
     generatedId String
     status      GenerationStatus @default(PENDING)
-    input       String
-    output      String
-    chatHistory String[] //chat history
+    chatHistory Json[] //chat history
     createdAt   DateTime         @default(now())
     updatedAt   DateTime         @updatedAt
 
