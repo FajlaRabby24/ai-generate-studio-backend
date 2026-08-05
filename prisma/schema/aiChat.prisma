@@ -1,17 +1,14 @@
-model ImageToVideo {
+model AIChat {
     id          String           @id @default(uuid())
     generatedId String
     status      GenerationStatus @default(PENDING)
-    prompt      String
-    imageUrl    String
-    requestId   String
-    outputUrls  String
-    isPublic    Boolean          @default(true)
-    isFeatured  Boolean          @default(false)
+    input       String
+    output      String
+    chatHistory String[] //chat history
     createdAt   DateTime         @default(now())
     updatedAt   DateTime         @updatedAt
 
     generated Generated @relation(fields: [generatedId], references: [id], onDelete: Cascade)
 
-    @@map("image_to_video")
+    @@map("ai_chat")
 }

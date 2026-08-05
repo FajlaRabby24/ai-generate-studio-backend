@@ -48,10 +48,8 @@ model User {
   payments      Payment[]
   sessions      Session[]
   accounts      Account[]
-  chatHistories ChatHistory[]
   subscription  Subscription?
   notifications Notification[]
-  imageToVideos ImageToVideo[]
   generateds    Generated[]
 
   @@unique([email])

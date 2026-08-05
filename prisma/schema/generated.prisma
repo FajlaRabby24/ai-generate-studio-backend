@@ -8,6 +8,10 @@ model Generated {
 
     user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
     backgroundRemoves BackgroundRemove[]
+    imageToVideos     ImageToVideo[]
+    aichats           AIChat[]
+    textToVideos      TextToVideo[]
+    textToImages      TextToImage[]
 
     @@map("generated")
 }

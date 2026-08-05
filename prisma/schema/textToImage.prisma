@@ -1,10 +1,8 @@
-model ImageToVideo {
+model TextToImage {
     id          String           @id @default(uuid())
     generatedId String
     status      GenerationStatus @default(PENDING)
     prompt      String
-    imageUrl    String
-    requestId   String
     outputUrls  String
     isPublic    Boolean          @default(true)
     isFeatured  Boolean          @default(false)
@@ -13,5 +11,5 @@ model ImageToVideo {
 
     generated Generated @relation(fields: [generatedId], references: [id], onDelete: Cascade)
 
-    @@map("image_to_video")
+    @@map("text_to_image")
 }
