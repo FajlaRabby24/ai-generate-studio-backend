@@ -299,8 +299,31 @@ const getConversationChats = async (userId: string, conversationId: string) => {
   return conversation;
 };
 
+const getUserConversations = async (userId: string) => {
+  const conversations = await prisma.aIChat.findMany({
+    where: {
+      generated: {
+        userId,
+        isDeleted: false,
+      },
+    },
+    select: {
+      id: true,
+      title: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return conversations;
+};
+
 export const AiChatBot = {
   ChatbotService,
   StreamChatbotService,
   getConversationChats,
+  getUserConversations,
 };

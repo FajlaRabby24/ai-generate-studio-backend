@@ -24,6 +24,12 @@ router.post(
 );
 
 router.get(
+  "/conversations",
+  checkAuth(),
+  AiChatBotController.getUserConversationsController,
+);
+
+router.get(
   "/conversations/:conversationId",
   checkAuth(),
   AiChatBotController.getConversationChatsController,

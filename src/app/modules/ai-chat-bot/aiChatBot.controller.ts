@@ -103,8 +103,35 @@ const getConversationChatsController = catchAsync(
   },
 );
 
+const getUserConversationsController = catchAsync(
+  async (req: Request, res: Response) => {
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return sendResponse(
+        res,
+        status.UNAUTHORIZED,
+        false,
+        "Unauthorized: User not found in request context",
+        null,
+      );
+    }
+
+    const conversations = await AiChatBot.getUserConversations(userId);
+
+    sendResponse(
+      res,
+      status.OK,
+      true,
+      "Conversations retrieved successfully",
+      conversations,
+    );
+  },
+);
+
 export const AiChatBotController = {
   chatResponse,
   streamChatResponse,
   getConversationChatsController,
+  getUserConversationsController,
 };
