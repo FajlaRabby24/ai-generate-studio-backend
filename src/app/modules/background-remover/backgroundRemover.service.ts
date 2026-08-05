@@ -47,15 +47,32 @@ const removeBackground = async (
 
   setImmediate(() => {
     (async () => {
-      await prisma.generation.create({
-        data: {
-          outputUrls: secureUrl,
-          type: GenerationType.IMAGE_BACKGROUND_REMOVER,
-          prompt: "Remove background from uploaded image",
-          userId,
-          status: GenerationStatus.COMPLETED,
-        },
-      });
+      try {
+        let inputImageUrl = "";
+        try {
+          const inputUpload = await CloudinaryImageUpload(fileBuffer);
+          if (inputUpload.success && inputUpload.secureUrl) {
+            inputImageUrl = inputUpload.secureUrl;
+          }
+        } catch (err) {
+          console.warn("Failed to upload input image reference to Cloudinary:", err);
+        }
+
+        const generated = await prisma.generated.create({
+          data: {
+            userId,
+            type: GenerationType.IMAGE_BACKGROUND_REMOVER,
+          },
+        });
+
+        await prisma.backgroundRemove.create({
+          data: {
+            generatedId: generated.id,
+            status: GenerationStatus.COMPLETED,
+            imageUrl: inputImageUrl,
+            outputUrls: secureUrl,
+          },
+        });
 
       await prisma.user.update({
         where: { id: userId },
@@ -65,6 +82,9 @@ const removeBackground = async (
           },
         },
       });
+      } catch (error) {
+        console.error("[Background BG Remover Job Error]:", error);
+      }
     })();
   });
 

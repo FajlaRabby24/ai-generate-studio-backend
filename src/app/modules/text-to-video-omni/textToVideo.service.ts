@@ -40,13 +40,20 @@ const textToVideoOmni = async (
     (async () => {
       try {
         // Create history log
-        await prisma.generation.create({
+        const generated = await prisma.generated.create({
           data: {
-            outputUrls: uploadVideo.secureUrl,
-            type: GenerationType.TEXT_TO_VIDEO,
-            prompt,
             userId,
+            type: GenerationType.TEXT_TO_VIDEO,
+          },
+        });
+
+        await prisma.textToVideo.create({
+          data: {
+            generatedId: generated.id,
             status: GenerationStatus.COMPLETED,
+            prompt,
+            requestId: "sync-omni",
+            outputUrl: uploadVideo.secureUrl,
           },
         });
 

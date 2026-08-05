@@ -5,7 +5,7 @@ model ImageToVideo {
     prompt      String
     imageUrl    String
     requestId   String
-    outputUrls  String
+    outputUrl   String
     isPublic    Boolean          @default(true)
     isFeatured  Boolean          @default(false)
     createdAt   DateTime         @default(now())
@@ -15,3 +15,12 @@ model ImageToVideo {
 
     @@map("image_to_video")
 }
+
+/**
+ * [{"id":"bd9d7994-e1ea-40f7-8a85-0eedf7050c11","prompt":"The character jumps and celebrates with raised arms, hair bouncing slightly, cheerful energetic movement","userId":"fLsuh5cDuH3w6Hna3jV6SHWqMUcI9bQM","createdAt":"2026-08-04 15:11:22.586"},{"id":"a1de3c68-fc8f-44e2-95fc-a3b9c1ed5c8b","prompt":"The character jumps and celebrates with raised arms, hair bouncing slightly, cheerful energetic movement","userId":"fLsuh5cDuH3w6Hna3jV6SHWqMUcI9bQM","createdAt":"2026-08-05 02:05:45.133"}]
+ */
+
+// * users
+// [{"id":"zYK7T3EJIIHTCkREX0w7J6caU9LovNP4","email":"user1@gmail.com"},
+// {"id":"CPPv5ky4lxtwjP5Q5NREL64CYuTET8qC","email":"aigeneratestudio@gmail.com"},
+// {"id":"fLsuh5cDuH3w6Hna3jV6SHWqMUcI9bQM","email":"fajlarabby.dev@gmail.com"}]

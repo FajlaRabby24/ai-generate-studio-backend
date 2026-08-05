@@ -89,14 +89,20 @@ const generateTextToVideo = async (
     throw new Error("Failed to generate video");
   }
 
-  await prisma.generation.create({
+  const generated = await prisma.generated.create({
     data: {
-      projectId: project.project,
-      type: GenerationType.TEXT_TO_VIDEO,
-      prompt,
       userId,
+      type: GenerationType.TEXT_TO_VIDEO,
+    },
+  });
+
+  await prisma.textToVideo.create({
+    data: {
+      generatedId: generated.id,
+      requestId: project.project,
       status: GenerationStatus.PENDING,
-      outputUrls: "",
+      prompt,
+      outputUrl: "",
     },
   });
 
@@ -115,16 +121,16 @@ const updateVideoStatusFromWebhook = async (
   );
 
   if (status === "done") {
-    return await prisma.generation.updateMany({
-      where: { projectId: project },
+    return await prisma.textToVideo.updateMany({
+      where: { requestId: project },
       data: {
-        outputUrls: url,
+        outputUrl: url,
         status: GenerationStatus.COMPLETED,
       },
     });
   } else if (status === "error") {
-    return await prisma.generation.updateMany({
-      where: { projectId: project },
+    return await prisma.textToVideo.updateMany({
+      where: { requestId: project },
       data: {
         status: GenerationStatus.FAILED,
       },

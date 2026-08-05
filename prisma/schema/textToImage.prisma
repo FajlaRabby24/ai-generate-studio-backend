@@ -3,7 +3,7 @@ model TextToImage {
     generatedId String
     status      GenerationStatus @default(PENDING)
     prompt      String
-    outputUrls  String
+    outputUrl   String
     isPublic    Boolean          @default(true)
     isFeatured  Boolean          @default(false)
     createdAt   DateTime         @default(now())

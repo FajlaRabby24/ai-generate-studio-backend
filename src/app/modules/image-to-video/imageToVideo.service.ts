@@ -66,15 +66,21 @@ const imageToVideo = async (
 
   // 3. Save the queued generation record in database
   if (responseJson && responseJson.request_id) {
-    await prisma.imageToVideo.create({
+    const generated = await prisma.generated.create({
       data: {
         userId,
         type: GenerationType.IMAGE_TO_VIDEO,
+      },
+    });
+
+    await prisma.imageToVideo.create({
+      data: {
+        generatedId: generated.id,
         status: GenerationStatus.QUEUED,
         prompt,
         imageUrl,
         requestId: responseJson.request_id,
-        outputUrls: "", // placeholder until webhook/polling completes
+        outputUrl: "", // placeholder until webhook/polling completes
       },
     });
   }
@@ -96,6 +102,7 @@ const updateVideoStatusFromWebhook = async (payload: {
 
   const generation = await prisma.imageToVideo.findFirst({
     where: { requestId: request_id },
+    include: { generated: true },
   });
 
   if (!generation) {
@@ -118,13 +125,13 @@ const updateVideoStatusFromWebhook = async (payload: {
       where: { id: generation.id },
       data: {
         status: GenerationStatus.COMPLETED,
-        outputUrls: secureUrl,
+        outputUrl: secureUrl,
       },
     });
 
     // Decrement user credit limit
     await prisma.user.update({
-      where: { id: generation.userId },
+      where: { id: generation.generated.userId },
       data: {
         imageToVideoLastRefreshAT: new Date(),
         imageToVideo: {
@@ -136,7 +143,7 @@ const updateVideoStatusFromWebhook = async (payload: {
     // Create success notification
     await prisma.notification.create({
       data: {
-        userId: generation.userId,
+        userId: generation.generated.userId,
         title: "Image to Video Success",
         message: `Your image-to-video generation for prompt: "${generation.prompt.substring(0, 60)}..." is ready!`,
         type: NotificationType.SYSTEM,
@@ -150,14 +157,14 @@ const updateVideoStatusFromWebhook = async (payload: {
       where: { id: generation.id },
       data: {
         status: GenerationStatus.FAILED,
-        outputUrls: error || "Generation failed",
+        outputUrl: error || "Generation failed",
       },
     });
 
     // Create failure notification
     await prisma.notification.create({
       data: {
-        userId: generation.userId,
+        userId: generation.generated.userId,
         title: "Image to Video Failed",
         message: `Your image-to-video generation request for prompt: "${generation.prompt.substring(0, 60)}..." failed. Error: ${error || "Unknown error"}.`,
         type: NotificationType.ALERT,

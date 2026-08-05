@@ -25,14 +25,20 @@ const ChatbotService = async (
   setImmediate(() => {
     (async () => {
       try {
-        await prisma.generation.create({
+        const generated = await prisma.generated.create({
           data: {
-            outputUrls: responseText,
-            type: GenerationType.AI_CHATBOT,
-            prompt: userMessage,
             userId,
-            isPublic: true,
+            type: GenerationType.AI_CHATBOT,
+          },
+        });
+
+        await prisma.aIChat.create({
+          data: {
+            generatedId: generated.id,
             status: GenerationStatus.COMPLETED,
+            input: userMessage,
+            output: responseText,
+            chatHistory: chatHistory.map(item => typeof item === 'object' ? JSON.stringify(item) : String(item)),
           },
         });
 

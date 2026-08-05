@@ -25,9 +25,9 @@ const GenerateTextToImage = async (
 
   const arrayBuffer = await (blob as any).arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
-  const base64Image = `data:image/png;base64,${buffer.toString("base64")}`;
+  // const base64Image = `data:image/png;base64,${buffer.toString("base64")}`;
 
-  const uploadImage = await CloudinaryImageUpload(base64Image);
+  const uploadImage = await CloudinaryImageUpload(buffer);
   if (!uploadImage.success || !uploadImage.secureUrl) {
     throw new Error("Failed to upload text-to-image result to Cloudinary");
   }
@@ -37,13 +37,19 @@ const GenerateTextToImage = async (
     (async () => {
       try {
         // generate history
-        await prisma.generation.create({
+        const generated = await prisma.generated.create({
           data: {
-            outputUrls: uploadImage.secureUrl,
-            type: GenerationType.TEXT_TO_IMAGE,
-            prompt,
             userId,
+            type: GenerationType.TEXT_TO_IMAGE,
+          },
+        });
+
+        await prisma.textToImage.create({
+          data: {
+            generatedId: generated.id,
             status: GenerationStatus.COMPLETED,
+            prompt,
+            outputUrl: uploadImage.secureUrl,
           },
         });
 

@@ -1,5 +1,5 @@
 import status from "http-status";
-import { GenerationType } from "../../../generated/prisma/enums";
+import { GenerationStatus } from "../../../generated/prisma/enums";
 import { AppError } from "../../errors/AppError";
 import { prisma } from "../../lib/prisma";
 
@@ -16,10 +16,57 @@ const userDashboardStats = async (userId: string) => {
   }
 
   // Get recent generations (last 5)
-  const recentGenerations = await prisma.generation.findMany({
-    where: { userId, isDeleted: false, type: GenerationType.TEXT_TO_IMAGE },
+  const rawRecentGenerations = await prisma.generated.findMany({
+    where: { userId, isDeleted: false },
+    include: {
+      textToImages: true,
+      textToVideos: true,
+      backgroundRemoves: true,
+      imageToVideos: true,
+      aichats: true,
+    },
     orderBy: { createdAt: "desc" },
     take: 5,
+  });
+
+  const recentGenerations = rawRecentGenerations.map((item: any) => {
+    let prompt = "";
+    let outputUrls = "";
+    let status = GenerationStatus.COMPLETED;
+
+    if (item.textToImages && item.textToImages[0]) {
+      prompt = item.textToImages[0].prompt;
+      outputUrls = item.textToImages[0].outputUrls;
+      status = item.textToImages[0].status;
+    } else if (item.textToVideos && item.textToVideos[0]) {
+      prompt = item.textToVideos[0].prompt;
+      outputUrls = item.textToVideos[0].outputUrls;
+      status = item.textToVideos[0].status;
+    } else if (item.backgroundRemoves && item.backgroundRemoves[0]) {
+      prompt = "Remove background from uploaded image";
+      outputUrls = item.backgroundRemoves[0].outputUrls;
+      status = item.backgroundRemoves[0].status;
+    } else if (item.imageToVideos && item.imageToVideos[0]) {
+      prompt = item.imageToVideos[0].prompt;
+      outputUrls = item.imageToVideos[0].outputUrls;
+      status = item.imageToVideos[0].status;
+    } else if (item.aichats && item.aichats[0]) {
+      prompt = item.aichats[0].input;
+      outputUrls = item.aichats[0].output;
+      status = item.aichats[0].status;
+    }
+
+    return {
+      id: item.id,
+      userId: item.userId,
+      type: item.type,
+      isDeleted: item.isDeleted,
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
+      prompt,
+      outputUrls,
+      status,
+    };
   });
 
   // Calculate activity data for the last 7 days
@@ -48,7 +95,7 @@ const userDashboardStats = async (userId: string) => {
       999,
     );
 
-    const count = await prisma.generation.count({
+    const count = await prisma.generated.count({
       where: {
         userId,
         createdAt: {

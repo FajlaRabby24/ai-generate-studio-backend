@@ -4,7 +4,7 @@ model TextToVideo {
     status      GenerationStatus @default(PENDING)
     prompt      String
     requestId   String
-    outputUrls  String
+    outputUrl   String
     isPublic    Boolean          @default(true)
     isFeatured  Boolean          @default(false)
     createdAt   DateTime         @default(now())
