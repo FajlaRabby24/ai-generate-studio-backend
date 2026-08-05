@@ -7,7 +7,7 @@ import { ResumeAnalyzerService } from "./resumeAnalyzer.service";
 
 const resumeAnalyzer = catchAsync(async (req: Request, res: Response) => {
   const pdfBuffer = req.file?.buffer;
-  //   const userId = req.user?.id;
+  const userId = req.user?.id;
   const { prompt } = req.body;
 
   if (!pdfBuffer) {
@@ -19,14 +19,14 @@ const resumeAnalyzer = catchAsync(async (req: Request, res: Response) => {
     );
   }
 
-  //   if (!userId) {
-  //     return sendResponse(
-  //       res,
-  //       status.UNAUTHORIZED,
-  //       false,
-  //       "Authorization token is required.",
-  //     );
-  //   }
+  if (!userId) {
+    return sendResponse(
+      res,
+      status.UNAUTHORIZED,
+      false,
+      "Authorization token is required.",
+    );
+  }
 
   const parser = new PDFParse({ data: pdfBuffer });
   const parseResult = (await parser.getText()).text;

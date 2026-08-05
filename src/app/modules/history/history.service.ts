@@ -17,6 +17,7 @@ const getMyHistoryFromDB = async (
         { textToVideos: { some: { prompt: { contains: searchTerm, mode: "insensitive" } } } },
         { imageToVideos: { some: { prompt: { contains: searchTerm, mode: "insensitive" } } } },
         { aichats: { some: { input: { contains: searchTerm, mode: "insensitive" } } } },
+        { resumeAnalyzers: { some: { summary: { contains: searchTerm, mode: "insensitive" } } } },
       ],
     });
   }
@@ -40,6 +41,7 @@ const getMyHistoryFromDB = async (
     backgroundRemoves: true,
     imageToVideos: true,
     aichats: true,
+    resumeAnalyzers: true,
   });
 
   const result = await historyQuery.execute();
@@ -53,11 +55,11 @@ const getMyHistoryFromDB = async (
 
     if (item.textToImages && item.textToImages[0]) {
       prompt = item.textToImages[0].prompt;
-      outputUrls = item.textToImages[0].outputUrls;
+      outputUrls = item.textToImages[0].outputUrl;
       status = item.textToImages[0].status;
     } else if (item.textToVideos && item.textToVideos[0]) {
       prompt = item.textToVideos[0].prompt;
-      outputUrls = item.textToVideos[0].outputUrls;
+      outputUrls = item.textToVideos[0].outputUrl;
       status = item.textToVideos[0].status;
       requestId = item.textToVideos[0].requestId;
     } else if (item.backgroundRemoves && item.backgroundRemoves[0]) {
@@ -66,13 +68,17 @@ const getMyHistoryFromDB = async (
       status = item.backgroundRemoves[0].status;
     } else if (item.imageToVideos && item.imageToVideos[0]) {
       prompt = item.imageToVideos[0].prompt;
-      outputUrls = item.imageToVideos[0].outputUrls;
+      outputUrls = item.imageToVideos[0].outputUrl;
       status = item.imageToVideos[0].status;
       requestId = item.imageToVideos[0].requestId;
     } else if (item.aichats && item.aichats[0]) {
       prompt = item.aichats[0].input;
       outputUrls = item.aichats[0].output;
       status = item.aichats[0].status;
+    } else if (item.resumeAnalyzers && item.resumeAnalyzers[0]) {
+      prompt = "Resume analysis & review";
+      outputUrls = JSON.stringify(item.resumeAnalyzers[0]);
+      status = item.resumeAnalyzers[0].status;
     }
 
     return {

@@ -45,8 +45,6 @@ const analyzeResume = async (
           data: {
             generatedId: generated.id,
             status: GenerationStatus.COMPLETED,
-            input: prompt || "Resume analysis",
-            output: analysisResult,
             chatHistory: [],
           },
         });
@@ -177,13 +175,18 @@ export const analyzeResumeWithGroq = async (
           },
         });
 
-        await prisma.aIChat.create({
+        await prisma.resumeAnalyzer.create({
           data: {
             generatedId: generated.id,
+            atsScore: Number(result.atsScore) || 0,
+            summary: result.summary || "",
+            strengths: result.strengths || [],
+            weaknesses: result.weaknesses || [],
+            missingKeywords: result.missingKeywords || [],
+            actionableSuggestions: result.actionableSuggestions || [],
+            updatedResumeJson: result.updatedResume || null,
+            isGenerateResume,
             status: GenerationStatus.COMPLETED,
-            input: prompt || "Resume analysis with Groq",
-            output: content,
-            chatHistory: [],
           },
         });
 

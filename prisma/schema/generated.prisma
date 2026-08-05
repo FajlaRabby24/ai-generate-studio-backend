@@ -12,6 +12,7 @@ model Generated {
     aichats           AIChat[]
     textToVideos      TextToVideo[]
     textToImages      TextToImage[]
+    resumeAnalyzers   ResumeAnalyzer[]
 
     @@map("generated")
 }

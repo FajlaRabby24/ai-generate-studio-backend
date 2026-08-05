@@ -1,0 +1,24 @@
+model ResumeAnalyzer {
+    id          String @id @default(uuid())
+    generatedId String
+
+    atsScore              Int // 0 to 100
+    summary               String   @db.Text
+    strengths             String[]
+    weaknesses            String[]
+    missingKeywords       String[]
+    actionableSuggestions String[]
+
+    updatedResumeJson Json?
+
+    generatedPdfUrl  String?
+    isGenerateResume Boolean @default(false)
+
+    status    GenerationStatus @default(PENDING)
+    createdAt DateTime         @default(now())
+    updatedAt DateTime         @updatedAt
+
+    generated Generated @relation(fields: [generatedId], references: [id], onDelete: Cascade)
+
+    @@map("resume_analyzers")
+}
