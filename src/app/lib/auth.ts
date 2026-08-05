@@ -21,7 +21,7 @@ export const auth = betterAuth({
     additionalFields: {
       emailVerified: {
         type: "boolean",
-        required: true,
+        required: false,
         defaultValue: true,
       },
       phone: {
@@ -49,6 +49,6 @@ export const auth = betterAuth({
         required: false,
         defaultValue: null,
       },
-    }
-  }
+    },
+  },
 });

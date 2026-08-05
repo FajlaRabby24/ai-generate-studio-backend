@@ -6,7 +6,6 @@ model User {
   role             UserRole   @default(USER)
   plan             Plan       @default(FREE)
   planExpiresAt    DateTime? // For non-recurring payments
-  dailyCount       Int        @default(0) // resets every 24 hours
   lastResetDate    DateTime   @default(now())
   stripeCustomerId String?    @unique
   stripeSubId      String?
