@@ -46,8 +46,6 @@ router.use(
 router.use(
   "/background-remove",
   rateLimiters.generationLimiter,
-  checkAuth(),
-  checkGenerateAuth(GenerationType.IMAGE_BACKGROUND_REMOVER),
   BackgroundRoutes,
 );
 

@@ -1,0 +1,13 @@
+model Generated {
+    id        String         @id @default(uuid())
+    userId    String
+    type      GenerationType
+    isDeleted Boolean        @default(false) // soft delete
+    createdAt DateTime       @default(now())
+    updatedAt DateTime       @updatedAt
+
+    user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+    backgroundRemoves BackgroundRemove[]
+
+    @@map("generated")
+}

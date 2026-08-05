@@ -146,7 +146,7 @@ const updateVideoStatusFromWebhook = async (payload: {
     return true;
   } else {
     // Mark generation as failed in database
-    await prisma.generation.update({
+    await prisma.imageToVideo.update({
       where: { id: generation.id },
       data: {
         status: GenerationStatus.FAILED,

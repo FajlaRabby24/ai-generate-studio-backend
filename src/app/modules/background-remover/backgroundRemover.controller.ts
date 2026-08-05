@@ -32,6 +32,13 @@ const backgroundRemover = catchAsync(async (req: Request, res: Response) => {
   );
 
   sendResponse(res, status.OK, true, "Background removed successfully", result);
+  // sendResponse(
+  //   res,
+  //   status.OK,
+  //   true,
+  //   "Background removed successfully",
+  //   req.file,
+  // );
 });
 
 export const BackgroundRemover = {
