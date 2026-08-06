@@ -88,7 +88,7 @@ export const analyzeResumeWithGroq = async (
   `;
 
   const generationInstruction = `
-    You are a professional CV writer and ATS reviewer. 
+    You are a professional Resume writer and ATS reviewer. 
     Analyze the resume, provide evaluation metrics AND generate a fully improved and restructured resume dataset.
     
     Return a STRICT JSON response matching this exact structure:
@@ -167,261 +167,604 @@ export const analyzeResumeWithGroq = async (
   const result = JSON.parse(content);
 
   // ৪. ডাটাবেজ আপডেট বা সেভ লজিক (প্রয়োজন অনুযায়ী)
-  setImmediate(() => {
-    (async () => {
-      try {
-        prisma.$transaction(async (tx) => {
-          const generated = await tx.generated.create({
-            data: {
-              userId,
-              type: GenerationType.RESUME_ANALYZER,
-            },
-          });
+  let analyzerId = "";
 
-          await tx.resumeAnalyzer.create({
-            data: {
-              generatedId: generated.id,
-              atsScore: Number(result.atsScore) || 0,
-              summary: result.summary || "",
-              strengths: result.strengths || [],
-              weaknesses: result.weaknesses || [],
-              missingKeywords: result.missingKeywords || [],
-              actionableSuggestions: result.actionableSuggestions || [],
-              updatedResumeJson: result.updatedResume || null,
-              isGenerateResume,
-              status: GenerationStatus.COMPLETED,
-            },
-          });
+  try {
+    await prisma.$transaction(async (tx) => {
+      const generated = await tx.generated.create({
+        data: {
+          userId,
+          type: GenerationType.RESUME_ANALYZER,
+        },
+      });
 
-          await tx.user.update({
-            where: { id: userId },
-            data: {
-              resumeAnalyzerLastRefreshAT: new Date(),
-              resumeAnalyzer: {
-                decrement: 1,
-              },
-            },
-          });
-        });
-      } catch (dbError) {
-        throw new Error(
-          `[Background DB Error - Resume Analyzer Groq]: ${dbError}`,
-        );
-      }
-    })();
-  });
+      const resumeRecord = await tx.resumeAnalyzer.create({
+        data: {
+          generatedId: generated.id,
+          atsScore: Number(result.atsScore) || 0,
+          summary: result.summary || "",
+          strengths: result.strengths || [],
+          weaknesses: result.weaknesses || [],
+          missingKeywords: result.missingKeywords || [],
+          actionableSuggestions: result.actionableSuggestions || [],
+          updatedResumeJson: result.updatedResume || null,
+          isGenerateResume,
+          status: GenerationStatus.COMPLETED,
+        },
+      });
 
-  return result;
+      analyzerId = resumeRecord.id;
+
+      await tx.user.update({
+        where: { id: userId },
+        data: {
+          resumeAnalyzerLastRefreshAT: new Date(),
+          resumeAnalyzer: {
+            decrement: 1,
+          },
+        },
+      });
+    });
+  } catch (dbError) {
+    throw new Error(`[Database Error - Resume Analyzer Groq]: ${dbError}`);
+  }
+
+  return {
+    analyzerId,
+    ...result,
+  };
 };
 
-const buildResumePdf = (resumeData: any): Promise<Buffer> => {
+// const buildResumePdf = (resumeData: any): Promise<Buffer> => {
+//   return new Promise((resolve, reject) => {
+//     try {
+//       const doc = new PDFDocument({ margin: 40, size: "A4" });
+//       const chunks: Buffer[] = [];
+//       doc.on("data", (chunk) => chunks.push(chunk));
+//       doc.on("end", () => resolve(Buffer.concat(chunks)));
+//       doc.on("error", (err) => reject(err));
+
+//       const p = resumeData?.personalInfo || {};
+
+//       // --- Header ---
+//       if (p.fullName) {
+//         doc
+//           .fontSize(22)
+//           .font("Helvetica-Bold")
+//           .text(p.fullName, { align: "center" });
+//       }
+
+//       const contactInfo = [
+//         p.email,
+//         p.phone,
+//         p.linkedin ? `LinkedIn: ${p.linkedin}` : null,
+//         p.github ? `GitHub: ${p.github}` : null,
+//       ]
+//         .filter(Boolean)
+//         .join("  |  ");
+
+//       if (contactInfo) {
+//         doc.moveDown(0.3);
+//         doc
+//           .fontSize(10)
+//           .font("Helvetica")
+//           .text(contactInfo, { align: "center" });
+//       }
+
+//       doc.moveDown(1);
+
+//       // --- Summary ---
+//       if (p.summary) {
+//         doc.fontSize(12).font("Helvetica-Bold").text("PROFESSIONAL SUMMARY");
+//         doc
+//           .strokeColor("#cccccc")
+//           .lineWidth(1)
+//           .moveTo(40, doc.y)
+//           .lineTo(555, doc.y)
+//           .stroke();
+//         doc.moveDown(0.5);
+//         doc
+//           .fontSize(10)
+//           .font("Helvetica")
+//           .text(p.summary, { align: "justify" });
+//         doc.moveDown(1.2);
+//       }
+
+//       // --- Skills ---
+//       const s = resumeData?.skills || {};
+//       const hasTechnical = s.technical && s.technical.length > 0;
+//       const hasSoft = s.soft && s.soft.length > 0;
+//       if (hasTechnical || hasSoft) {
+//         doc.fontSize(12).font("Helvetica-Bold").text("TECHNICAL & SOFT SKILLS");
+//         doc
+//           .strokeColor("#cccccc")
+//           .lineWidth(1)
+//           .moveTo(40, doc.y)
+//           .lineTo(555, doc.y)
+//           .stroke();
+//         doc.moveDown(0.5);
+
+//         if (hasTechnical) {
+//           doc
+//             .fontSize(10)
+//             .font("Helvetica-Bold")
+//             .text("Technical Skills: ", { continued: true })
+//             .font("Helvetica")
+//             .text(s.technical.join(", "));
+//         }
+//         if (hasSoft) {
+//           doc.moveDown(0.2);
+//           doc
+//             .fontSize(10)
+//             .font("Helvetica-Bold")
+//             .text("Soft Skills: ", { continued: true })
+//             .font("Helvetica")
+//             .text(s.soft.join(", "));
+//         }
+//         doc.moveDown(1.2);
+//       }
+
+//       // --- Experience ---
+//       const exp = resumeData?.experience || [];
+//       if (exp.length > 0) {
+//         doc.fontSize(12).font("Helvetica-Bold").text("PROFESSIONAL EXPERIENCE");
+//         doc
+//           .strokeColor("#cccccc")
+//           .lineWidth(1)
+//           .moveTo(40, doc.y)
+//           .lineTo(555, doc.y)
+//           .stroke();
+//         doc.moveDown(0.5);
+
+//         exp.forEach((job: any) => {
+//           doc
+//             .fontSize(11)
+//             .font("Helvetica-Bold")
+//             .text(job.title || "", { continued: true })
+//             .font("Helvetica")
+//             .text(` at ${job.company || ""}`, { align: "left" });
+//           if (job.duration) {
+//             doc
+//               .fontSize(9)
+//               .font("Helvetica-Oblique")
+//               .text(job.duration, { align: "right" });
+//           }
+
+//           doc.moveDown(0.3);
+//           const bulletPoints = job.bulletPoints || [];
+//           bulletPoints.forEach((point: string) => {
+//             doc
+//               .fontSize(10)
+//               .font("Helvetica")
+//               .text(`• ${point}`, { indent: 10, align: "justify" });
+//           });
+//           doc.moveDown(0.8);
+//         });
+//         doc.moveDown(0.4);
+//       }
+
+//       // --- Projects ---
+//       const proj = resumeData?.projects || [];
+//       if (proj.length > 0) {
+//         doc.fontSize(12).font("Helvetica-Bold").text("PROJECTS");
+//         doc
+//           .strokeColor("#cccccc")
+//           .lineWidth(1)
+//           .moveTo(40, doc.y)
+//           .lineTo(555, doc.y)
+//           .stroke();
+//         doc.moveDown(0.5);
+
+//         proj.forEach((project: any) => {
+//           doc
+//             .fontSize(11)
+//             .font("Helvetica-Bold")
+//             .text(project.name || "");
+
+//           const projLinks = [
+//             project.liveUrl ? `Live: ${project.liveUrl}` : null,
+//             project.githubUrl ? `GitHub: ${project.githubUrl}` : null,
+//           ]
+//             .filter(Boolean)
+//             .join("  |  ");
+
+//           if (projLinks) {
+//             doc
+//               .fontSize(9)
+//               .font("Helvetica-Oblique")
+//               .text(projLinks, { align: "right" });
+//           }
+
+//           doc.moveDown(0.2);
+//           if (project.description) {
+//             doc
+//               .fontSize(10)
+//               .font("Helvetica")
+//               .text(project.description, { align: "justify" });
+//           }
+
+//           if (project.technologies && project.technologies.length > 0) {
+//             doc.moveDown(0.2);
+//             doc
+//               .fontSize(9)
+//               .font("Helvetica-Bold")
+//               .text("Technologies: ", { continued: true })
+//               .font("Helvetica")
+//               .text(project.technologies.join(", "));
+//           }
+//           doc.moveDown(0.8);
+//         });
+//         doc.moveDown(0.4);
+//       }
+
+//       // --- Education ---
+//       const edu = resumeData?.education || [];
+//       if (edu.length > 0) {
+//         doc.fontSize(12).font("Helvetica-Bold").text("EDUCATION");
+//         doc
+//           .strokeColor("#cccccc")
+//           .lineWidth(1)
+//           .moveTo(40, doc.y)
+//           .lineTo(555, doc.y)
+//           .stroke();
+//         doc.moveDown(0.5);
+
+//         edu.forEach((school: any) => {
+//           doc
+//             .fontSize(10)
+//             .font("Helvetica-Bold")
+//             .text(school.degree || "", { continued: true })
+//             .font("Helvetica")
+//             .text(` — ${school.institution || ""}`);
+//           if (school.year) {
+//             doc
+//               .fontSize(9)
+//               .font("Helvetica-Oblique")
+//               .text(school.year, { align: "right" });
+//           }
+//           doc.moveDown(0.5);
+//         });
+//       }
+
+//       doc.end();
+//     } catch (err) {
+//       reject(err);
+//     }
+//   });
+// };
+
+export const buildResumePdf = (resumeData: any): Promise<Buffer> => {
   return new Promise((resolve, reject) => {
     try {
+      // Modern Clean Margins & Modern Page Boundaries
       const doc = new PDFDocument({ margin: 40, size: "A4" });
       const chunks: Buffer[] = [];
+
       doc.on("data", (chunk) => chunks.push(chunk));
       doc.on("end", () => resolve(Buffer.concat(chunks)));
       doc.on("error", (err) => reject(err));
 
       const p = resumeData?.personalInfo || {};
 
-      // --- Header ---
+      // 🎨 Modern Color Palette
+      const PRIMARY_COLOR = "#0F172A"; // Dark Slate
+      const SECONDARY_COLOR = "#334155"; // Muted Slate
+      const TEXT_COLOR = "#1E293B"; // Dark Neutral Text
+      const LINK_COLOR = "#2563EB"; // Accent Blue
+      const LINE_COLOR = "#E2E8F0"; // Subtle Divider Gray
+
+      const PAGE_WIDTH = 515; // 595.28 (A4 Width) - 80 (Margins)
+      const LEFT_MARGIN = 40;
+
+      // -------------------------------------------------------------
+      // 1. HEADER SECTION
+      // -------------------------------------------------------------
       if (p.fullName) {
         doc
-          .fontSize(22)
+          .fillColor(PRIMARY_COLOR)
+          .fontSize(24)
           .font("Helvetica-Bold")
-          .text(p.fullName, { align: "center" });
+          .text(p.fullName, LEFT_MARGIN, 40, { align: "left" });
       }
 
-      const contactInfo = [
-        p.email,
-        p.phone,
-        p.linkedin ? `LinkedIn: ${p.linkedin}` : null,
-        p.github ? `GitHub: ${p.github}` : null,
-      ]
-        .filter(Boolean)
-        .join("  |  ");
-
-      if (contactInfo) {
-        doc.moveDown(0.3);
+      // Job Title / Subheading
+      if (p.title || p.jobTitle) {
+        doc.moveDown(0.15);
         doc
-          .fontSize(10)
-          .font("Helvetica")
-          .text(contactInfo, { align: "center" });
+          .fillColor(SECONDARY_COLOR)
+          .fontSize(13)
+          .font("Helvetica-Bold")
+          .text(p.title || p.jobTitle);
       }
 
-      doc.moveDown(1);
+      // Contact & Links (Single Line with Inline Hyperlinks)
+      const contactItems = [];
+      if (p.location) contactItems.push(p.location);
+      if (p.email) contactItems.push(p.email);
+      if (p.phone) contactItems.push(p.phone);
 
-      // --- Summary ---
-      if (p.summary) {
-        doc.fontSize(12).font("Helvetica-Bold").text("PROFESSIONAL SUMMARY");
+      doc.moveDown(0.3);
+      doc.fontSize(9.5).font("Helvetica").fillColor(TEXT_COLOR);
+
+      if (contactItems.length > 0) {
+        doc.text(contactItems.join("  |  "));
+      }
+
+      // Social Links (Clickable)
+      const links = [];
+      if (p.portfolio) links.push({ label: "Portfolio", url: p.portfolio });
+      if (p.github) links.push({ label: "GitHub", url: p.github });
+      if (p.linkedin) links.push({ label: "LinkedIn", url: p.linkedin });
+
+      if (links.length > 0) {
+        doc.moveDown(0.15);
+        let currentX = LEFT_MARGIN;
+
+        links.forEach((link, idx) => {
+          doc.fillColor(LINK_COLOR).text(link.label, currentX, doc.y, {
+            link: link.url,
+            underline: true,
+            continued: idx < links.length - 1,
+          });
+
+          if (idx < links.length - 1) {
+            currentX = doc.x;
+            doc.fillColor(TEXT_COLOR).text("  |  ", { continued: true });
+          }
+        });
+      }
+
+      doc.moveDown(1.2);
+
+      // Helper: Modern Section Header Generator
+      const createSectionHeader = (title: string) => {
+        doc.moveDown(0.4);
         doc
-          .strokeColor("#cccccc")
+          .fillColor(PRIMARY_COLOR)
+          .fontSize(12)
+          .font("Helvetica-Bold")
+          .text(title.toUpperCase());
+
+        doc
+          .strokeColor(LINE_COLOR)
           .lineWidth(1)
-          .moveTo(40, doc.y)
-          .lineTo(555, doc.y)
+          .moveTo(LEFT_MARGIN, doc.y + 2)
+          .lineTo(LEFT_MARGIN + PAGE_WIDTH, doc.y + 2)
           .stroke();
+
         doc.moveDown(0.5);
+      };
+
+      // -------------------------------------------------------------
+      // 2. PROFESSIONAL SUMMARY / OBJECTIVE
+      // -------------------------------------------------------------
+      if (p.summary) {
+        createSectionHeader("Objective");
         doc
-          .fontSize(10)
+          .fillColor(TEXT_COLOR)
+          .fontSize(9.5)
           .font("Helvetica")
-          .text(p.summary, { align: "justify" });
-        doc.moveDown(1.2);
+          .text(p.summary, { align: "justify", lineGap: 3 });
       }
 
-      // --- Skills ---
+      // -------------------------------------------------------------
+      // 3. SKILLS SECTION
+      // -------------------------------------------------------------
       const s = resumeData?.skills || {};
       const hasTechnical = s.technical && s.technical.length > 0;
+      const hasFrontend = s.frontend && s.frontend.length > 0;
+      const hasBackend = s.backend && s.backend.length > 0;
+      const hasDatabase = s.database && s.database.length > 0;
+      const hasTools = s.tools && s.tools.length > 0;
       const hasSoft = s.soft && s.soft.length > 0;
-      if (hasTechnical || hasSoft) {
-        doc.fontSize(12).font("Helvetica-Bold").text("TECHNICAL & SOFT SKILLS");
-        doc
-          .strokeColor("#cccccc")
-          .lineWidth(1)
-          .moveTo(40, doc.y)
-          .lineTo(555, doc.y)
-          .stroke();
-        doc.moveDown(0.5);
 
-        if (hasTechnical) {
+      if (
+        hasTechnical ||
+        hasFrontend ||
+        hasBackend ||
+        hasDatabase ||
+        hasTools ||
+        hasSoft
+      ) {
+        createSectionHeader("Skills");
+
+        const renderSkillLine = (label: string, items: string[]) => {
+          if (!items || items.length === 0) return;
           doc
-            .fontSize(10)
+            .fillColor(PRIMARY_COLOR)
+            .fontSize(9.5)
             .font("Helvetica-Bold")
-            .text("Technical Skills: ", { continued: true })
+            .text(`${label}: `, { continued: true })
+            .fillColor(TEXT_COLOR)
             .font("Helvetica")
-            .text(s.technical.join(", "));
-        }
-        if (hasSoft) {
-          doc.moveDown(0.2);
-          doc
-            .fontSize(10)
-            .font("Helvetica-Bold")
-            .text("Soft Skills: ", { continued: true })
-            .font("Helvetica")
-            .text(s.soft.join(", "));
-        }
-        doc.moveDown(1.2);
+            .text(items.join(", "), { lineGap: 2 });
+        };
+
+        if (hasFrontend) renderSkillLine("Frontend", s.frontend);
+        if (hasBackend) renderSkillLine("Backend", s.backend);
+        if (hasDatabase) renderSkillLine("Database", s.database);
+        if (hasTechnical) renderSkillLine("Technical", s.technical);
+        if (hasTools) renderSkillLine("Tools", s.tools);
+        if (hasSoft) renderSkillLine("Soft Skills", s.soft);
       }
 
-      // --- Experience ---
+      // -------------------------------------------------------------
+      // 4. PROFESSIONAL EXPERIENCE
+      // -------------------------------------------------------------
       const exp = resumeData?.experience || [];
       if (exp.length > 0) {
-        doc.fontSize(12).font("Helvetica-Bold").text("PROFESSIONAL EXPERIENCE");
-        doc
-          .strokeColor("#cccccc")
-          .lineWidth(1)
-          .moveTo(40, doc.y)
-          .lineTo(555, doc.y)
-          .stroke();
-        doc.moveDown(0.5);
+        createSectionHeader("Experience");
 
         exp.forEach((job: any) => {
+          const startY = doc.y;
+
+          // Left: Job Title & Company
           doc
-            .fontSize(11)
+            .fillColor(PRIMARY_COLOR)
+            .fontSize(10.5)
             .font("Helvetica-Bold")
-            .text(job.title || "", { continued: true })
+            .text(job.title || "", LEFT_MARGIN, startY, { continued: true })
+            .fillColor(SECONDARY_COLOR)
             .font("Helvetica")
-            .text(` at ${job.company || ""}`, { align: "left" });
+            .text(job.company ? `  —  ${job.company}` : "");
+
+          // Right: Duration (Same Line)
           if (job.duration) {
             doc
+              .fillColor(SECONDARY_COLOR)
               .fontSize(9)
               .font("Helvetica-Oblique")
-              .text(job.duration, { align: "right" });
+              .text(job.duration, LEFT_MARGIN, startY, {
+                align: "right",
+                width: PAGE_WIDTH,
+              });
           }
 
           doc.moveDown(0.3);
+
+          // Bullet Points
           const bulletPoints = job.bulletPoints || [];
           bulletPoints.forEach((point: string) => {
             doc
-              .fontSize(10)
+              .fillColor(TEXT_COLOR)
+              .fontSize(9.5)
               .font("Helvetica")
-              .text(`• ${point}`, { indent: 10, align: "justify" });
+              .text(`•   ${point}`, LEFT_MARGIN + 10, doc.y, {
+                width: PAGE_WIDTH - 10,
+                align: "justify",
+                lineGap: 2.5,
+              });
           });
-          doc.moveDown(0.8);
+
+          doc.moveDown(0.6);
         });
-        doc.moveDown(0.4);
       }
 
-      // --- Projects ---
+      // -------------------------------------------------------------
+      // 5. PROJECTS SECTION
+      // -------------------------------------------------------------
       const proj = resumeData?.projects || [];
       if (proj.length > 0) {
-        doc.fontSize(12).font("Helvetica-Bold").text("PROJECTS");
-        doc
-          .strokeColor("#cccccc")
-          .lineWidth(1)
-          .moveTo(40, doc.y)
-          .lineTo(555, doc.y)
-          .stroke();
-        doc.moveDown(0.5);
+        createSectionHeader("Projects");
 
         proj.forEach((project: any) => {
+          const startY = doc.y;
+
+          // Project Title
           doc
-            .fontSize(11)
+            .fillColor(PRIMARY_COLOR)
+            .fontSize(10.5)
             .font("Helvetica-Bold")
-            .text(project.name || "");
+            .text(project.name || "", LEFT_MARGIN, startY, { continued: true });
 
-          const projLinks = [
-            project.liveUrl ? `Live: ${project.liveUrl}` : null,
-            project.githubUrl ? `GitHub: ${project.githubUrl}` : null,
-          ]
-            .filter(Boolean)
-            .join("  |  ");
+          // Clickable Links Right-Aligned
+          if (project.liveUrl || project.githubUrl) {
+            let linksText = "";
+            if (project.liveUrl) linksText += "Live Link";
+            if (project.liveUrl && project.githubUrl) linksText += "  |  ";
+            if (project.githubUrl) linksText += "GitHub";
 
-          if (projLinks) {
             doc
+              .fillColor(LINK_COLOR)
               .fontSize(9)
-              .font("Helvetica-Oblique")
-              .text(projLinks, { align: "right" });
+              .font("Helvetica")
+              .text(linksText, LEFT_MARGIN, startY, {
+                align: "right",
+                width: PAGE_WIDTH,
+              });
+          } else {
+            doc.text(""); // Clear continued flag
           }
 
-          doc.moveDown(0.2);
+          doc.moveDown(0.3);
+
+          // Project Description / Bullet Points
           if (project.description) {
             doc
-              .fontSize(10)
+              .fillColor(TEXT_COLOR)
+              .fontSize(9.5)
               .font("Helvetica")
-              .text(project.description, { align: "justify" });
+              .text(project.description, LEFT_MARGIN, doc.y, {
+                align: "justify",
+                lineGap: 2.5,
+              });
+          }
+
+          if (project.bulletPoints && project.bulletPoints.length > 0) {
+            project.bulletPoints.forEach((point: string) => {
+              doc
+                .fillColor(TEXT_COLOR)
+                .fontSize(9.5)
+                .font("Helvetica")
+                .text(`•   ${point}`, LEFT_MARGIN + 10, doc.y, {
+                  width: PAGE_WIDTH - 10,
+                  lineGap: 2,
+                });
+            });
           }
 
           if (project.technologies && project.technologies.length > 0) {
-            doc.moveDown(0.2);
+            doc.moveDown(0.15);
             doc
-              .fontSize(9)
+              .fillColor(SECONDARY_COLOR)
+              .fontSize(8.5)
               .font("Helvetica-Bold")
-              .text("Technologies: ", { continued: true })
+              .text("Technologies: ", LEFT_MARGIN, doc.y, { continued: true })
               .font("Helvetica")
               .text(project.technologies.join(", "));
           }
-          doc.moveDown(0.8);
+
+          doc.moveDown(0.6);
         });
-        doc.moveDown(0.4);
       }
 
-      // --- Education ---
+      // -------------------------------------------------------------
+      // 6. EDUCATION SECTION
+      // -------------------------------------------------------------
       const edu = resumeData?.education || [];
       if (edu.length > 0) {
-        doc.fontSize(12).font("Helvetica-Bold").text("EDUCATION");
-        doc
-          .strokeColor("#cccccc")
-          .lineWidth(1)
-          .moveTo(40, doc.y)
-          .lineTo(555, doc.y)
-          .stroke();
-        doc.moveDown(0.5);
+        createSectionHeader("Education");
 
         edu.forEach((school: any) => {
+          const startY = doc.y;
+
           doc
-            .fontSize(10)
+            .fillColor(PRIMARY_COLOR)
+            .fontSize(9.5)
             .font("Helvetica-Bold")
-            .text(school.degree || "", { continued: true })
+            .text(school.degree || "", LEFT_MARGIN, startY, { continued: true })
+            .fillColor(TEXT_COLOR)
             .font("Helvetica")
-            .text(` — ${school.institution || ""}`);
+            .text(school.institution ? `, ${school.institution}` : "");
+
           if (school.year) {
             doc
+              .fillColor(SECONDARY_COLOR)
               .fontSize(9)
               .font("Helvetica-Oblique")
-              .text(school.year, { align: "right" });
+              .text(school.year, LEFT_MARGIN, startY, {
+                align: "right",
+                width: PAGE_WIDTH,
+              });
           }
-          doc.moveDown(0.5);
+          doc.moveDown(0.4);
+        });
+      }
+
+      // -------------------------------------------------------------
+      // 7. CERTIFICATES / LANGUAGES (OPTIONAL)
+      // -------------------------------------------------------------
+      const certs = resumeData?.certificates || [];
+      if (certs.length > 0) {
+        createSectionHeader("Certifications & Achievements");
+        certs.forEach((cert: any) => {
+          const title =
+            typeof cert === "string" ? cert : cert.name || cert.title;
+          doc
+            .fillColor(TEXT_COLOR)
+            .fontSize(9.5)
+            .font("Helvetica")
+            .text(`•   ${title}`, LEFT_MARGIN + 10, doc.y, { lineGap: 2 });
         });
       }
 
@@ -433,12 +776,16 @@ const buildResumePdf = (resumeData: any): Promise<Buffer> => {
 };
 
 const generateResumePdfFromEditedJson = async (
+  name: string,
   analyzerId: string,
   editedResumeJson: any,
 ) => {
   // 1. Locate the resume analyzer database record
   const analyzerRecord = await prisma.resumeAnalyzer.findUnique({
     where: { id: analyzerId },
+    select: {
+      id: true,
+    },
   });
 
   if (!analyzerRecord) {
@@ -447,9 +794,10 @@ const generateResumePdfFromEditedJson = async (
 
   // 2. Generate PDF Kit document buffer
   const pdfBuffer = await buildResumePdf(editedResumeJson);
+  // const pdfBuffer = await generatePdf(PDFTemplates.MODERN, editedResumeJson);
 
   // 3. Upload PDF file stream to Cloudinary
-  const pdfUrl = await PDFUploadToCloudinary(pdfBuffer);
+  const pdfUrl = await PDFUploadToCloudinary(pdfBuffer, name);
 
   // 4. Save final edited JSON and Cloudinary URL in DB
   const updatedRecord = await prisma.resumeAnalyzer.update({
@@ -464,7 +812,7 @@ const generateResumePdfFromEditedJson = async (
 
   return {
     pdfUrl: pdfUrl,
-    updatedRecord,
+    // updatedRecord,
   };
 };
 

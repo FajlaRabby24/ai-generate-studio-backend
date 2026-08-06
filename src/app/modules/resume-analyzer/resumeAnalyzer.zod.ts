@@ -18,6 +18,9 @@ const analyzeValidationSchema = z.object({
 });
 
 const generatePdfValidationSchema = z.object({
+  name: z.string({
+    error: "Name is required and must be a string",
+  }),
   analyzerId: z.string({
     error: "analyzerId is required and must be a string",
   }),

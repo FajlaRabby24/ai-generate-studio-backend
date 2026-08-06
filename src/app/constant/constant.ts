@@ -57,3 +57,11 @@ export const AspectRatio = {
   "16:9": "16:9",
   "9:16": "9:16",
 } as const;
+
+export const PDFTemplates = {
+  MODERN: "modern",
+  CLASSIC: "classic",
+  MINIMAL: "minimal",
+} as const;
+
+export type ResumeTemplate = "modern" | "classic" | "minimal";

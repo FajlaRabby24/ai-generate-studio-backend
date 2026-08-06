@@ -1,12 +1,15 @@
 import cloudinary from "../../config/cloudinary.config";
 
-export const PDFUploadToCloudinary = async (pdfBuffer: Buffer) => {
+export const PDFUploadToCloudinary = async (
+  pdfBuffer: Buffer,
+  name: string,
+) => {
   const uploadResponse = await new Promise<any>((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {
         folder: "AI Generate Studio/Resumes",
-        resource_type: "image",
-        format: "pdf",
+        resource_type: "raw", // ⚠️ "auto"-এর জায়গায় অবশ্যই "raw" ব্যবহার করুন
+        public_id: `${name}_resume_${Date.now()}.pdf`, // ⚠️ ফাইলের নাম ও .pdf এক্সটেনশন নিশ্চিত করার জন্য
       },
       (error, result) => {
         if (error) return reject(error);

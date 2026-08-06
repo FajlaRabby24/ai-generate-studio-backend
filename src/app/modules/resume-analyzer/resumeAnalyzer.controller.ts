@@ -80,7 +80,7 @@ const analyzeResumeWithGroqController = catchAsync(
 
 const generateResumePdfController = catchAsync(
   async (req: Request, res: Response) => {
-    const { analyzerId, editedResumeJson } = req.body;
+    const { name, analyzerId, editedResumeJson } = req.body;
     const userId = req.user?.id;
 
     if (!userId) {
@@ -111,6 +111,7 @@ const generateResumePdfController = catchAsync(
     }
 
     const result = await ResumeAnalyzerService.generateResumePdfFromEditedJson(
+      name,
       analyzerId,
       editedResumeJson,
     );
