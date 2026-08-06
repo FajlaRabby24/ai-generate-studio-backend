@@ -78,7 +78,49 @@ const analyzeResumeWithGroqController = catchAsync(
   },
 );
 
+const generateResumePdfController = catchAsync(
+  async (req: Request, res: Response) => {
+    const { analyzerId, editedResumeJson } = req.body;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return sendResponse(
+        res,
+        status.UNAUTHORIZED,
+        false,
+        "Authorization token is required.",
+      );
+    }
+
+    if (!analyzerId) {
+      return sendResponse(
+        res,
+        status.BAD_REQUEST,
+        false,
+        "analyzerId is required.",
+      );
+    }
+
+    if (!editedResumeJson) {
+      return sendResponse(
+        res,
+        status.BAD_REQUEST,
+        false,
+        "editedResumeJson is required.",
+      );
+    }
+
+    const result = await ResumeAnalyzerService.generateResumePdfFromEditedJson(
+      analyzerId,
+      editedResumeJson,
+    );
+
+    sendResponse(res, status.OK, true, "PDF generated successfully", result);
+  },
+);
+
 export const ResumeAnalyzer = {
   resumeAnalyzer,
   analyzeResumeWithGroqController,
+  generateResumePdfController,
 };

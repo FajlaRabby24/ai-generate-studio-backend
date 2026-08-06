@@ -147,7 +147,7 @@ const ChatbotService = async (
   };
 };
 
-const groq = new Groq({ apiKey: envVars.GROQ_API_KEY });
+const groq = new Groq({ apiKey: envVars.GROQ_API_KEY_AI_CHAT });
 
 export const StreamChatbotService = async (
   res: Response,

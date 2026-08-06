@@ -25,4 +25,11 @@ router.post(
   ResumeAnalyzer.analyzeResumeWithGroqController,
 );
 
+router.post(
+  "/generate-pdf",
+  validateRequest(ResumeAnalyzerValidation.generatePdfValidationSchema),
+  checkAuth(),
+  ResumeAnalyzer.generateResumePdfController,
+);
+
 export const ResumeAnalyzerRoutes = router;

@@ -1,14 +1,16 @@
 import { GoogleGenAI } from "@google/genai";
 import Groq from "groq-sdk";
+import PDFDocument from "pdfkit";
 import {
   GenerationStatus,
   GenerationType,
 } from "../../../generated/prisma/enums";
 import { envVars } from "../../config/env";
 import { prisma } from "../../lib/prisma";
+import { PDFUploadToCloudinary } from "../../utils/cloudinary/pdfUpload";
 
 const ai = new GoogleGenAI({ apiKey: envVars.GEMINI_API_KEY });
-const groq = new Groq({ apiKey: envVars.GROQ_API_KEY });
+const groq = new Groq({ apiKey: envVars.GROQ_API_KEY_RESUME_ANALYZER });
 
 const analyzeResume = async (
   userId: string,
@@ -168,36 +170,38 @@ export const analyzeResumeWithGroq = async (
   setImmediate(() => {
     (async () => {
       try {
-        const generated = await prisma.generated.create({
-          data: {
-            userId,
-            type: GenerationType.RESUME_ANALYZER,
-          },
-        });
-
-        await prisma.resumeAnalyzer.create({
-          data: {
-            generatedId: generated.id,
-            atsScore: Number(result.atsScore) || 0,
-            summary: result.summary || "",
-            strengths: result.strengths || [],
-            weaknesses: result.weaknesses || [],
-            missingKeywords: result.missingKeywords || [],
-            actionableSuggestions: result.actionableSuggestions || [],
-            updatedResumeJson: result.updatedResume || null,
-            isGenerateResume,
-            status: GenerationStatus.COMPLETED,
-          },
-        });
-
-        await prisma.user.update({
-          where: { id: userId },
-          data: {
-            resumeAnalyzerLastRefreshAT: new Date(),
-            resumeAnalyzer: {
-              decrement: 1,
+        prisma.$transaction(async (tx) => {
+          const generated = await tx.generated.create({
+            data: {
+              userId,
+              type: GenerationType.RESUME_ANALYZER,
             },
-          },
+          });
+
+          await tx.resumeAnalyzer.create({
+            data: {
+              generatedId: generated.id,
+              atsScore: Number(result.atsScore) || 0,
+              summary: result.summary || "",
+              strengths: result.strengths || [],
+              weaknesses: result.weaknesses || [],
+              missingKeywords: result.missingKeywords || [],
+              actionableSuggestions: result.actionableSuggestions || [],
+              updatedResumeJson: result.updatedResume || null,
+              isGenerateResume,
+              status: GenerationStatus.COMPLETED,
+            },
+          });
+
+          await tx.user.update({
+            where: { id: userId },
+            data: {
+              resumeAnalyzerLastRefreshAT: new Date(),
+              resumeAnalyzer: {
+                decrement: 1,
+              },
+            },
+          });
         });
       } catch (dbError) {
         throw new Error(
@@ -210,7 +214,262 @@ export const analyzeResumeWithGroq = async (
   return result;
 };
 
+const buildResumePdf = (resumeData: any): Promise<Buffer> => {
+  return new Promise((resolve, reject) => {
+    try {
+      const doc = new PDFDocument({ margin: 40, size: "A4" });
+      const chunks: Buffer[] = [];
+      doc.on("data", (chunk) => chunks.push(chunk));
+      doc.on("end", () => resolve(Buffer.concat(chunks)));
+      doc.on("error", (err) => reject(err));
+
+      const p = resumeData?.personalInfo || {};
+
+      // --- Header ---
+      if (p.fullName) {
+        doc
+          .fontSize(22)
+          .font("Helvetica-Bold")
+          .text(p.fullName, { align: "center" });
+      }
+
+      const contactInfo = [
+        p.email,
+        p.phone,
+        p.linkedin ? `LinkedIn: ${p.linkedin}` : null,
+        p.github ? `GitHub: ${p.github}` : null,
+      ]
+        .filter(Boolean)
+        .join("  |  ");
+
+      if (contactInfo) {
+        doc.moveDown(0.3);
+        doc
+          .fontSize(10)
+          .font("Helvetica")
+          .text(contactInfo, { align: "center" });
+      }
+
+      doc.moveDown(1);
+
+      // --- Summary ---
+      if (p.summary) {
+        doc.fontSize(12).font("Helvetica-Bold").text("PROFESSIONAL SUMMARY");
+        doc
+          .strokeColor("#cccccc")
+          .lineWidth(1)
+          .moveTo(40, doc.y)
+          .lineTo(555, doc.y)
+          .stroke();
+        doc.moveDown(0.5);
+        doc
+          .fontSize(10)
+          .font("Helvetica")
+          .text(p.summary, { align: "justify" });
+        doc.moveDown(1.2);
+      }
+
+      // --- Skills ---
+      const s = resumeData?.skills || {};
+      const hasTechnical = s.technical && s.technical.length > 0;
+      const hasSoft = s.soft && s.soft.length > 0;
+      if (hasTechnical || hasSoft) {
+        doc.fontSize(12).font("Helvetica-Bold").text("TECHNICAL & SOFT SKILLS");
+        doc
+          .strokeColor("#cccccc")
+          .lineWidth(1)
+          .moveTo(40, doc.y)
+          .lineTo(555, doc.y)
+          .stroke();
+        doc.moveDown(0.5);
+
+        if (hasTechnical) {
+          doc
+            .fontSize(10)
+            .font("Helvetica-Bold")
+            .text("Technical Skills: ", { continued: true })
+            .font("Helvetica")
+            .text(s.technical.join(", "));
+        }
+        if (hasSoft) {
+          doc.moveDown(0.2);
+          doc
+            .fontSize(10)
+            .font("Helvetica-Bold")
+            .text("Soft Skills: ", { continued: true })
+            .font("Helvetica")
+            .text(s.soft.join(", "));
+        }
+        doc.moveDown(1.2);
+      }
+
+      // --- Experience ---
+      const exp = resumeData?.experience || [];
+      if (exp.length > 0) {
+        doc.fontSize(12).font("Helvetica-Bold").text("PROFESSIONAL EXPERIENCE");
+        doc
+          .strokeColor("#cccccc")
+          .lineWidth(1)
+          .moveTo(40, doc.y)
+          .lineTo(555, doc.y)
+          .stroke();
+        doc.moveDown(0.5);
+
+        exp.forEach((job: any) => {
+          doc
+            .fontSize(11)
+            .font("Helvetica-Bold")
+            .text(job.title || "", { continued: true })
+            .font("Helvetica")
+            .text(` at ${job.company || ""}`, { align: "left" });
+          if (job.duration) {
+            doc
+              .fontSize(9)
+              .font("Helvetica-Oblique")
+              .text(job.duration, { align: "right" });
+          }
+
+          doc.moveDown(0.3);
+          const bulletPoints = job.bulletPoints || [];
+          bulletPoints.forEach((point: string) => {
+            doc
+              .fontSize(10)
+              .font("Helvetica")
+              .text(`• ${point}`, { indent: 10, align: "justify" });
+          });
+          doc.moveDown(0.8);
+        });
+        doc.moveDown(0.4);
+      }
+
+      // --- Projects ---
+      const proj = resumeData?.projects || [];
+      if (proj.length > 0) {
+        doc.fontSize(12).font("Helvetica-Bold").text("PROJECTS");
+        doc
+          .strokeColor("#cccccc")
+          .lineWidth(1)
+          .moveTo(40, doc.y)
+          .lineTo(555, doc.y)
+          .stroke();
+        doc.moveDown(0.5);
+
+        proj.forEach((project: any) => {
+          doc
+            .fontSize(11)
+            .font("Helvetica-Bold")
+            .text(project.name || "");
+
+          const projLinks = [
+            project.liveUrl ? `Live: ${project.liveUrl}` : null,
+            project.githubUrl ? `GitHub: ${project.githubUrl}` : null,
+          ]
+            .filter(Boolean)
+            .join("  |  ");
+
+          if (projLinks) {
+            doc
+              .fontSize(9)
+              .font("Helvetica-Oblique")
+              .text(projLinks, { align: "right" });
+          }
+
+          doc.moveDown(0.2);
+          if (project.description) {
+            doc
+              .fontSize(10)
+              .font("Helvetica")
+              .text(project.description, { align: "justify" });
+          }
+
+          if (project.technologies && project.technologies.length > 0) {
+            doc.moveDown(0.2);
+            doc
+              .fontSize(9)
+              .font("Helvetica-Bold")
+              .text("Technologies: ", { continued: true })
+              .font("Helvetica")
+              .text(project.technologies.join(", "));
+          }
+          doc.moveDown(0.8);
+        });
+        doc.moveDown(0.4);
+      }
+
+      // --- Education ---
+      const edu = resumeData?.education || [];
+      if (edu.length > 0) {
+        doc.fontSize(12).font("Helvetica-Bold").text("EDUCATION");
+        doc
+          .strokeColor("#cccccc")
+          .lineWidth(1)
+          .moveTo(40, doc.y)
+          .lineTo(555, doc.y)
+          .stroke();
+        doc.moveDown(0.5);
+
+        edu.forEach((school: any) => {
+          doc
+            .fontSize(10)
+            .font("Helvetica-Bold")
+            .text(school.degree || "", { continued: true })
+            .font("Helvetica")
+            .text(` — ${school.institution || ""}`);
+          if (school.year) {
+            doc
+              .fontSize(9)
+              .font("Helvetica-Oblique")
+              .text(school.year, { align: "right" });
+          }
+          doc.moveDown(0.5);
+        });
+      }
+
+      doc.end();
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+const generateResumePdfFromEditedJson = async (
+  analyzerId: string,
+  editedResumeJson: any,
+) => {
+  // 1. Locate the resume analyzer database record
+  const analyzerRecord = await prisma.resumeAnalyzer.findUnique({
+    where: { id: analyzerId },
+  });
+
+  if (!analyzerRecord) {
+    throw new Error(`ResumeAnalyzer record with ID: ${analyzerId} not found.`);
+  }
+
+  // 2. Generate PDF Kit document buffer
+  const pdfBuffer = await buildResumePdf(editedResumeJson);
+
+  // 3. Upload PDF file stream to Cloudinary
+  const pdfUrl = await PDFUploadToCloudinary(pdfBuffer);
+
+  // 4. Save final edited JSON and Cloudinary URL in DB
+  const updatedRecord = await prisma.resumeAnalyzer.update({
+    where: { id: analyzerId },
+    data: {
+      updatedResumeJson: editedResumeJson,
+      generatedPdfUrl: pdfUrl,
+      isGenerateResume: true,
+      status: GenerationStatus.COMPLETED,
+    },
+  });
+
+  return {
+    pdfUrl: pdfUrl,
+    updatedRecord,
+  };
+};
+
 export const ResumeAnalyzerService = {
   analyzeResume,
   analyzeResumeWithGroq,
+  generateResumePdfFromEditedJson,
 };

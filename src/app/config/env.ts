@@ -41,5 +41,7 @@ export const envVars = {
 
   BACKEND_SERVER_URL: process.env.BACKEND_SERVER_URL as string,
 
-  GROQ_API_KEY: process.env.GROQ_API_KEY as string,
+  GROQ_API_KEY_RESUME_ANALYZER: process.env
+    .GROQ_API_KEY_RESUME_ANALYZER as string,
+  GROQ_API_KEY_AI_CHAT: process.env.GROQ_API_KEY_AI_CHAT as string,
 };

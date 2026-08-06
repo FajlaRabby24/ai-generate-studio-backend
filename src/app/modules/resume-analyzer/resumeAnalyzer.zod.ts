@@ -17,6 +17,14 @@ const analyzeValidationSchema = z.object({
   }, z.boolean().optional()),
 });
 
+const generatePdfValidationSchema = z.object({
+  analyzerId: z.string({
+    error: "analyzerId is required and must be a string",
+  }),
+  editedResumeJson: z.any(),
+});
+
 export const ResumeAnalyzerValidation = {
   analyzeValidationSchema,
+  generatePdfValidationSchema,
 };
