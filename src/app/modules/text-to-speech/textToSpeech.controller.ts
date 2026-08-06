@@ -15,7 +15,7 @@ const generateSpeech = catchAsync(async (req: Request, res: Response) => {
       status.BAD_REQUEST,
       false,
       "Prompt is required",
-      null
+      null,
     );
   }
 
@@ -25,7 +25,7 @@ const generateSpeech = catchAsync(async (req: Request, res: Response) => {
       status.BAD_REQUEST,
       false,
       "Voice option is required",
-      null
+      null,
     );
   }
 
@@ -33,7 +33,7 @@ const generateSpeech = catchAsync(async (req: Request, res: Response) => {
     userId,
     voice,
     prompt,
-    field as string
+    field as string,
   );
 
   if (!result) {
@@ -42,19 +42,80 @@ const generateSpeech = catchAsync(async (req: Request, res: Response) => {
       status.INTERNAL_SERVER_ERROR,
       false,
       "Failed to generate speech",
-      null
+      null,
     );
   }
 
-  sendResponse(
-    res,
-    status.OK,
-    true,
-    "Speech generated successfully",
-    result
+  sendResponse(res, status.OK, true, "Speech generated successfully", result);
+});
+
+const testTextToSpeech = catchAsync(async (req: Request, res: Response) => {
+  const { prompt, voiceId } = req.body;
+  const userId = req.user?.id;
+
+  if (!userId) {
+    return sendResponse(
+      res,
+      status.UNAUTHORIZED,
+      false,
+      "Authorization token is required.",
+      null,
+    );
+  }
+
+  if (!prompt) {
+    return sendResponse(
+      res,
+      status.BAD_REQUEST,
+      false,
+      "Prompt is required",
+      null,
+    );
+  }
+
+  if (!voiceId) {
+    return sendResponse(
+      res,
+      status.BAD_REQUEST,
+      false,
+      "Voice option is required",
+      null,
+    );
+  }
+
+  const result = await textToSpeechService.textToSpeech(
+    userId,
+    prompt,
+    voiceId,
   );
+
+  sendResponse(res, status.OK, true, "Speech generated successfully", result);
+});
+
+// * get voices
+const getAllVoices = catchAsync(async (req: Request, res: Response) => {
+  const { lang, gender } = req.body;
+
+  if (!lang || !gender) {
+    return sendResponse(
+      res,
+      status.BAD_REQUEST,
+      false,
+      "Language and Gender are required",
+      null,
+    );
+  }
+
+  const result = await textToSpeechService.getVoices(
+    lang as string,
+    gender as string,
+  );
+
+  sendResponse(res, status.OK, true, "Voices fetched successfully", result);
 });
 
 export const TextToSpeechController = {
   generateSpeech,
+  testTextToSpeech,
+  getAllVoices,
 };

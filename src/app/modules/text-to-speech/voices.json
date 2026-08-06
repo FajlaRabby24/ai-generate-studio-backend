@@ -1,0 +1,1934 @@
+[
+  {
+    "id": "af-ZA-AdriNeural",
+    "name": "Adri",
+    "gender": "Female",
+    "language": "Afrikaans (South Africa)"
+  },
+  {
+    "id": "af-ZA-WillemNeural",
+    "name": "Willem",
+    "gender": "Male",
+    "language": "Afrikaans (South Africa)"
+  },
+  {
+    "id": "sq-AL-AnilaNeural",
+    "name": "Anila",
+    "gender": "Female",
+    "language": "Albanian (Albania)"
+  },
+  {
+    "id": "sq-AL-IlirNeural",
+    "name": "Ilir",
+    "gender": "Male",
+    "language": "Albanian (Albania)"
+  },
+  {
+    "id": "am-ET-AmehaNeural",
+    "name": "Ameha",
+    "gender": "Male",
+    "language": "Amharic (Ethiopia)"
+  },
+  {
+    "id": "am-ET-MekdesNeural",
+    "name": "Mekdes",
+    "gender": "Female",
+    "language": "Amharic (Ethiopia)"
+  },
+  {
+    "id": "ar-DZ-AminaNeural",
+    "name": "Amina",
+    "gender": "Female",
+    "language": "Arabic (Algeria)"
+  },
+  {
+    "id": "ar-DZ-IsmaelNeural",
+    "name": "Ismael",
+    "gender": "Male",
+    "language": "Arabic (Algeria)"
+  },
+  {
+    "id": "ar-BH-AliNeural",
+    "name": "Ali",
+    "gender": "Male",
+    "language": "Arabic (Bahrain)"
+  },
+  {
+    "id": "ar-BH-LailaNeural",
+    "name": "Laila",
+    "gender": "Female",
+    "language": "Arabic (Bahrain)"
+  },
+  {
+    "id": "ar-EG-SalmaNeural",
+    "name": "Salma",
+    "gender": "Female",
+    "language": "Arabic (Egypt)"
+  },
+  {
+    "id": "ar-EG-ShakirNeural",
+    "name": "Shakir",
+    "gender": "Male",
+    "language": "Arabic (Egypt)"
+  },
+  {
+    "id": "ar-IQ-BasselNeural",
+    "name": "Bassel",
+    "gender": "Male",
+    "language": "Arabic (Iraq)"
+  },
+  {
+    "id": "ar-IQ-RanaNeural",
+    "name": "Rana",
+    "gender": "Female",
+    "language": "Arabic (Iraq)"
+  },
+  {
+    "id": "ar-JO-SanaNeural",
+    "name": "Sana",
+    "gender": "Female",
+    "language": "Arabic (Jordan)"
+  },
+  {
+    "id": "ar-JO-TaimNeural",
+    "name": "Taim",
+    "gender": "Male",
+    "language": "Arabic (Jordan)"
+  },
+  {
+    "id": "ar-KW-FahedNeural",
+    "name": "Fahed",
+    "gender": "Male",
+    "language": "Arabic (Kuwait)"
+  },
+  {
+    "id": "ar-KW-NouraNeural",
+    "name": "Noura",
+    "gender": "Female",
+    "language": "Arabic (Kuwait)"
+  },
+  {
+    "id": "ar-LB-LaylaNeural",
+    "name": "Layla",
+    "gender": "Female",
+    "language": "Arabic (Lebanon)"
+  },
+  {
+    "id": "ar-LB-RamiNeural",
+    "name": "Rami",
+    "gender": "Male",
+    "language": "Arabic (Lebanon)"
+  },
+  {
+    "id": "ar-LY-ImanNeural",
+    "name": "Iman",
+    "gender": "Female",
+    "language": "Arabic (Libya)"
+  },
+  {
+    "id": "ar-LY-OmarNeural",
+    "name": "Omar",
+    "gender": "Male",
+    "language": "Arabic (Libya)"
+  },
+  {
+    "id": "ar-MA-JamalNeural",
+    "name": "Jamal",
+    "gender": "Male",
+    "language": "Arabic (Morocco)"
+  },
+  {
+    "id": "ar-MA-MounaNeural",
+    "name": "Mouna",
+    "gender": "Female",
+    "language": "Arabic (Morocco)"
+  },
+  {
+    "id": "ar-OM-AbdullahNeural",
+    "name": "Abdullah",
+    "gender": "Male",
+    "language": "Arabic (Oman)"
+  },
+  {
+    "id": "ar-OM-AyshaNeural",
+    "name": "Aysha",
+    "gender": "Female",
+    "language": "Arabic (Oman)"
+  },
+  {
+    "id": "ar-QA-AmalNeural",
+    "name": "Amal",
+    "gender": "Female",
+    "language": "Arabic (Qatar)"
+  },
+  {
+    "id": "ar-QA-MoazNeural",
+    "name": "Moaz",
+    "gender": "Male",
+    "language": "Arabic (Qatar)"
+  },
+  {
+    "id": "ar-SA-HamedNeural",
+    "name": "Hamed",
+    "gender": "Male",
+    "language": "Arabic (Saudi Arabia)"
+  },
+  {
+    "id": "ar-SA-ZariyahNeural",
+    "name": "Zariyah",
+    "gender": "Female",
+    "language": "Arabic (Saudi Arabia)"
+  },
+  {
+    "id": "ar-SY-AmanyNeural",
+    "name": "Amany",
+    "gender": "Female",
+    "language": "Arabic (Syria)"
+  },
+  {
+    "id": "ar-SY-LaithNeural",
+    "name": "Laith",
+    "gender": "Male",
+    "language": "Arabic (Syria)"
+  },
+  {
+    "id": "ar-TN-HediNeural",
+    "name": "Hedi",
+    "gender": "Male",
+    "language": "Arabic (Tunisia)"
+  },
+  {
+    "id": "ar-TN-ReemNeural",
+    "name": "Reem",
+    "gender": "Female",
+    "language": "Arabic (Tunisia)"
+  },
+  {
+    "id": "ar-AE-FatimaNeural",
+    "name": "Fatima",
+    "gender": "Female",
+    "language": "Arabic (United Arab Emirates)"
+  },
+  {
+    "id": "ar-AE-HamdanNeural",
+    "name": "Hamdan",
+    "gender": "Male",
+    "language": "Arabic (United Arab Emirates)"
+  },
+  {
+    "id": "ar-YE-MaryamNeural",
+    "name": "Maryam",
+    "gender": "Female",
+    "language": "Arabic (Yemen)"
+  },
+  {
+    "id": "ar-YE-SalehNeural",
+    "name": "Saleh",
+    "gender": "Male",
+    "language": "Arabic (Yemen)"
+  },
+  {
+    "id": "az-AZ-BabekNeural",
+    "name": "Babek",
+    "gender": "Male",
+    "language": "Azerbaijani (Azerbaijan)"
+  },
+  {
+    "id": "az-AZ-BanuNeural",
+    "name": "Banu",
+    "gender": "Female",
+    "language": "Azerbaijani (Azerbaijan)"
+  },
+  {
+    "id": "bn-BD-NabanitaNeural",
+    "name": "Nabanita",
+    "gender": "Female",
+    "language": "Bangla (Bangladesh)"
+  },
+  {
+    "id": "bn-BD-PradeepNeural",
+    "name": "Pradeep",
+    "gender": "Male",
+    "language": "Bangla (Bangladesh)"
+  },
+  {
+    "id": "bn-IN-BashkarNeural",
+    "name": "Bashkar",
+    "gender": "Male",
+    "language": "Bangla (India)"
+  },
+  {
+    "id": "bn-IN-TanishaaNeural",
+    "name": "Tanishaa",
+    "gender": "Female",
+    "language": "Bengali (India)"
+  },
+  {
+    "id": "bs-BA-VesnaNeural",
+    "name": "Vesna",
+    "gender": "Female",
+    "language": "Bosnian (Bosnia and Herzegovina)"
+  },
+  {
+    "id": "bs-BA-GoranNeural",
+    "name": "Goran",
+    "gender": "Male",
+    "language": "Bosnian (Bosnia)"
+  },
+  {
+    "id": "bg-BG-BorislavNeural",
+    "name": "Borislav",
+    "gender": "Male",
+    "language": "Bulgarian (Bulgaria)"
+  },
+  {
+    "id": "bg-BG-KalinaNeural",
+    "name": "Kalina",
+    "gender": "Female",
+    "language": "Bulgarian (Bulgaria)"
+  },
+  {
+    "id": "my-MM-NilarNeural",
+    "name": "Nilar",
+    "gender": "Female",
+    "language": "Burmese (Myanmar)"
+  },
+  {
+    "id": "my-MM-ThihaNeural",
+    "name": "Thiha",
+    "gender": "Male",
+    "language": "Burmese (Myanmar)"
+  },
+  {
+    "id": "ca-ES-EnricNeural",
+    "name": "Enric",
+    "gender": "Male",
+    "language": "Catalan"
+  },
+  {
+    "id": "ca-ES-JoanaNeural",
+    "name": "Joana",
+    "gender": "Female",
+    "language": "Catalan"
+  },
+  {
+    "id": "zh-HK-HiuGaaiNeural",
+    "name": "HiuGaai",
+    "gender": "Female",
+    "language": "Chinese (Cantonese Traditional)"
+  },
+  {
+    "id": "zh-HK-HiuMaanNeural",
+    "name": "HiuMaan",
+    "gender": "Female",
+    "language": "Chinese (Hong Kong SAR)"
+  },
+  {
+    "id": "zh-HK-WanLungNeural",
+    "name": "WanLung",
+    "gender": "Male",
+    "language": "Chinese (Hong Kong SAR)"
+  },
+  {
+    "id": "zh-CN-XiaoxiaoNeural",
+    "name": "Xiaoxiao",
+    "gender": "Female",
+    "language": "Chinese (Mainland)"
+  },
+  {
+    "id": "zh-CN-XiaoyiNeural",
+    "name": "Xiaoyi",
+    "gender": "Female",
+    "language": "Chinese (Mainland)"
+  },
+  {
+    "id": "zh-CN-YunjianNeural",
+    "name": "Yunjian",
+    "gender": "Male",
+    "language": "Chinese (Mainland)"
+  },
+  {
+    "id": "zh-CN-YunxiNeural",
+    "name": "Yunxi",
+    "gender": "Male",
+    "language": "Chinese (Mainland)"
+  },
+  {
+    "id": "zh-CN-YunxiaNeural",
+    "name": "Yunxia",
+    "gender": "Male",
+    "language": "Chinese (Mainland)"
+  },
+  {
+    "id": "zh-CN-YunyangNeural",
+    "name": "Yunyang",
+    "gender": "Male",
+    "language": "Chinese (Mainland)"
+  },
+  {
+    "id": "zh-CN-liaoning-XiaobeiNeural",
+    "name": "Xiaobei",
+    "gender": "Female",
+    "language": "Chinese (Northeastern Mandarin)"
+  },
+  {
+    "id": "zh-TW-HsiaoChenNeural",
+    "name": "HsiaoChen",
+    "gender": "Female",
+    "language": "Chinese (Taiwan)"
+  },
+  {
+    "id": "zh-TW-YunJheNeural",
+    "name": "YunJhe",
+    "gender": "Male",
+    "language": "Chinese (Taiwan)"
+  },
+  {
+    "id": "zh-TW-HsiaoYuNeural",
+    "name": "HsiaoYu",
+    "gender": "Female",
+    "language": "Chinese (Taiwanese Mandarin)"
+  },
+  {
+    "id": "zh-CN-shaanxi-XiaoniNeural",
+    "name": "Xiaoni",
+    "gender": "Female",
+    "language": "Chinese (Zhongyuan Mandarin Shaanxi)"
+  },
+  {
+    "id": "hr-HR-GabrijelaNeural",
+    "name": "Gabrijela",
+    "gender": "Female",
+    "language": "Croatian (Croatia)"
+  },
+  {
+    "id": "hr-HR-SreckoNeural",
+    "name": "Srecko",
+    "gender": "Male",
+    "language": "Croatian (Croatia)"
+  },
+  {
+    "id": "cs-CZ-AntoninNeural",
+    "name": "Antonin",
+    "gender": "Male",
+    "language": "Czech (Czech)"
+  },
+  {
+    "id": "cs-CZ-VlastaNeural",
+    "name": "Vlasta",
+    "gender": "Female",
+    "language": "Czech (Czech)"
+  },
+  {
+    "id": "da-DK-ChristelNeural",
+    "name": "Christel",
+    "gender": "Female",
+    "language": "Danish (Denmark)"
+  },
+  {
+    "id": "da-DK-JeppeNeural",
+    "name": "Jeppe",
+    "gender": "Male",
+    "language": "Danish (Denmark)"
+  },
+  {
+    "id": "nl-BE-ArnaudNeural",
+    "name": "Arnaud",
+    "gender": "Male",
+    "language": "Dutch (Belgium)"
+  },
+  {
+    "id": "nl-BE-DenaNeural",
+    "name": "Dena",
+    "gender": "Female",
+    "language": "Dutch (Belgium)"
+  },
+  {
+    "id": "nl-NL-ColetteNeural",
+    "name": "Colette",
+    "gender": "Female",
+    "language": "Dutch (Netherlands)"
+  },
+  {
+    "id": "nl-NL-FennaNeural",
+    "name": "Fenna",
+    "gender": "Female",
+    "language": "Dutch (Netherlands)"
+  },
+  {
+    "id": "nl-NL-MaartenNeural",
+    "name": "Maarten",
+    "gender": "Male",
+    "language": "Dutch (Netherlands)"
+  },
+  {
+    "id": "en-AU-WilliamMultilingualNeural",
+    "name": "WilliamMultilingual",
+    "gender": "Male",
+    "language": "English (Australia)"
+  },
+  {
+    "id": "en-AU-NatashaNeural",
+    "name": "Natasha",
+    "gender": "Female",
+    "language": "English (Australia)"
+  },
+  {
+    "id": "en-CA-ClaraNeural",
+    "name": "Clara",
+    "gender": "Female",
+    "language": "English (Canada)"
+  },
+  {
+    "id": "en-CA-LiamNeural",
+    "name": "Liam",
+    "gender": "Male",
+    "language": "English (Canada)"
+  },
+  {
+    "id": "en-HK-YanNeural",
+    "name": "Yan",
+    "gender": "Female",
+    "language": "English (Hong Kong SAR)"
+  },
+  {
+    "id": "en-HK-SamNeural",
+    "name": "Sam",
+    "gender": "Male",
+    "language": "English (Hongkong)"
+  },
+  {
+    "id": "en-IN-NeerjaExpressiveNeural",
+    "name": "NeerjaExpressive",
+    "gender": "Female",
+    "language": "English (India) (Preview)"
+  },
+  {
+    "id": "en-IN-NeerjaNeural",
+    "name": "Neerja",
+    "gender": "Female",
+    "language": "English (India)"
+  },
+  {
+    "id": "en-IN-PrabhatNeural",
+    "name": "Prabhat",
+    "gender": "Male",
+    "language": "English (India)"
+  },
+  {
+    "id": "en-IE-ConnorNeural",
+    "name": "Connor",
+    "gender": "Male",
+    "language": "English (Ireland)"
+  },
+  {
+    "id": "en-IE-EmilyNeural",
+    "name": "Emily",
+    "gender": "Female",
+    "language": "English (Ireland)"
+  },
+  {
+    "id": "en-KE-AsiliaNeural",
+    "name": "Asilia",
+    "gender": "Female",
+    "language": "English (Kenya)"
+  },
+  {
+    "id": "en-KE-ChilembaNeural",
+    "name": "Chilemba",
+    "gender": "Male",
+    "language": "English (Kenya)"
+  },
+  {
+    "id": "en-NZ-MitchellNeural",
+    "name": "Mitchell",
+    "gender": "Male",
+    "language": "English (New Zealand)"
+  },
+  {
+    "id": "en-NZ-MollyNeural",
+    "name": "Molly",
+    "gender": "Female",
+    "language": "English (New Zealand)"
+  },
+  {
+    "id": "en-NG-AbeoNeural",
+    "name": "Abeo",
+    "gender": "Male",
+    "language": "English (Nigeria)"
+  },
+  {
+    "id": "en-NG-EzinneNeural",
+    "name": "Ezinne",
+    "gender": "Female",
+    "language": "English (Nigeria)"
+  },
+  {
+    "id": "en-PH-JamesNeural",
+    "name": "James",
+    "gender": "Male",
+    "language": "English (Philippines)"
+  },
+  {
+    "id": "en-PH-RosaNeural",
+    "name": "Rosa",
+    "gender": "Female",
+    "language": "English (Philippines)"
+  },
+  {
+    "id": "en-US-AvaNeural",
+    "name": "Ava",
+    "gender": "Female",
+    "language": "English (United States)"
+  },
+  {
+    "id": "en-US-AndrewNeural",
+    "name": "Andrew",
+    "gender": "Male",
+    "language": "English (United States)"
+  },
+  {
+    "id": "en-US-EmmaNeural",
+    "name": "Emma",
+    "gender": "Female",
+    "language": "English (United States)"
+  },
+  {
+    "id": "en-US-BrianNeural",
+    "name": "Brian",
+    "gender": "Male",
+    "language": "English (United States)"
+  },
+  {
+    "id": "en-SG-LunaNeural",
+    "name": "Luna",
+    "gender": "Female",
+    "language": "English (Singapore)"
+  },
+  {
+    "id": "en-SG-WayneNeural",
+    "name": "Wayne",
+    "gender": "Male",
+    "language": "English (Singapore)"
+  },
+  {
+    "id": "en-ZA-LeahNeural",
+    "name": "Leah",
+    "gender": "Female",
+    "language": "English (South Africa)"
+  },
+  {
+    "id": "en-ZA-LukeNeural",
+    "name": "Luke",
+    "gender": "Male",
+    "language": "English (South Africa)"
+  },
+  {
+    "id": "en-TZ-ElimuNeural",
+    "name": "Elimu",
+    "gender": "Male",
+    "language": "English (Tanzania)"
+  },
+  {
+    "id": "en-TZ-ImaniNeural",
+    "name": "Imani",
+    "gender": "Female",
+    "language": "English (Tanzania)"
+  },
+  {
+    "id": "en-GB-LibbyNeural",
+    "name": "Libby",
+    "gender": "Female",
+    "language": "English (United Kingdom)"
+  },
+  {
+    "id": "en-GB-MaisieNeural",
+    "name": "Maisie",
+    "gender": "Female",
+    "language": "English (United Kingdom)"
+  },
+  {
+    "id": "en-GB-RyanNeural",
+    "name": "Ryan",
+    "gender": "Male",
+    "language": "English (United Kingdom)"
+  },
+  {
+    "id": "en-GB-SoniaNeural",
+    "name": "Sonia",
+    "gender": "Female",
+    "language": "English (United Kingdom)"
+  },
+  {
+    "id": "en-GB-ThomasNeural",
+    "name": "Thomas",
+    "gender": "Male",
+    "language": "English (United Kingdom)"
+  },
+  {
+    "id": "en-US-AnaNeural",
+    "name": "Ana",
+    "gender": "Female",
+    "language": "English (United States)"
+  },
+  {
+    "id": "en-US-AndrewMultilingualNeural",
+    "name": "AndrewMultilingual",
+    "gender": "Male",
+    "language": "English (United States)"
+  },
+  {
+    "id": "en-US-AriaNeural",
+    "name": "Aria",
+    "gender": "Female",
+    "language": "English (United States)"
+  },
+  {
+    "id": "en-US-AvaMultilingualNeural",
+    "name": "AvaMultilingual",
+    "gender": "Female",
+    "language": "English (United States)"
+  },
+  {
+    "id": "en-US-BrianMultilingualNeural",
+    "name": "BrianMultilingual",
+    "gender": "Male",
+    "language": "English (United States)"
+  },
+  {
+    "id": "en-US-ChristopherNeural",
+    "name": "Christopher",
+    "gender": "Male",
+    "language": "English (United States)"
+  },
+  {
+    "id": "en-US-EmmaMultilingualNeural",
+    "name": "EmmaMultilingual",
+    "gender": "Female",
+    "language": "English (United States)"
+  },
+  {
+    "id": "en-US-EricNeural",
+    "name": "Eric",
+    "gender": "Male",
+    "language": "English (United States)"
+  },
+  {
+    "id": "en-US-GuyNeural",
+    "name": "Guy",
+    "gender": "Male",
+    "language": "English (United States)"
+  },
+  {
+    "id": "en-US-JennyNeural",
+    "name": "Jenny",
+    "gender": "Female",
+    "language": "English (United States)"
+  },
+  {
+    "id": "en-US-MichelleNeural",
+    "name": "Michelle",
+    "gender": "Female",
+    "language": "English (United States)"
+  },
+  {
+    "id": "en-US-RogerNeural",
+    "name": "Roger",
+    "gender": "Male",
+    "language": "English (United States)"
+  },
+  {
+    "id": "en-US-SteffanNeural",
+    "name": "Steffan",
+    "gender": "Male",
+    "language": "English (United States)"
+  },
+  {
+    "id": "et-EE-AnuNeural",
+    "name": "Anu",
+    "gender": "Female",
+    "language": "Estonian (Estonia)"
+  },
+  {
+    "id": "et-EE-KertNeural",
+    "name": "Kert",
+    "gender": "Male",
+    "language": "Estonian (Estonia)"
+  },
+  {
+    "id": "fil-PH-AngeloNeural",
+    "name": "Angelo",
+    "gender": "Male",
+    "language": "Filipino (Philippines)"
+  },
+  {
+    "id": "fil-PH-BlessicaNeural",
+    "name": "Blessica",
+    "gender": "Female",
+    "language": "Filipino (Philippines)"
+  },
+  {
+    "id": "fi-FI-HarriNeural",
+    "name": "Harri",
+    "gender": "Male",
+    "language": "Finnish (Finland)"
+  },
+  {
+    "id": "fi-FI-NooraNeural",
+    "name": "Noora",
+    "gender": "Female",
+    "language": "Finnish (Finland)"
+  },
+  {
+    "id": "fr-BE-CharlineNeural",
+    "name": "Charline",
+    "gender": "Female",
+    "language": "French (Belgium)"
+  },
+  {
+    "id": "fr-BE-GerardNeural",
+    "name": "Gerard",
+    "gender": "Male",
+    "language": "French (Belgium)"
+  },
+  {
+    "id": "fr-CA-ThierryNeural",
+    "name": "Thierry",
+    "gender": "Male",
+    "language": "French (Canada)"
+  },
+  {
+    "id": "fr-CA-AntoineNeural",
+    "name": "Antoine",
+    "gender": "Male",
+    "language": "French (Canada)"
+  },
+  {
+    "id": "fr-CA-JeanNeural",
+    "name": "Jean",
+    "gender": "Male",
+    "language": "French (Canada)"
+  },
+  {
+    "id": "fr-CA-SylvieNeural",
+    "name": "Sylvie",
+    "gender": "Female",
+    "language": "French (Canada)"
+  },
+  {
+    "id": "fr-FR-VivienneMultilingualNeural",
+    "name": "VivienneMultilingual",
+    "gender": "Female",
+    "language": "French (France)"
+  },
+  {
+    "id": "fr-FR-RemyMultilingualNeural",
+    "name": "RemyMultilingual",
+    "gender": "Male",
+    "language": "French (France)"
+  },
+  {
+    "id": "fr-FR-DeniseNeural",
+    "name": "Denise",
+    "gender": "Female",
+    "language": "French (France)"
+  },
+  {
+    "id": "fr-FR-EloiseNeural",
+    "name": "Eloise",
+    "gender": "Female",
+    "language": "French (France)"
+  },
+  {
+    "id": "fr-FR-HenriNeural",
+    "name": "Henri",
+    "gender": "Male",
+    "language": "French (France)"
+  },
+  {
+    "id": "fr-CH-ArianeNeural",
+    "name": "Ariane",
+    "gender": "Female",
+    "language": "French (Switzerland)"
+  },
+  {
+    "id": "fr-CH-FabriceNeural",
+    "name": "Fabrice",
+    "gender": "Male",
+    "language": "French (Switzerland)"
+  },
+  {
+    "id": "gl-ES-RoiNeural",
+    "name": "Roi",
+    "gender": "Male",
+    "language": "Galician"
+  },
+  {
+    "id": "gl-ES-SabelaNeural",
+    "name": "Sabela",
+    "gender": "Female",
+    "language": "Galician"
+  },
+  {
+    "id": "ka-GE-EkaNeural",
+    "name": "Eka",
+    "gender": "Female",
+    "language": "Georgian (Georgia)"
+  },
+  {
+    "id": "ka-GE-GiorgiNeural",
+    "name": "Giorgi",
+    "gender": "Male",
+    "language": "Georgian (Georgia)"
+  },
+  {
+    "id": "de-AT-IngridNeural",
+    "name": "Ingrid",
+    "gender": "Female",
+    "language": "German (Austria)"
+  },
+  {
+    "id": "de-AT-JonasNeural",
+    "name": "Jonas",
+    "gender": "Male",
+    "language": "German (Austria)"
+  },
+  {
+    "id": "de-DE-SeraphinaMultilingualNeural",
+    "name": "SeraphinaMultilingual",
+    "gender": "Female",
+    "language": "German (Germany)"
+  },
+  {
+    "id": "de-DE-FlorianMultilingualNeural",
+    "name": "FlorianMultilingual",
+    "gender": "Male",
+    "language": "German (Germany)"
+  },
+  {
+    "id": "de-DE-AmalaNeural",
+    "name": "Amala",
+    "gender": "Female",
+    "language": "German (Germany)"
+  },
+  {
+    "id": "de-DE-ConradNeural",
+    "name": "Conrad",
+    "gender": "Male",
+    "language": "German (Germany)"
+  },
+  {
+    "id": "de-DE-KatjaNeural",
+    "name": "Katja",
+    "gender": "Female",
+    "language": "German (Germany)"
+  },
+  {
+    "id": "de-DE-KillianNeural",
+    "name": "Killian",
+    "gender": "Male",
+    "language": "German (Germany)"
+  },
+  {
+    "id": "de-CH-JanNeural",
+    "name": "Jan",
+    "gender": "Male",
+    "language": "German (Switzerland)"
+  },
+  {
+    "id": "de-CH-LeniNeural",
+    "name": "Leni",
+    "gender": "Female",
+    "language": "German (Switzerland)"
+  },
+  {
+    "id": "el-GR-AthinaNeural",
+    "name": "Athina",
+    "gender": "Female",
+    "language": "Greek (Greece)"
+  },
+  {
+    "id": "el-GR-NestorasNeural",
+    "name": "Nestoras",
+    "gender": "Male",
+    "language": "Greek (Greece)"
+  },
+  {
+    "id": "gu-IN-DhwaniNeural",
+    "name": "Dhwani",
+    "gender": "Female",
+    "language": "Gujarati (India)"
+  },
+  {
+    "id": "gu-IN-NiranjanNeural",
+    "name": "Niranjan",
+    "gender": "Male",
+    "language": "Gujarati (India)"
+  },
+  {
+    "id": "he-IL-AvriNeural",
+    "name": "Avri",
+    "gender": "Male",
+    "language": "Hebrew (Israel)"
+  },
+  {
+    "id": "he-IL-HilaNeural",
+    "name": "Hila",
+    "gender": "Female",
+    "language": "Hebrew (Israel)"
+  },
+  {
+    "id": "hi-IN-MadhurNeural",
+    "name": "Madhur",
+    "gender": "Male",
+    "language": "Hindi (India)"
+  },
+  {
+    "id": "hi-IN-SwaraNeural",
+    "name": "Swara",
+    "gender": "Female",
+    "language": "Hindi (India)"
+  },
+  {
+    "id": "hu-HU-NoemiNeural",
+    "name": "Noemi",
+    "gender": "Female",
+    "language": "Hungarian (Hungary)"
+  },
+  {
+    "id": "hu-HU-TamasNeural",
+    "name": "Tamas",
+    "gender": "Male",
+    "language": "Hungarian (Hungary)"
+  },
+  {
+    "id": "is-IS-GudrunNeural",
+    "name": "Gudrun",
+    "gender": "Female",
+    "language": "Icelandic (Iceland)"
+  },
+  {
+    "id": "is-IS-GunnarNeural",
+    "name": "Gunnar",
+    "gender": "Male",
+    "language": "Icelandic (Iceland)"
+  },
+  {
+    "id": "id-ID-ArdiNeural",
+    "name": "Ardi",
+    "gender": "Male",
+    "language": "Indonesian (Indonesia)"
+  },
+  {
+    "id": "id-ID-GadisNeural",
+    "name": "Gadis",
+    "gender": "Female",
+    "language": "Indonesian (Indonesia)"
+  },
+  {
+    "id": "iu-Latn-CA-SiqiniqNeural",
+    "name": "Siqiniq",
+    "gender": "Female",
+    "language": "Inuktitut (Latin, Canada)"
+  },
+  {
+    "id": "iu-Latn-CA-TaqqiqNeural",
+    "name": "Taqqiq",
+    "gender": "Male",
+    "language": "Inuktitut (Latin, Canada)"
+  },
+  {
+    "id": "iu-Cans-CA-SiqiniqNeural",
+    "name": "Siqiniq",
+    "gender": "Female",
+    "language": "Inuktitut (Syllabics, Canada)"
+  },
+  {
+    "id": "iu-Cans-CA-TaqqiqNeural",
+    "name": "Taqqiq",
+    "gender": "Male",
+    "language": "Inuktitut (Syllabics, Canada)"
+  },
+  {
+    "id": "ga-IE-ColmNeural",
+    "name": "Colm",
+    "gender": "Male",
+    "language": "Irish (Ireland)"
+  },
+  {
+    "id": "ga-IE-OrlaNeural",
+    "name": "Orla",
+    "gender": "Female",
+    "language": "Irish (Ireland)"
+  },
+  {
+    "id": "it-IT-GiuseppeMultilingualNeural",
+    "name": "GiuseppeMultilingual",
+    "gender": "Male",
+    "language": "Italian (Italy)"
+  },
+  {
+    "id": "it-IT-DiegoNeural",
+    "name": "Diego",
+    "gender": "Male",
+    "language": "Italian (Italy)"
+  },
+  {
+    "id": "it-IT-ElsaNeural",
+    "name": "Elsa",
+    "gender": "Female",
+    "language": "Italian (Italy)"
+  },
+  {
+    "id": "it-IT-IsabellaNeural",
+    "name": "Isabella",
+    "gender": "Female",
+    "language": "Italian (Italy)"
+  },
+  {
+    "id": "ja-JP-KeitaNeural",
+    "name": "Keita",
+    "gender": "Male",
+    "language": "Japanese (Japan)"
+  },
+  {
+    "id": "ja-JP-NanamiNeural",
+    "name": "Nanami",
+    "gender": "Female",
+    "language": "Japanese (Japan)"
+  },
+  {
+    "id": "jv-ID-DimasNeural",
+    "name": "Dimas",
+    "gender": "Male",
+    "language": "Javanese (Indonesia)"
+  },
+  {
+    "id": "jv-ID-SitiNeural",
+    "name": "Siti",
+    "gender": "Female",
+    "language": "Javanese (Indonesia)"
+  },
+  {
+    "id": "kn-IN-GaganNeural",
+    "name": "Gagan",
+    "gender": "Male",
+    "language": "Kannada (India)"
+  },
+  {
+    "id": "kn-IN-SapnaNeural",
+    "name": "Sapna",
+    "gender": "Female",
+    "language": "Kannada (India)"
+  },
+  {
+    "id": "kk-KZ-AigulNeural",
+    "name": "Aigul",
+    "gender": "Female",
+    "language": "Kazakh (Kazakhstan)"
+  },
+  {
+    "id": "kk-KZ-DauletNeural",
+    "name": "Daulet",
+    "gender": "Male",
+    "language": "Kazakh (Kazakhstan)"
+  },
+  {
+    "id": "km-KH-PisethNeural",
+    "name": "Piseth",
+    "gender": "Male",
+    "language": "Khmer (Cambodia)"
+  },
+  {
+    "id": "km-KH-SreymomNeural",
+    "name": "Sreymom",
+    "gender": "Female",
+    "language": "Khmer (Cambodia)"
+  },
+  {
+    "id": "ko-KR-HyunsuMultilingualNeural",
+    "name": "HyunsuMultilingual",
+    "gender": "Male",
+    "language": "Korean (Korea)"
+  },
+  {
+    "id": "ko-KR-InJoonNeural",
+    "name": "InJoon",
+    "gender": "Male",
+    "language": "Korean (Korea)"
+  },
+  {
+    "id": "ko-KR-SunHiNeural",
+    "name": "SunHi",
+    "gender": "Female",
+    "language": "Korean (Korea)"
+  },
+  {
+    "id": "lo-LA-ChanthavongNeural",
+    "name": "Chanthavong",
+    "gender": "Male",
+    "language": "Lao (Laos)"
+  },
+  {
+    "id": "lo-LA-KeomanyNeural",
+    "name": "Keomany",
+    "gender": "Female",
+    "language": "Lao (Laos)"
+  },
+  {
+    "id": "lv-LV-EveritaNeural",
+    "name": "Everita",
+    "gender": "Female",
+    "language": "Latvian (Latvia)"
+  },
+  {
+    "id": "lv-LV-NilsNeural",
+    "name": "Nils",
+    "gender": "Male",
+    "language": "Latvian (Latvia)"
+  },
+  {
+    "id": "lt-LT-LeonasNeural",
+    "name": "Leonas",
+    "gender": "Male",
+    "language": "Lithuanian (Lithuania)"
+  },
+  {
+    "id": "lt-LT-OnaNeural",
+    "name": "Ona",
+    "gender": "Female",
+    "language": "Lithuanian (Lithuania)"
+  },
+  {
+    "id": "mk-MK-AleksandarNeural",
+    "name": "Aleksandar",
+    "gender": "Male",
+    "language": "Macedonian (North Macedonia)"
+  },
+  {
+    "id": "mk-MK-MarijaNeural",
+    "name": "Marija",
+    "gender": "Female",
+    "language": "Macedonian (North Macedonia)"
+  },
+  {
+    "id": "ms-MY-OsmanNeural",
+    "name": "Osman",
+    "gender": "Male",
+    "language": "Malay (Malaysia)"
+  },
+  {
+    "id": "ms-MY-YasminNeural",
+    "name": "Yasmin",
+    "gender": "Female",
+    "language": "Malay (Malaysia)"
+  },
+  {
+    "id": "ml-IN-MidhunNeural",
+    "name": "Midhun",
+    "gender": "Male",
+    "language": "Malayalam (India)"
+  },
+  {
+    "id": "ml-IN-SobhanaNeural",
+    "name": "Sobhana",
+    "gender": "Female",
+    "language": "Malayalam (India)"
+  },
+  {
+    "id": "mt-MT-GraceNeural",
+    "name": "Grace",
+    "gender": "Female",
+    "language": "Maltese (Malta)"
+  },
+  {
+    "id": "mt-MT-JosephNeural",
+    "name": "Joseph",
+    "gender": "Male",
+    "language": "Maltese (Malta)"
+  },
+  {
+    "id": "mr-IN-AarohiNeural",
+    "name": "Aarohi",
+    "gender": "Female",
+    "language": "Marathi (India)"
+  },
+  {
+    "id": "mr-IN-ManoharNeural",
+    "name": "Manohar",
+    "gender": "Male",
+    "language": "Marathi (India)"
+  },
+  {
+    "id": "mn-MN-BataaNeural",
+    "name": "Bataa",
+    "gender": "Male",
+    "language": "Mongolian (Mongolia)"
+  },
+  {
+    "id": "mn-MN-YesuiNeural",
+    "name": "Yesui",
+    "gender": "Female",
+    "language": "Mongolian (Mongolia)"
+  },
+  {
+    "id": "ne-NP-HemkalaNeural",
+    "name": "Hemkala",
+    "gender": "Female",
+    "language": "Nepali (Nepal)"
+  },
+  {
+    "id": "ne-NP-SagarNeural",
+    "name": "Sagar",
+    "gender": "Male",
+    "language": "Nepali (Nepal)"
+  },
+  {
+    "id": "nb-NO-FinnNeural",
+    "name": "Finn",
+    "gender": "Male",
+    "language": "Norwegian (Bokmål Norway)"
+  },
+  {
+    "id": "nb-NO-PernilleNeural",
+    "name": "Pernille",
+    "gender": "Female",
+    "language": "Norwegian (Bokmål, Norway)"
+  },
+  {
+    "id": "ps-AF-GulNawazNeural",
+    "name": "GulNawaz",
+    "gender": "Male",
+    "language": "Pashto (Afghanistan)"
+  },
+  {
+    "id": "ps-AF-LatifaNeural",
+    "name": "Latifa",
+    "gender": "Female",
+    "language": "Pashto (Afghanistan)"
+  },
+  {
+    "id": "fa-IR-DilaraNeural",
+    "name": "Dilara",
+    "gender": "Female",
+    "language": "Persian (Iran)"
+  },
+  {
+    "id": "fa-IR-FaridNeural",
+    "name": "Farid",
+    "gender": "Male",
+    "language": "Persian (Iran)"
+  },
+  {
+    "id": "pl-PL-MarekNeural",
+    "name": "Marek",
+    "gender": "Male",
+    "language": "Polish (Poland)"
+  },
+  {
+    "id": "pl-PL-ZofiaNeural",
+    "name": "Zofia",
+    "gender": "Female",
+    "language": "Polish (Poland)"
+  },
+  {
+    "id": "pt-BR-ThalitaMultilingualNeural",
+    "name": "ThalitaMultilingual",
+    "gender": "Female",
+    "language": "Portuguese (Brazil)"
+  },
+  {
+    "id": "pt-BR-AntonioNeural",
+    "name": "Antonio",
+    "gender": "Male",
+    "language": "Portuguese (Brazil)"
+  },
+  {
+    "id": "pt-BR-FranciscaNeural",
+    "name": "Francisca",
+    "gender": "Female",
+    "language": "Portuguese (Brazil)"
+  },
+  {
+    "id": "pt-PT-DuarteNeural",
+    "name": "Duarte",
+    "gender": "Male",
+    "language": "Portuguese (Portugal)"
+  },
+  {
+    "id": "pt-PT-RaquelNeural",
+    "name": "Raquel",
+    "gender": "Female",
+    "language": "Portuguese (Portugal)"
+  },
+  {
+    "id": "ro-RO-AlinaNeural",
+    "name": "Alina",
+    "gender": "Female",
+    "language": "Romanian (Romania)"
+  },
+  {
+    "id": "ro-RO-EmilNeural",
+    "name": "Emil",
+    "gender": "Male",
+    "language": "Romanian (Romania)"
+  },
+  {
+    "id": "ru-RU-DmitryNeural",
+    "name": "Dmitry",
+    "gender": "Male",
+    "language": "Russian (Russia)"
+  },
+  {
+    "id": "ru-RU-SvetlanaNeural",
+    "name": "Svetlana",
+    "gender": "Female",
+    "language": "Russian (Russia)"
+  },
+  {
+    "id": "sr-RS-NicholasNeural",
+    "name": "Nicholas",
+    "gender": "Male",
+    "language": "Serbian (Serbia)"
+  },
+  {
+    "id": "sr-RS-SophieNeural",
+    "name": "Sophie",
+    "gender": "Female",
+    "language": "Serbian (Serbia)"
+  },
+  {
+    "id": "si-LK-SameeraNeural",
+    "name": "Sameera",
+    "gender": "Male",
+    "language": "Sinhala (Sri Lanka)"
+  },
+  {
+    "id": "si-LK-ThiliniNeural",
+    "name": "Thilini",
+    "gender": "Female",
+    "language": "Sinhala (Sri Lanka)"
+  },
+  {
+    "id": "sk-SK-LukasNeural",
+    "name": "Lukas",
+    "gender": "Male",
+    "language": "Slovak (Slovakia)"
+  },
+  {
+    "id": "sk-SK-ViktoriaNeural",
+    "name": "Viktoria",
+    "gender": "Female",
+    "language": "Slovak (Slovakia)"
+  },
+  {
+    "id": "sl-SI-PetraNeural",
+    "name": "Petra",
+    "gender": "Female",
+    "language": "Slovenian (Slovenia)"
+  },
+  {
+    "id": "sl-SI-RokNeural",
+    "name": "Rok",
+    "gender": "Male",
+    "language": "Slovenian (Slovenia)"
+  },
+  {
+    "id": "so-SO-MuuseNeural",
+    "name": "Muuse",
+    "gender": "Male",
+    "language": "Somali (Somalia)"
+  },
+  {
+    "id": "so-SO-UbaxNeural",
+    "name": "Ubax",
+    "gender": "Female",
+    "language": "Somali (Somalia)"
+  },
+  {
+    "id": "es-AR-ElenaNeural",
+    "name": "Elena",
+    "gender": "Female",
+    "language": "Spanish (Argentina)"
+  },
+  {
+    "id": "es-AR-TomasNeural",
+    "name": "Tomas",
+    "gender": "Male",
+    "language": "Spanish (Argentina)"
+  },
+  {
+    "id": "es-BO-MarceloNeural",
+    "name": "Marcelo",
+    "gender": "Male",
+    "language": "Spanish (Bolivia)"
+  },
+  {
+    "id": "es-BO-SofiaNeural",
+    "name": "Sofia",
+    "gender": "Female",
+    "language": "Spanish (Bolivia)"
+  },
+  {
+    "id": "es-CL-CatalinaNeural",
+    "name": "Catalina",
+    "gender": "Female",
+    "language": "Spanish (Chile)"
+  },
+  {
+    "id": "es-CL-LorenzoNeural",
+    "name": "Lorenzo",
+    "gender": "Male",
+    "language": "Spanish (Chile)"
+  },
+  {
+    "id": "es-CO-GonzaloNeural",
+    "name": "Gonzalo",
+    "gender": "Male",
+    "language": "Spanish (Colombia)"
+  },
+  {
+    "id": "es-CO-SalomeNeural",
+    "name": "Salome",
+    "gender": "Female",
+    "language": "Spanish (Colombia)"
+  },
+  {
+    "id": "es-ES-XimenaNeural",
+    "name": "Ximena",
+    "gender": "Female",
+    "language": "Spanish (Colombia)"
+  },
+  {
+    "id": "es-CR-JuanNeural",
+    "name": "Juan",
+    "gender": "Male",
+    "language": "Spanish (Costa Rica)"
+  },
+  {
+    "id": "es-CR-MariaNeural",
+    "name": "Maria",
+    "gender": "Female",
+    "language": "Spanish (Costa Rica)"
+  },
+  {
+    "id": "es-CU-BelkysNeural",
+    "name": "Belkys",
+    "gender": "Female",
+    "language": "Spanish (Cuba)"
+  },
+  {
+    "id": "es-CU-ManuelNeural",
+    "name": "Manuel",
+    "gender": "Male",
+    "language": "Spanish (Cuba)"
+  },
+  {
+    "id": "es-DO-EmilioNeural",
+    "name": "Emilio",
+    "gender": "Male",
+    "language": "Spanish (Dominican Republic)"
+  },
+  {
+    "id": "es-DO-RamonaNeural",
+    "name": "Ramona",
+    "gender": "Female",
+    "language": "Spanish (Dominican Republic)"
+  },
+  {
+    "id": "es-EC-AndreaNeural",
+    "name": "Andrea",
+    "gender": "Female",
+    "language": "Spanish (Ecuador)"
+  },
+  {
+    "id": "es-EC-LuisNeural",
+    "name": "Luis",
+    "gender": "Male",
+    "language": "Spanish (Ecuador)"
+  },
+  {
+    "id": "es-SV-LorenaNeural",
+    "name": "Lorena",
+    "gender": "Female",
+    "language": "Spanish (El Salvador)"
+  },
+  {
+    "id": "es-SV-RodrigoNeural",
+    "name": "Rodrigo",
+    "gender": "Male",
+    "language": "Spanish (El Salvador)"
+  },
+  {
+    "id": "es-GQ-JavierNeural",
+    "name": "Javier",
+    "gender": "Male",
+    "language": "Spanish (Equatorial Guinea)"
+  },
+  {
+    "id": "es-GQ-TeresaNeural",
+    "name": "Teresa",
+    "gender": "Female",
+    "language": "Spanish (Equatorial Guinea)"
+  },
+  {
+    "id": "es-GT-AndresNeural",
+    "name": "Andres",
+    "gender": "Male",
+    "language": "Spanish (Guatemala)"
+  },
+  {
+    "id": "es-GT-MartaNeural",
+    "name": "Marta",
+    "gender": "Female",
+    "language": "Spanish (Guatemala)"
+  },
+  {
+    "id": "es-HN-CarlosNeural",
+    "name": "Carlos",
+    "gender": "Male",
+    "language": "Spanish (Honduras)"
+  },
+  {
+    "id": "es-HN-KarlaNeural",
+    "name": "Karla",
+    "gender": "Female",
+    "language": "Spanish (Honduras)"
+  },
+  {
+    "id": "es-MX-DaliaNeural",
+    "name": "Dalia",
+    "gender": "Female",
+    "language": "Spanish (Mexico)"
+  },
+  {
+    "id": "es-MX-JorgeNeural",
+    "name": "Jorge",
+    "gender": "Male",
+    "language": "Spanish (Mexico)"
+  },
+  {
+    "id": "es-NI-FedericoNeural",
+    "name": "Federico",
+    "gender": "Male",
+    "language": "Spanish (Nicaragua)"
+  },
+  {
+    "id": "es-NI-YolandaNeural",
+    "name": "Yolanda",
+    "gender": "Female",
+    "language": "Spanish (Nicaragua)"
+  },
+  {
+    "id": "es-PA-MargaritaNeural",
+    "name": "Margarita",
+    "gender": "Female",
+    "language": "Spanish (Panama)"
+  },
+  {
+    "id": "es-PA-RobertoNeural",
+    "name": "Roberto",
+    "gender": "Male",
+    "language": "Spanish (Panama)"
+  },
+  {
+    "id": "es-PY-MarioNeural",
+    "name": "Mario",
+    "gender": "Male",
+    "language": "Spanish (Paraguay)"
+  },
+  {
+    "id": "es-PY-TaniaNeural",
+    "name": "Tania",
+    "gender": "Female",
+    "language": "Spanish (Paraguay)"
+  },
+  {
+    "id": "es-PE-AlexNeural",
+    "name": "Alex",
+    "gender": "Male",
+    "language": "Spanish (Peru)"
+  },
+  {
+    "id": "es-PE-CamilaNeural",
+    "name": "Camila",
+    "gender": "Female",
+    "language": "Spanish (Peru)"
+  },
+  {
+    "id": "es-PR-KarinaNeural",
+    "name": "Karina",
+    "gender": "Female",
+    "language": "Spanish (Puerto Rico)"
+  },
+  {
+    "id": "es-PR-VictorNeural",
+    "name": "Victor",
+    "gender": "Male",
+    "language": "Spanish (Puerto Rico)"
+  },
+  {
+    "id": "es-ES-AlvaroNeural",
+    "name": "Alvaro",
+    "gender": "Male",
+    "language": "Spanish (Spain)"
+  },
+  {
+    "id": "es-ES-ElviraNeural",
+    "name": "Elvira",
+    "gender": "Female",
+    "language": "Spanish (Spain)"
+  },
+  {
+    "id": "es-US-AlonsoNeural",
+    "name": "Alonso",
+    "gender": "Male",
+    "language": "Spanish (United States)"
+  },
+  {
+    "id": "es-US-PalomaNeural",
+    "name": "Paloma",
+    "gender": "Female",
+    "language": "Spanish (United States)"
+  },
+  {
+    "id": "es-UY-MateoNeural",
+    "name": "Mateo",
+    "gender": "Male",
+    "language": "Spanish (Uruguay)"
+  },
+  {
+    "id": "es-UY-ValentinaNeural",
+    "name": "Valentina",
+    "gender": "Female",
+    "language": "Spanish (Uruguay)"
+  },
+  {
+    "id": "es-VE-PaolaNeural",
+    "name": "Paola",
+    "gender": "Female",
+    "language": "Spanish (Venezuela)"
+  },
+  {
+    "id": "es-VE-SebastianNeural",
+    "name": "Sebastian",
+    "gender": "Male",
+    "language": "Spanish (Venezuela)"
+  },
+  {
+    "id": "su-ID-JajangNeural",
+    "name": "Jajang",
+    "gender": "Male",
+    "language": "Sundanese (Indonesia)"
+  },
+  {
+    "id": "su-ID-TutiNeural",
+    "name": "Tuti",
+    "gender": "Female",
+    "language": "Sundanese (Indonesia)"
+  },
+  {
+    "id": "sw-KE-RafikiNeural",
+    "name": "Rafiki",
+    "gender": "Male",
+    "language": "Swahili (Kenya)"
+  },
+  {
+    "id": "sw-KE-ZuriNeural",
+    "name": "Zuri",
+    "gender": "Female",
+    "language": "Swahili (Kenya)"
+  },
+  {
+    "id": "sw-TZ-DaudiNeural",
+    "name": "Daudi",
+    "gender": "Male",
+    "language": "Swahili (Tanzania)"
+  },
+  {
+    "id": "sw-TZ-RehemaNeural",
+    "name": "Rehema",
+    "gender": "Female",
+    "language": "Swahili (Tanzania)"
+  },
+  {
+    "id": "sv-SE-MattiasNeural",
+    "name": "Mattias",
+    "gender": "Male",
+    "language": "Swedish (Sweden)"
+  },
+  {
+    "id": "sv-SE-SofieNeural",
+    "name": "Sofie",
+    "gender": "Female",
+    "language": "Swedish (Sweden)"
+  },
+  {
+    "id": "ta-IN-PallaviNeural",
+    "name": "Pallavi",
+    "gender": "Female",
+    "language": "Tamil (India)"
+  },
+  {
+    "id": "ta-IN-ValluvarNeural",
+    "name": "Valluvar",
+    "gender": "Male",
+    "language": "Tamil (India)"
+  },
+  {
+    "id": "ta-MY-KaniNeural",
+    "name": "Kani",
+    "gender": "Female",
+    "language": "Tamil (Malaysia)"
+  },
+  {
+    "id": "ta-MY-SuryaNeural",
+    "name": "Surya",
+    "gender": "Male",
+    "language": "Tamil (Malaysia)"
+  },
+  {
+    "id": "ta-SG-AnbuNeural",
+    "name": "Anbu",
+    "gender": "Male",
+    "language": "Tamil (Singapore)"
+  },
+  {
+    "id": "ta-SG-VenbaNeural",
+    "name": "Venba",
+    "gender": "Female",
+    "language": "Tamil (Singapore)"
+  },
+  {
+    "id": "ta-LK-KumarNeural",
+    "name": "Kumar",
+    "gender": "Male",
+    "language": "Tamil (Sri Lanka)"
+  },
+  {
+    "id": "ta-LK-SaranyaNeural",
+    "name": "Saranya",
+    "gender": "Female",
+    "language": "Tamil (Sri Lanka)"
+  },
+  {
+    "id": "te-IN-MohanNeural",
+    "name": "Mohan",
+    "gender": "Male",
+    "language": "Telugu (India)"
+  },
+  {
+    "id": "te-IN-ShrutiNeural",
+    "name": "Shruti",
+    "gender": "Female",
+    "language": "Telugu (India)"
+  },
+  {
+    "id": "th-TH-NiwatNeural",
+    "name": "Niwat",
+    "gender": "Male",
+    "language": "Thai (Thailand)"
+  },
+  {
+    "id": "th-TH-PremwadeeNeural",
+    "name": "Premwadee",
+    "gender": "Female",
+    "language": "Thai (Thailand)"
+  },
+  {
+    "id": "tr-TR-EmelNeural",
+    "name": "Emel",
+    "gender": "Female",
+    "language": "Turkish (Turkey)"
+  },
+  {
+    "id": "tr-TR-AhmetNeural",
+    "name": "Ahmet",
+    "gender": "Male",
+    "language": "Turkish (Türkiye)"
+  },
+  {
+    "id": "uk-UA-OstapNeural",
+    "name": "Ostap",
+    "gender": "Male",
+    "language": "Ukrainian (Ukraine)"
+  },
+  {
+    "id": "uk-UA-PolinaNeural",
+    "name": "Polina",
+    "gender": "Female",
+    "language": "Ukrainian (Ukraine)"
+  },
+  {
+    "id": "ur-IN-GulNeural",
+    "name": "Gul",
+    "gender": "Female",
+    "language": "Urdu (India)"
+  },
+  {
+    "id": "ur-IN-SalmanNeural",
+    "name": "Salman",
+    "gender": "Male",
+    "language": "Urdu (India)"
+  },
+  {
+    "id": "ur-PK-AsadNeural",
+    "name": "Asad",
+    "gender": "Male",
+    "language": "Urdu (Pakistan)"
+  },
+  {
+    "id": "ur-PK-UzmaNeural",
+    "name": "Uzma",
+    "gender": "Female",
+    "language": "Urdu (Pakistan)"
+  },
+  {
+    "id": "uz-UZ-MadinaNeural",
+    "name": "Madina",
+    "gender": "Female",
+    "language": "Uzbek (Uzbekistan)"
+  },
+  {
+    "id": "uz-UZ-SardorNeural",
+    "name": "Sardor",
+    "gender": "Male",
+    "language": "Uzbek (Uzbekistan)"
+  },
+  {
+    "id": "vi-VN-HoaiMyNeural",
+    "name": "HoaiMy",
+    "gender": "Female",
+    "language": "Vietnamese (Vietnam)"
+  },
+  {
+    "id": "vi-VN-NamMinhNeural",
+    "name": "NamMinh",
+    "gender": "Male",
+    "language": "Vietnamese (Vietnam)"
+  },
+  {
+    "id": "cy-GB-AledNeural",
+    "name": "Aled",
+    "gender": "Male",
+    "language": "Welsh (United Kingdom)"
+  },
+  {
+    "id": "cy-GB-NiaNeural",
+    "name": "Nia",
+    "gender": "Female",
+    "language": "Welsh (United Kingdom)"
+  },
+  {
+    "id": "zu-ZA-ThandoNeural",
+    "name": "Thando",
+    "gender": "Female",
+    "language": "Zulu (South Africa)"
+  },
+  {
+    "id": "zu-ZA-ThembaNeural",
+    "name": "Themba",
+    "gender": "Male",
+    "language": "Zulu (South Africa)"
+  }
+]

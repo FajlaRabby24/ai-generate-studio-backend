@@ -51,7 +51,6 @@ router.use(
 router.use(
   "/text-to-speech",
   rateLimiters.generationLimiter,
-  checkAuth(),
   TextToSpeechRoutes,
 );
 

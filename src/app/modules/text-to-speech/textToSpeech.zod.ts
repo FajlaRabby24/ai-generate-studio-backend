@@ -47,6 +47,29 @@ const generateTextToSpeechSchema = z.object({
   }),
 });
 
+const testTextToSpeechSchema = z.object({
+  prompt: z.string({
+    error: "Prompt is required",
+  }),
+  voiceId: z.string({
+    error: "Voice option is required",
+  }),
+  type: z.nativeEnum(GenerationType, {
+    message: "Invalid generation type",
+  }),
+});
+
+export const getVoicesSchema = z.object({
+  lang: z.string({
+    error: "Language is required",
+  }),
+  gender: z.string({
+    error: "Gender is required",
+  }),
+});
+
 export const TextToSpeechValidation = {
   generateTextToSpeechSchema,
+  getVoicesSchema,
+  testTextToSpeechSchema,
 };
