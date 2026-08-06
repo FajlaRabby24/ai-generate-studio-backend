@@ -13,6 +13,8 @@ model ImageToVideo {
 
     generated Generated @relation(fields: [generatedId], references: [id], onDelete: Cascade)
 
+    @@index([generatedId])
+    @@index([requestId])
     @@map("image_to_video")
 }
 

@@ -12,5 +12,7 @@ model TextToVideo {
 
     generated Generated @relation(fields: [generatedId], references: [id], onDelete: Cascade)
 
+    @@index([generatedId])
+    @@index([requestId])
     @@map("text_to_video")
 }

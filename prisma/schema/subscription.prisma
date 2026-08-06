@@ -20,5 +20,6 @@ model Subscription {
   user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   payments Payment[]
 
+  @@index([userId])
   @@map("subscription")
 }

@@ -11,5 +11,6 @@ model BackgroundRemove {
 
     generated Generated @relation(fields: [generatedId], references: [id], onDelete: Cascade)
 
+    @@index([generatedId])
     @@map("background_remove")
 }

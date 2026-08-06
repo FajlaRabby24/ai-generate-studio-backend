@@ -20,5 +20,6 @@ model ResumeAnalyzer {
 
     generated Generated @relation(fields: [generatedId], references: [id], onDelete: Cascade)
 
+    @@index([generatedId])
     @@map("resume_analyzers")
 }

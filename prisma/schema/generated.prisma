@@ -14,5 +14,7 @@ model Generated {
     textToImages      TextToImage[]
     resumeAnalyzers   ResumeAnalyzer[]
 
+    @@index([userId, isDeleted])
+    @@index([type])
     @@map("generated")
 }

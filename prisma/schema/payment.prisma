@@ -14,5 +14,7 @@ model Payment {
   subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
   subscriptionId String?
 
+  @@index([userId])
+  @@index([subscriptionId])
   @@map("payments")
 }

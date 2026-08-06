@@ -9,5 +9,6 @@ model AIChat {
 
     generated Generated @relation(fields: [generatedId], references: [id], onDelete: Cascade)
 
+    @@index([generatedId])
     @@map("ai_chat")
 }
