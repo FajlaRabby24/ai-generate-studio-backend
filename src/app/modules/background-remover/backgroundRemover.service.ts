@@ -15,8 +15,6 @@ const removeBackground = async (
 ) => {
   const fileBlob = new Blob([new Uint8Array(fileBuffer)], { type: mimetype });
 
-  console.log("file blob", fileBlob);
-
   const formData = new FormData();
   formData.append("size", "auto");
   formData.append("image_file", fileBlob, originalname);
@@ -37,7 +35,7 @@ const removeBackground = async (
 
   const rbgResultData = await response.arrayBuffer();
   const resultBuffer = Buffer.from(rbgResultData);
-  console.log("result buffer", resultBuffer);
+
   const uploadImage = await CloudinaryImageUpload(resultBuffer);
   if (!uploadImage.success || !uploadImage.secureUrl) {
     throw new Error("Failed to upload background-removed image to Cloudinary");
@@ -55,41 +53,46 @@ const removeBackground = async (
             inputImageUrl = inputUpload.secureUrl;
           }
         } catch (err) {
-          console.warn("Failed to upload input image reference to Cloudinary:", err);
+          throw new Error(
+            `Failed to upload input image reference to Cloudinary: ${err}`,
+          );
         }
 
-        const generated = await prisma.generated.create({
-          data: {
-            userId,
-            type: GenerationType.IMAGE_BACKGROUND_REMOVER,
-          },
-        });
+        await prisma.$transaction(async (tx) => {
+          const generated = await prisma.generated.create({
+            data: {
+              userId,
+              type: GenerationType.IMAGE_BACKGROUND_REMOVER,
+            },
+          });
 
-        await prisma.backgroundRemove.create({
-          data: {
-            generatedId: generated.id,
-            status: GenerationStatus.COMPLETED,
-            imageUrl: inputImageUrl,
-            outputUrls: secureUrl,
-          },
-        });
+          await prisma.backgroundRemove.create({
+            data: {
+              generatedId: generated.id,
+              status: GenerationStatus.COMPLETED,
+              imageUrl: inputImageUrl,
+              outputUrls: secureUrl,
+            },
+          });
 
-      await prisma.user.update({
-        where: { id: userId },
-        data: {
-          imageBackgroundRemover: {
-            decrement: 1,
-          },
-        },
-      });
+          await prisma.user.update({
+            where: { id: userId },
+            data: {
+              imageBackgroundRemoverLastRefreshAT: new Date(),
+              imageBackgroundRemover: {
+                decrement: 1,
+              },
+            },
+          });
+        });
       } catch (error) {
-        console.error("[Background BG Remover Job Error]:", error);
+        throw new Error(`[Background BG Remover Job Error]: ${error}`);
       }
     })();
   });
 
   // Return the base64 string immediately to minimize response latency
-  return secureUrl;
+  return { secureUrl };
 };
 
 export const BackgroundRemoverService = {
