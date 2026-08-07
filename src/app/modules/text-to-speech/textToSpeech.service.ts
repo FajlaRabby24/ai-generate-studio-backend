@@ -42,28 +42,36 @@ const singleVoiceTTSService = async (
   setImmediate(() => {
     (async () => {
       try {
-        // Generate history item
-        await prisma.generation.create({
-          data: {
-            outputUrls: uploadResponse.secureUrl,
-            type: GenerationType.TEXT_TO_SPEECH,
-            prompt,
-            userId,
-            status: GenerationStatus.COMPLETED,
-          },
-        });
-
-        // Decrement user credit limit
-        await prisma.user.update({
-          where: {
-            id: userId,
-          },
-          data: {
-            textToSpeechLastRefreshAT: new Date(),
-            [field]: {
-              decrement: 1,
+        await prisma.$transaction(async (tx) => {
+          const generated = await tx.generated.create({
+            data: {
+              userId,
+              type: GenerationType.TEXT_TO_SPEECH,
             },
-          },
+          });
+
+          await tx.textToSpeech.create({
+            data: {
+              generatedId: generated.id,
+              status: GenerationStatus.COMPLETED,
+              prompt,
+              voiceId: voice,
+              audioUrl: uploadResponse.secureUrl!,
+            },
+          });
+
+          // Decrement user credit limit
+          await tx.user.update({
+            where: {
+              id: userId,
+            },
+            data: {
+              textToSpeechLastRefreshAT: new Date(),
+              [field]: {
+                decrement: 1,
+              },
+            },
+          });
         });
       } catch (dbError) {
         console.error("[Background DB Error - Text to Speech]:", dbError);
@@ -109,20 +117,26 @@ const textToSpeech = async (
   setImmediate(() => {
     (async () => {
       try {
-        // Generate history item
         await prisma.$transaction(async (tx) => {
-          await prisma.generation.create({
+          const generated = await tx.generated.create({
             data: {
-              outputUrls: uploadResponse.secureUrl,
-              type: GenerationType.TEXT_TO_SPEECH,
-              prompt,
               userId,
+              type: GenerationType.TEXT_TO_SPEECH,
+            },
+          });
+
+          await tx.textToSpeech.create({
+            data: {
+              generatedId: generated.id,
               status: GenerationStatus.COMPLETED,
+              prompt,
+              voiceId: voiceId,
+              audioUrl: uploadResponse.secureUrl!,
             },
           });
 
           // Decrement user credit limit
-          await prisma.user.update({
+          await tx.user.update({
             where: {
               id: userId,
             },
@@ -135,7 +149,7 @@ const textToSpeech = async (
           });
         });
       } catch (dbError) {
-        console.error("[Background DB Error - Text to Speech]:", dbError);
+        throw new Error(`[Background DB Error - Text to Speech]:${dbError}`);
       }
     })();
   });

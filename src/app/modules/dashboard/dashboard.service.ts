@@ -25,6 +25,7 @@ const userDashboardStats = async (userId: string) => {
       imageToVideos: true,
       aichats: true,
       resumeAnalyzers: true,
+      textToSpeeches: true,
     },
     orderBy: { createdAt: "desc" },
     take: 5,
@@ -59,6 +60,10 @@ const userDashboardStats = async (userId: string) => {
       prompt = "Resume analysis & review";
       outputUrls = JSON.stringify(item.resumeAnalyzers[0]);
       status = item.resumeAnalyzers[0].status;
+    } else if (item.textToSpeeches && item.textToSpeeches[0]) {
+      prompt = item.textToSpeeches[0].prompt;
+      outputUrls = item.textToSpeeches[0].audioUrl;
+      status = item.textToSpeeches[0].status;
     }
 
     return {

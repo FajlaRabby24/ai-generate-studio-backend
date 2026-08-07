@@ -1,0 +1,17 @@
+model TextToSpeech {
+    id          String           @id @default(uuid())
+    generatedId String
+    status      GenerationStatus @default(PENDING)
+    prompt      String
+    voiceId     String
+    audioUrl    String
+    isPublic    Boolean          @default(true)
+    isFeatured  Boolean          @default(false)
+    createdAt   DateTime         @default(now())
+    updatedAt   DateTime         @updatedAt
+
+    generated Generated @relation(fields: [generatedId], references: [id], onDelete: Cascade)
+
+    @@index([generatedId])
+    @@map("text_to_speech")
+}

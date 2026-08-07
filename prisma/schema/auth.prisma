@@ -25,7 +25,7 @@ model User {
   resumeAnalyzer         Int @default(3)
   languageTranslator     Int @default(3)
   grammarChecker         Int @default(3)
-  textToSpeech           Int @default(3)
+  textToSpeech           Int @default(10)
   speechToText           Int @default(3)
   imageToVideo           Int @default(1)
   textToVideo            Int @default(1)

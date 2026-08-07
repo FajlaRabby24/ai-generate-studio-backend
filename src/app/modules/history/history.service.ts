@@ -18,6 +18,7 @@ const getMyHistoryFromDB = async (
         { imageToVideos: { some: { prompt: { contains: searchTerm, mode: "insensitive" } } } },
         { aichats: { some: { input: { contains: searchTerm, mode: "insensitive" } } } },
         { resumeAnalyzers: { some: { summary: { contains: searchTerm, mode: "insensitive" } } } },
+        { textToSpeeches: { some: { prompt: { contains: searchTerm, mode: "insensitive" } } } },
       ],
     });
   }
@@ -42,6 +43,7 @@ const getMyHistoryFromDB = async (
     imageToVideos: true,
     aichats: true,
     resumeAnalyzers: true,
+    textToSpeeches: true,
   });
 
   const result = await historyQuery.execute();
@@ -79,6 +81,10 @@ const getMyHistoryFromDB = async (
       prompt = "Resume analysis & review";
       outputUrls = JSON.stringify(item.resumeAnalyzers[0]);
       status = item.resumeAnalyzers[0].status;
+    } else if (item.textToSpeeches && item.textToSpeeches[0]) {
+      prompt = item.textToSpeeches[0].prompt;
+      outputUrls = item.textToSpeeches[0].audioUrl;
+      status = item.textToSpeeches[0].status;
     }
 
     return {
