@@ -32,7 +32,7 @@ const resumeAnalyzer = catchAsync(async (req: Request, res: Response) => {
   const parseResult = (await parser.getText()).text;
 
   const result = await ResumeAnalyzerService.analyzeResume(
-    // userId,
+    userId,
     parseResult,
     prompt,
   );

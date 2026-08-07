@@ -120,55 +120,59 @@ const updateVideoStatusFromWebhook = async (payload: {
     const videoUrl = output.media_url[0];
     let secureUrl = videoUrl;
 
-    // Mark generation as completed in database
-    await prisma.imageToVideo.update({
-      where: { id: generation.id },
-      data: {
-        status: GenerationStatus.COMPLETED,
-        outputUrl: secureUrl,
-      },
-    });
-
-    // Decrement user credit limit
-    await prisma.user.update({
-      where: { id: generation.generated.userId },
-      data: {
-        imageToVideoLastRefreshAT: new Date(),
-        imageToVideo: {
-          decrement: 1,
+    await prisma.$transaction(async (tx) => {
+      // Mark generation as completed in database
+      await tx.imageToVideo.update({
+        where: { id: generation.id },
+        data: {
+          status: GenerationStatus.COMPLETED,
+          outputUrl: secureUrl,
         },
-      },
-    });
+      });
 
-    // Create success notification
-    await prisma.notification.create({
-      data: {
-        userId: generation.generated.userId,
-        title: "Image to Video Success",
-        message: `Your image-to-video generation for prompt: "${generation.prompt.substring(0, 60)}..." is ready!`,
-        type: NotificationType.SYSTEM,
-      },
+      // Decrement user credit limit
+      await tx.user.update({
+        where: { id: generation.generated.userId },
+        data: {
+          imageToVideoLastRefreshAT: new Date(),
+          imageToVideo: {
+            decrement: 1,
+          },
+        },
+      });
+
+      // Create success notification
+      await tx.notification.create({
+        data: {
+          userId: generation.generated.userId,
+          title: "Image to Video Success",
+          message: `Your image-to-video generation for prompt: "${generation.prompt.substring(0, 60)}..." is ready!`,
+          type: NotificationType.SYSTEM,
+        },
+      });
     });
 
     return true;
   } else {
     // Mark generation as failed in database
-    await prisma.imageToVideo.update({
-      where: { id: generation.id },
-      data: {
-        status: GenerationStatus.FAILED,
-        outputUrl: error || "Generation failed",
-      },
-    });
+    await prisma.$transaction(async (tx) => {
+      await tx.imageToVideo.update({
+        where: { id: generation.id },
+        data: {
+          status: GenerationStatus.FAILED,
+          outputUrl: error || "Generation failed",
+        },
+      });
 
-    // Create failure notification
-    await prisma.notification.create({
-      data: {
-        userId: generation.generated.userId,
-        title: "Image to Video Failed",
-        message: `Your image-to-video generation request for prompt: "${generation.prompt.substring(0, 60)}..." failed. Error: ${error || "Unknown error"}.`,
-        type: NotificationType.ALERT,
-      },
+      // Create failure notification
+      await tx.notification.create({
+        data: {
+          userId: generation.generated.userId,
+          title: "Image to Video Failed",
+          message: `Your image-to-video generation request for prompt: "${generation.prompt.substring(0, 60)}..." failed. Error: ${error || "Unknown error"}.`,
+          type: NotificationType.ALERT,
+        },
+      });
     });
 
     return false;

@@ -29,8 +29,6 @@ const imageToVideo = catchAsync(async (req: Request, res: Response) => {
     return sendResponse(res, status.BAD_REQUEST, false, "Prompt is required");
   }
 
-  const field = req.currentGenerationField;
-
   const result = await ImageToVideoService.imageToVideo(
     userId,
     req.file.buffer,

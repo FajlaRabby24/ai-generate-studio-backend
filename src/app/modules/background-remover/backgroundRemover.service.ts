@@ -59,14 +59,14 @@ const removeBackground = async (
         }
 
         await prisma.$transaction(async (tx) => {
-          const generated = await prisma.generated.create({
+          const generated = await tx.generated.create({
             data: {
               userId,
               type: GenerationType.IMAGE_BACKGROUND_REMOVER,
             },
           });
 
-          await prisma.backgroundRemove.create({
+          await tx.backgroundRemove.create({
             data: {
               generatedId: generated.id,
               status: GenerationStatus.COMPLETED,
@@ -75,7 +75,7 @@ const removeBackground = async (
             },
           });
 
-          await prisma.user.update({
+          await tx.user.update({
             where: { id: userId },
             data: {
               imageBackgroundRemoverLastRefreshAT: new Date(),
