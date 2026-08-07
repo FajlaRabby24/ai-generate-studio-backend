@@ -8,12 +8,12 @@ import { AiChatBotValidation } from "./aiChatBot.zod";
 
 const router = Router();
 
-router.post(
-  "/",
-  validateRequest(AiChatBotValidation.chatValidationSchema),
-  checkGenerateAuth(GenerationType.AI_CHATBOT),
-  AiChatBotController.chatResponse,
-);
+// router.post(
+//   "/",
+//   validateRequest(AiChatBotValidation.chatValidationSchema),
+//   checkGenerateAuth(GenerationType.AI_CHATBOT),
+//   AiChatBotController.chatResponse,
+// );
 
 router.post(
   "/stream",
@@ -26,13 +26,13 @@ router.post(
 router.get(
   "/conversations",
   checkAuth(),
-  AiChatBotController.getUserConversationsController,
+  AiChatBotController.getUserConversationsTitle,
 );
 
 router.get(
   "/conversations/:conversationId",
   checkAuth(),
-  AiChatBotController.getConversationChatsController,
+  AiChatBotController.getConversationChatsById,
 );
 
 export const AiChatBotRoutes = router;

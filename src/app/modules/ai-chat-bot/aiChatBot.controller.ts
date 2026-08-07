@@ -4,34 +4,34 @@ import { catchAsync } from "../../shared/catchAsync";
 import { sendResponse } from "../../shared/sendResponse";
 import { AiChatBot } from "./aiChatBot.service";
 
-const chatResponse = catchAsync(async (req: Request, res: Response) => {
-  const { message, conversationId } = req.body;
-  const userId = req.user?.id;
+// const chatResponse = catchAsync(async (req: Request, res: Response) => {
+//   const { message, conversationId } = req.body;
+//   const userId = req.user?.id;
 
-  if (!userId) {
-    return sendResponse(
-      res,
-      status.UNAUTHORIZED,
-      false,
-      "Unauthorized: User not found in request context",
-      null,
-    );
-  }
+//   if (!userId) {
+//     return sendResponse(
+//       res,
+//       status.UNAUTHORIZED,
+//       false,
+//       "Unauthorized: User not found in request context",
+//       null,
+//     );
+//   }
 
-  const responseText = await AiChatBot.ChatbotService(
-    userId,
-    message,
-    conversationId,
-  );
+//   const responseText = await AiChatBot.ChatbotService(
+//     userId,
+//     message,
+//     conversationId,
+//   );
 
-  sendResponse(
-    res,
-    status.OK,
-    true,
-    "Chat response generated successfully",
-    responseText,
-  );
-});
+//   sendResponse(
+//     res,
+//     status.OK,
+//     true,
+//     "Chat response generated successfully",
+//     responseText,
+//   );
+// });
 
 const streamChatResponse = catchAsync(async (req: Request, res: Response) => {
   const { message, conversationId } = req.body;
@@ -63,7 +63,33 @@ const streamChatResponse = catchAsync(async (req: Request, res: Response) => {
   );
 });
 
-const getConversationChatsController = catchAsync(
+const getUserConversationsTitle = catchAsync(
+  async (req: Request, res: Response) => {
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return sendResponse(
+        res,
+        status.UNAUTHORIZED,
+        false,
+        "Unauthorized: User not found in request context",
+        null,
+      );
+    }
+
+    const conversations = await AiChatBot.getUserConversationsTitle(userId);
+
+    sendResponse(
+      res,
+      status.OK,
+      true,
+      "Conversations retrieved successfully",
+      conversations,
+    );
+  },
+);
+
+const getConversationChatsById = catchAsync(
   async (req: Request, res: Response) => {
     const { conversationId } = req.params;
     const userId = req.user?.id;
@@ -88,7 +114,7 @@ const getConversationChatsController = catchAsync(
       );
     }
 
-    const conversation = await AiChatBot.getConversationChats(
+    const conversation = await AiChatBot.getConversationChatsById(
       userId,
       conversationId as string,
     );
@@ -103,35 +129,9 @@ const getConversationChatsController = catchAsync(
   },
 );
 
-const getUserConversationsController = catchAsync(
-  async (req: Request, res: Response) => {
-    const userId = req.user?.id;
-
-    if (!userId) {
-      return sendResponse(
-        res,
-        status.UNAUTHORIZED,
-        false,
-        "Unauthorized: User not found in request context",
-        null,
-      );
-    }
-
-    const conversations = await AiChatBot.getUserConversations(userId);
-
-    sendResponse(
-      res,
-      status.OK,
-      true,
-      "Conversations retrieved successfully",
-      conversations,
-    );
-  },
-);
-
 export const AiChatBotController = {
-  chatResponse,
+  // chatResponse,
   streamChatResponse,
-  getConversationChatsController,
-  getUserConversationsController,
+  getUserConversationsTitle,
+  getConversationChatsById,
 };

@@ -1,4 +1,3 @@
-import { GoogleGenAI } from "@google/genai";
 import type { Response } from "express";
 import Groq from "groq-sdk";
 import {
@@ -8,51 +7,73 @@ import {
 import { envVars } from "../../config/env";
 import { prisma } from "../../lib/prisma";
 
-const ai = new GoogleGenAI({ apiKey: envVars.GEMINI_API_KEY });
-
 // const ChatbotService = async (
 //   userId: string,
 //   userMessage: string,
-//   chatHistory: any[],
+//   conversationId: string | undefined, // * undefined means new conversation
 // ) => {
+//   let aiChat = conversationId
+//     ? await prisma.aIChat.findUnique({
+//         where: {
+//           id: conversationId,
+//         },
+//         select: {
+//           id: true,
+//           chatHistory: true,
+//         },
+//       })
+//     : null;
+
+//   const previousHistory = (aiChat?.chatHistory as any[]) || [];
+
 //   const chat = ai.chats.create({
 //     model: "gemini-3.6-flash",
-//     history: chatHistory,
+//     history: previousHistory,
 //   });
 
-//   const response = await chat.sendMessage({ message: userMessage});
+//   const response = await chat.sendMessage({ message: userMessage });
 //   const responseText = response.text || "";
 
-//   // Perform background DB updates to store history and decrement quota
+//   const newEntries = [
+//     { role: "user", parts: [{ text: userMessage }] },
+//     { role: "model", parts: [{ text: responseText }] },
+//   ];
+
+//   // Background DB updates
 //   setImmediate(() => {
 //     (async () => {
 //       try {
-//         const generated = await prisma.generated.create({
-//           data: {
-//             userId,
-//             type: GenerationType.AI_CHATBOT,
-//           },
-//         });
+//         if (aiChat) {
+//           // existing conversation — শুধু push করুন
+//           await prisma.aIChat.update({
+//             where: { id: aiChat.id },
+//             data: {
+//               chatHistory: { push: newEntries },
+//             },
+//           });
+//         } else {
+//           // নতুন conversation — একবারই create করুন
+//           const generated = await prisma.generated.create({
+//             data: {
+//               userId,
+//               type: GenerationType.AI_CHATBOT,
+//             },
+//           });
 
-//         await prisma.aIChat.create({
-//           data: {
-//             generatedId: generated.id,
-//             status: GenerationStatus.COMPLETED,
-//             chatHistory: chatHistory.map((item) =>
-//               typeof item === "object" ? JSON.stringify(item) : String(item),
-//             ),
-//           },
-//         });
+//           aiChat = await prisma.aIChat.create({
+//             data: {
+//               generatedId: generated.id,
+//               status: GenerationStatus.COMPLETED,
+//               chatHistory: newEntries,
+//             },
+//           });
+//         }
 
 //         await prisma.user.update({
-//           where: {
-//             id: userId,
-//           },
+//           where: { id: userId },
 //           data: {
 //             aiChatbotLastRefreshAT: new Date(),
-//             aiChatbot: {
-//               decrement: 1,
-//             },
+//             aiChatbot: { decrement: 1 },
 //           },
 //         });
 //       } catch (dbError) {
@@ -63,89 +84,9 @@ const ai = new GoogleGenAI({ apiKey: envVars.GEMINI_API_KEY });
 
 //   return {
 //     response: responseText,
+//     conversationId: aiChat?.id, // client পরের রিকোয়েস্টে এটা পাঠাবে
 //   };
 // };
-
-const ChatbotService = async (
-  userId: string,
-  userMessage: string,
-  conversationId: string | undefined, // * undefined means new conversation
-) => {
-  let aiChat = conversationId
-    ? await prisma.aIChat.findUnique({
-        where: {
-          id: conversationId,
-        },
-        select: {
-          id: true,
-          chatHistory: true,
-        },
-      })
-    : null;
-
-  const previousHistory = (aiChat?.chatHistory as any[]) || [];
-
-  const chat = ai.chats.create({
-    model: "gemini-3.6-flash",
-    history: previousHistory,
-  });
-
-  const response = await chat.sendMessage({ message: userMessage });
-  const responseText = response.text || "";
-
-  const newEntries = [
-    { role: "user", parts: [{ text: userMessage }] },
-    { role: "model", parts: [{ text: responseText }] },
-  ];
-
-  // Background DB updates
-  setImmediate(() => {
-    (async () => {
-      try {
-        if (aiChat) {
-          // existing conversation — শুধু push করুন
-          await prisma.aIChat.update({
-            where: { id: aiChat.id },
-            data: {
-              chatHistory: { push: newEntries },
-            },
-          });
-        } else {
-          // নতুন conversation — একবারই create করুন
-          const generated = await prisma.generated.create({
-            data: {
-              userId,
-              type: GenerationType.AI_CHATBOT,
-            },
-          });
-
-          aiChat = await prisma.aIChat.create({
-            data: {
-              generatedId: generated.id,
-              status: GenerationStatus.COMPLETED,
-              chatHistory: newEntries,
-            },
-          });
-        }
-
-        await prisma.user.update({
-          where: { id: userId },
-          data: {
-            aiChatbotLastRefreshAT: new Date(),
-            aiChatbot: { decrement: 1 },
-          },
-        });
-      } catch (dbError) {
-        console.error("[Background DB Error - AI Chatbot]:", dbError);
-      }
-    })();
-  });
-
-  return {
-    response: responseText,
-    conversationId: aiChat?.id, // client পরের রিকোয়েস্টে এটা পাঠাবে
-  };
-};
 
 const groq = new Groq({ apiKey: envVars.GROQ_API_KEY_AI_CHAT });
 
@@ -274,7 +215,32 @@ export const StreamChatbotService = async (
   });
 };
 
-const getConversationChats = async (userId: string, conversationId: string) => {
+const getUserConversationsTitle = async (userId: string) => {
+  const conversations = await prisma.aIChat.findMany({
+    where: {
+      generated: {
+        userId,
+        isDeleted: false,
+      },
+    },
+    select: {
+      id: true,
+      title: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return conversations;
+};
+
+const getConversationChatsById = async (
+  userId: string,
+  conversationId: string,
+) => {
   const conversation = await prisma.aIChat.findFirst({
     where: {
       id: conversationId,
@@ -299,31 +265,9 @@ const getConversationChats = async (userId: string, conversationId: string) => {
   return conversation;
 };
 
-const getUserConversations = async (userId: string) => {
-  const conversations = await prisma.aIChat.findMany({
-    where: {
-      generated: {
-        userId,
-        isDeleted: false,
-      },
-    },
-    select: {
-      id: true,
-      title: true,
-      createdAt: true,
-      updatedAt: true,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-
-  return conversations;
-};
-
 export const AiChatBot = {
-  ChatbotService,
+  // ChatbotService,
   StreamChatbotService,
-  getConversationChats,
-  getUserConversations,
+  getUserConversationsTitle,
+  getConversationChatsById,
 };
