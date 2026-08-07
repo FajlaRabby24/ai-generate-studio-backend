@@ -23,7 +23,7 @@ router.post(
   TextToSpeechController.testTextToSpeech,
 );
 
-router.get(
+router.post(
   "/voices",
   validateRequest(TextToSpeechValidation.getVoicesSchema),
   TextToSpeechController.getAllVoices,
