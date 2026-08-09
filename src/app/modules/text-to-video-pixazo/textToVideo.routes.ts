@@ -18,6 +18,12 @@ router.post(
   TextToVideoController.generateVideo,
 );
 
+router.get(
+  "/recent",
+  checkAuth(),
+  TextToVideoController.getRecentGeneration,
+);
+
 // 🎯 নতুন যোগ করা Webhook রাউট
 router.post("/webhook/callback", TextToVideoController.handleVideoWebhook);
 

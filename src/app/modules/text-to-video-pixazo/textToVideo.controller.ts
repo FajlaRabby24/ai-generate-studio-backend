@@ -37,6 +37,24 @@ const generateVideo = catchAsync(async (req: Request, res: Response) => {
   );
 });
 
+const getRecentGeneration = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    return sendResponse(res, status.UNAUTHORIZED, false, "Unauthorized", null);
+  }
+
+  const result = await TextToVideoService.getRecentGeneration(userId);
+
+  sendResponse(
+    res,
+    status.OK,
+    true,
+    "Recent generations retrieved successfully",
+    result,
+  );
+});
+
 // 🎯 নতুন যোগ করা Webhook কন্ট্রোলার
 const handleVideoWebhook = catchAsync(async (req: Request, res: Response) => {
   // Json2Video থেকে আসা ডেটা পাস করে দেওয়া হচ্ছে সার্ভিসে
@@ -58,5 +76,6 @@ const handleVideoWebhook = catchAsync(async (req: Request, res: Response) => {
 
 export const TextToVideoController = {
   generateVideo,
+  getRecentGeneration,
   handleVideoWebhook, // এক্সপোর্ট অবজেক্টে যোগ করা হলো
 };
