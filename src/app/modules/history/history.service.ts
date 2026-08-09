@@ -1,6 +1,6 @@
+import { GenerationType } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import { QueryBuilder } from "../../utils/QueryBuilder";
-import { GenerationStatus, GenerationType } from "../../../generated/prisma/enums";
 
 const getMyHistoryFromDB = async (
   userId: string,
@@ -13,12 +13,31 @@ const getMyHistoryFromDB = async (
   if (searchTerm) {
     searchConditions.push({
       OR: [
-        { textToImages: { some: { prompt: { contains: searchTerm, mode: "insensitive" } } } },
-        { textToVideos: { some: { prompt: { contains: searchTerm, mode: "insensitive" } } } },
-        { imageToVideos: { some: { prompt: { contains: searchTerm, mode: "insensitive" } } } },
-        { aichats: { some: { input: { contains: searchTerm, mode: "insensitive" } } } },
-        { resumeAnalyzers: { some: { summary: { contains: searchTerm, mode: "insensitive" } } } },
-        { textToSpeeches: { some: { prompt: { contains: searchTerm, mode: "insensitive" } } } },
+        {
+          textToImages: {
+            some: { prompt: { contains: searchTerm, mode: "insensitive" } },
+          },
+        },
+        {
+          textToVideos: {
+            some: { prompt: { contains: searchTerm, mode: "insensitive" } },
+          },
+        },
+        {
+          imageToVideos: {
+            some: { prompt: { contains: searchTerm, mode: "insensitive" } },
+          },
+        },
+        {
+          resumeAnalyzers: {
+            some: { summary: { contains: searchTerm, mode: "insensitive" } },
+          },
+        },
+        {
+          textToSpeeches: {
+            some: { prompt: { contains: searchTerm, mode: "insensitive" } },
+          },
+        },
       ],
     });
   }
@@ -29,6 +48,9 @@ const getMyHistoryFromDB = async (
     .where({
       userId,
       isDeleted: false,
+      type: {
+        not: GenerationType.AI_CHATBOT
+      },
       ...(searchConditions.length > 0 ? { AND: searchConditions } : {}),
     })
     .filter()
@@ -41,7 +63,6 @@ const getMyHistoryFromDB = async (
     textToVideos: true,
     backgroundRemoves: true,
     imageToVideos: true,
-    aichats: true,
     resumeAnalyzers: true,
     textToSpeeches: true,
   });
@@ -73,10 +94,6 @@ const getMyHistoryFromDB = async (
       outputUrls = item.imageToVideos[0].outputUrl;
       status = item.imageToVideos[0].status;
       requestId = item.imageToVideos[0].requestId;
-    } else if (item.aichats && item.aichats[0]) {
-      prompt = item.aichats[0].input;
-      outputUrls = item.aichats[0].output;
-      status = item.aichats[0].status;
     } else if (item.resumeAnalyzers && item.resumeAnalyzers[0]) {
       prompt = "Resume analysis & review";
       outputUrls = JSON.stringify(item.resumeAnalyzers[0]);
