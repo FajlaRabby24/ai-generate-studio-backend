@@ -89,9 +89,13 @@ const textToSpeech = async (
   userId: string,
   prompt: string,
   voiceId: string,
+  rate?: string,
+  pitch?: string,
 ) => {
   const communicate = new Communicate(prompt, {
     voice: voiceId,
+    rate,
+    pitch,
   });
 
   const buffers: Buffer[] = [];
@@ -159,6 +163,25 @@ const textToSpeech = async (
   };
 };
 
+const getRecentGeneration = async (userId: string) => {
+  const generations = await prisma.generated.findMany({
+    where: {
+      userId,
+      type: GenerationType.TEXT_TO_SPEECH,
+      isDeleted: false,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 5,
+    include: {
+      textToSpeeches: true,
+    },
+  });
+
+  return generations;
+};
+
 // get voices
 const getVoices = async (lang: string, gender: string) => {
   const filePath = path.join(
@@ -195,4 +218,5 @@ export const textToSpeechService = {
   singleVoiceTTSService,
   textToSpeech,
   getVoices,
+  getRecentGeneration,
 };

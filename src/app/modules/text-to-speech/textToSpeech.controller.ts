@@ -50,7 +50,7 @@ const generateSpeech = catchAsync(async (req: Request, res: Response) => {
 });
 
 const testTextToSpeech = catchAsync(async (req: Request, res: Response) => {
-  const { prompt, voiceId } = req.body;
+  const { prompt, voiceId, rate, pitch } = req.body;
   const userId = req.user?.id;
 
   if (!userId) {
@@ -87,6 +87,8 @@ const testTextToSpeech = catchAsync(async (req: Request, res: Response) => {
     userId,
     prompt,
     voiceId,
+    rate,
+    pitch,
   );
 
   sendResponse(res, status.OK, true, "Speech generated successfully", result);
@@ -114,8 +116,27 @@ const getAllVoices = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, status.OK, true, "Voices fetched successfully", result);
 });
 
+const getRecentGeneration = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    return sendResponse(res, status.UNAUTHORIZED, false, "Unauthorized", null);
+  }
+
+  const result = await textToSpeechService.getRecentGeneration(userId);
+
+  sendResponse(
+    res,
+    status.OK,
+    true,
+    "Recent generations retrieved successfully",
+    result,
+  );
+});
+
 export const TextToSpeechController = {
   generateSpeech,
   testTextToSpeech,
   getAllVoices,
+  getRecentGeneration,
 };
