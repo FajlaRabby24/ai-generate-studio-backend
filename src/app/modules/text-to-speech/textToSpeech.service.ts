@@ -163,25 +163,6 @@ const textToSpeech = async (
   };
 };
 
-const getRecentGeneration = async (userId: string) => {
-  const generations = await prisma.generated.findMany({
-    where: {
-      userId,
-      type: GenerationType.TEXT_TO_SPEECH,
-      isDeleted: false,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-    take: 5,
-    include: {
-      textToSpeeches: true,
-    },
-  });
-
-  return generations;
-};
-
 // get voices
 const getVoices = async (lang: string, gender: string) => {
   const filePath = path.join(
@@ -212,6 +193,25 @@ const getVoices = async (lang: string, gender: string) => {
 
     return matchLang && matchGender;
   });
+};
+
+const getRecentGeneration = async (userId: string) => {
+  const generations = await prisma.generated.findMany({
+    where: {
+      userId,
+      type: GenerationType.TEXT_TO_SPEECH,
+      isDeleted: false,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 5,
+    include: {
+      textToSpeeches: true,
+    },
+  });
+
+  return generations;
 };
 
 export const textToSpeechService = {
