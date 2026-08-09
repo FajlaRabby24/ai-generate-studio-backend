@@ -134,9 +134,32 @@ const getRecentGeneration = catchAsync(async (req: Request, res: Response) => {
   );
 });
 
+const deleteSpeech = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+  const { id } = req.params;
+
+  if (!userId) {
+    return sendResponse(res, status.UNAUTHORIZED, false, "Unauthorized", null);
+  }
+
+  const result = await textToSpeechService.deleteTextToSpeech(
+    userId,
+    id as string,
+  );
+
+  sendResponse(
+    res,
+    status.OK,
+    true,
+    "Speech generation deleted successfully",
+    result,
+  );
+});
+
 export const TextToSpeechController = {
   generateSpeech,
   testTextToSpeech,
   getAllVoices,
   getRecentGeneration,
+  deleteSpeech,
 };

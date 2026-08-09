@@ -214,9 +214,24 @@ const getRecentGeneration = async (userId: string) => {
   return generations;
 };
 
+const deleteTextToSpeech = async (userId: string, id: string) => {
+  const result = await prisma.generated.update({
+    where: {
+      id,
+      userId,
+    },
+    data: {
+      isDeleted: true,
+    },
+  });
+
+  return result;
+};
+
 export const textToSpeechService = {
   singleVoiceTTSService,
   textToSpeech,
   getVoices,
   getRecentGeneration,
+  deleteTextToSpeech,
 };

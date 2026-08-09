@@ -43,11 +43,7 @@ router.use(
   ResumeAnalyzerRoutes,
 );
 
-router.use(
-  "/text-to-speech",
-  rateLimiters.generationLimiter,
-  TextToSpeechRoutes,
-);
+router.use("/text-to-speech", TextToSpeechRoutes);
 
 router.use("/text-to-video", TextToVideoRoutes);
 router.use("/image-to-video", ImageToVideoRoutes);
