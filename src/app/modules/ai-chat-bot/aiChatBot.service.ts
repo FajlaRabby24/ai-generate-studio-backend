@@ -90,7 +90,7 @@ import { prisma } from "../../lib/prisma";
 
 const groq = new Groq({ apiKey: envVars.GROQ_API_KEY_AI_CHAT });
 
-export const StreamChatbotService = async (
+const StreamChatbotService = async (
   res: Response,
   userId: string,
   userMessage: string,
@@ -104,9 +104,12 @@ export const StreamChatbotService = async (
     : null;
 
   const previousHistory = (aiChat?.chatHistory as any[]) || [];
+  const flatHistory = Array.isArray(previousHistory[0])
+    ? previousHistory.flat(Infinity)
+    : previousHistory;
 
   // ১. Groq-এর মেসেজ ফরম্যাটে ফিল্টারিং
-  const formattedHistory = previousHistory.map((item) => ({
+  const formattedHistory = flatHistory.map((item: any) => ({
     role: item.role === "model" ? "assistant" : item.role,
     content: item.parts?.[0]?.text || item.content || "",
   }));
