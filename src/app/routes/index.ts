@@ -28,12 +28,7 @@ router.use("/price-plan", PricePlanRoutes);
 router.use("/notification", NotificationRoutes);
 router.use("/history", checkAuth(), HistoryRoutes);
 
-router.use(
-  "/text-to-image",
-  rateLimiters.generationLimiter,
-  checkAuth(),
-  TextToImageRoutes,
-);
+router.use("/text-to-image", rateLimiters.generationLimiter, TextToImageRoutes);
 router.use("/ai-chat-bot", rateLimiters.generationLimiter, AiChatBotRoutes);
 
 router.use(

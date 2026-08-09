@@ -40,6 +40,25 @@ const generateImage = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, status.OK, true, "Image generated successfully", result);
 });
 
+const getRecentGeneration = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    return sendResponse(res, status.UNAUTHORIZED, false, "Unauthorized", null);
+  }
+
+  const result = await TextToImageService.getRecentGeneration(userId);
+
+  sendResponse(
+    res,
+    status.OK,
+    true,
+    "Recent generations retrieved successfully",
+    result,
+  );
+});
+
 export const TextToImageController = {
   generateImage,
+  getRecentGeneration,
 };

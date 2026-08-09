@@ -78,6 +78,26 @@ const GenerateTextToImage = async (
   };
 };
 
+const getRecentGeneration = async (userId: string) => {
+  const generations = await prisma.generated.findMany({
+    where: {
+      userId,
+      type: GenerationType.TEXT_TO_IMAGE,
+      isDeleted: false,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 5,
+    include: {
+      textToImages: true,
+    },
+  });
+
+  return generations;
+};
+
 export const TextToImageService = {
   GenerateTextToImage,
+  getRecentGeneration,
 };

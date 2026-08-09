@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { GenerationType } from "../../../generated/prisma/enums";
+import { checkAuth } from "../../middleware/checkAuth";
 import { checkGenerateAuth } from "../../middleware/checkGenerateAuth";
 import { validateRequest } from "../../middleware/validateRequest";
 import { TextToImageController } from "./textToImage.controller";
@@ -9,9 +10,12 @@ const router = Router();
 
 router.post(
   "/",
+  checkAuth(),
   validateRequest(TextToImageValidation.generateTextToImageSchema),
   checkGenerateAuth(GenerationType.TEXT_TO_IMAGE),
   TextToImageController.generateImage,
 );
+
+router.get("/recent", checkAuth(), TextToImageController.getRecentGeneration);
 
 export const TextToImageRoutes = router;
