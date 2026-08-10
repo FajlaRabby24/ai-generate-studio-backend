@@ -179,7 +179,27 @@ const updateVideoStatusFromWebhook = async (payload: {
   }
 };
 
+const getRecentGeneration = async (userId: string) => {
+  const generations = await prisma.generated.findMany({
+    where: {
+      userId,
+      type: GenerationType.IMAGE_TO_VIDEO,
+      isDeleted: false,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 5,
+    include: {
+      imageToVideos: true,
+    },
+  });
+
+  return generations;
+};
+
 export const ImageToVideoService = {
   imageToVideo,
   updateVideoStatusFromWebhook,
+  getRecentGeneration,
 };

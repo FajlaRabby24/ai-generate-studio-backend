@@ -21,3 +21,4 @@ const generateVideoSchema = z.object({
 export const ImageToVideoValidation = {
   generateVideoSchema,
 };
+// https://9cd5v0zv-5000.asse.devtunnels.ms/

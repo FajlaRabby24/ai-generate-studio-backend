@@ -11,13 +11,19 @@ const router = Router();
 
 router.post(
   "/",
-  checkAuth(),
   multerUpload.single("singleFile"),
   validateRequest(ImageToVideoValidation.generateVideoSchema),
+  checkAuth(),
   checkGenerateAuth(GenerationType.IMAGE_TO_VIDEO),
   ImageToVideoController.imageToVideo,
 );
 
 router.post("/webhook/callback", ImageToVideoController.handleVideoWebhook);
+
+router.get(
+  "/recent",
+  checkAuth(),
+  ImageToVideoController.getRecentGeneration,
+);
 
 export const ImageToVideoRoutes = router;
