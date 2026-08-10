@@ -120,8 +120,27 @@ const generateResumePdfController = catchAsync(
   },
 );
 
+const getRecentGeneration = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    return sendResponse(res, status.UNAUTHORIZED, false, "Unauthorized", null);
+  }
+
+  const result = await ResumeAnalyzerService.getRecentGeneration(userId);
+
+  sendResponse(
+    res,
+    status.OK,
+    true,
+    "Recent generations retrieved successfully",
+    result,
+  );
+});
+
 export const ResumeAnalyzer = {
   resumeAnalyzer,
   analyzeResumeWithGroqController,
   generateResumePdfController,
+  getRecentGeneration,
 };

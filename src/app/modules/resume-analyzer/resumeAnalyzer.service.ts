@@ -601,8 +601,28 @@ const generateResumePdfFromEditedJson = async (
   };
 };
 
+const getRecentGeneration = async (userId: string) => {
+  const generations = await prisma.generated.findMany({
+    where: {
+      userId,
+      type: GenerationType.RESUME_ANALYZER,
+      isDeleted: false,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 5,
+    include: {
+      resumeAnalyzers: true,
+    },
+  });
+
+  return generations;
+};
+
 export const ResumeAnalyzerService = {
   analyzeResume,
   analyzeResumeWithGroq,
   generateResumePdfFromEditedJson,
+  getRecentGeneration,
 };

@@ -32,4 +32,6 @@ router.post(
   ResumeAnalyzer.generateResumePdfController,
 );
 
+router.get("/recent", checkAuth(), ResumeAnalyzer.getRecentGeneration);
+
 export const ResumeAnalyzerRoutes = router;
