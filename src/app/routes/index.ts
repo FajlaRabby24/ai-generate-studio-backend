@@ -33,7 +33,6 @@ router.use("/ai-chat-bot", rateLimiters.generationLimiter, AiChatBotRoutes);
 
 router.use(
   "/background-remove",
-  rateLimiters.generationLimiter,
   BackgroundRoutes,
 );
 

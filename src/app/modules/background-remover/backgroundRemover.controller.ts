@@ -40,6 +40,26 @@ const backgroundRemover = catchAsync(async (req: Request, res: Response) => {
   );
 });
 
+const getRecentGeneration = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    return sendResponse(res, status.UNAUTHORIZED, false, "Unauthorized", null);
+  }
+
+  const result = await BackgroundRemoverService.getRecentGeneration(userId);
+
+  sendResponse(
+    res,
+    status.OK,
+    true,
+    "Recent generations retrieved successfully",
+    result,
+  );
+});
+
+
 export const BackgroundRemover = {
   backgroundRemover,
+  getRecentGeneration
 };

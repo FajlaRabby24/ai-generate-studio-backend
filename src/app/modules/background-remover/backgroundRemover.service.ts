@@ -95,6 +95,26 @@ const removeBackground = async (
   return { secureUrl };
 };
 
+const getRecentGeneration = async (userId: string) => {
+  const generations = await prisma.generated.findMany({
+    where: {
+      userId,
+      type: GenerationType.IMAGE_BACKGROUND_REMOVER,
+      isDeleted: false,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 5,
+    include: {
+      backgroundRemoves: true,
+    },
+  });
+
+  return generations;
+};
+
 export const BackgroundRemoverService = {
   removeBackground,
+  getRecentGeneration,
 };
