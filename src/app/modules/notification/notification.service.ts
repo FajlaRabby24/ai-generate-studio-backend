@@ -1,10 +1,15 @@
 import status from "http-status";
+import type { Prisma } from "../../../generated/prisma/client";
 import { AppError } from "../../errors/AppError";
 import { prisma } from "../../lib/prisma";
 
-const getMyNotificationsFromDB = async (userId: string) => {
+const getMyNotificationsFromDB = async (userId: string, all?: boolean) => {
+  const where: Prisma.NotificationWhereInput = { userId };
+  if (!all) {
+    where.isRead = false;
+  }
   const result = await prisma.notification.findMany({
-    where: { userId },
+    where,
     orderBy: { createdAt: "desc" },
   });
   return result;

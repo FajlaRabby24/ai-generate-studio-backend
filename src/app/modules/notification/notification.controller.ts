@@ -6,7 +6,13 @@ import { NotificationService } from "./notification.service";
 
 const getMyNotifications = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user.id;
-  const result = await NotificationService.getMyNotificationsFromDB(userId);
+
+  if (!userId) {
+    return sendResponse(res, status.FORBIDDEN, false, "Access Denied!", null);
+  }
+
+  const all = req.query.all === "true";
+  const result = await NotificationService.getMyNotificationsFromDB(userId, all);
 
   sendResponse(
     res,
@@ -39,9 +45,8 @@ const markNotificationAsRead = catchAsync(
 const markAllNotificationsAsRead = catchAsync(
   async (req: Request, res: Response) => {
     const userId = req.user.id;
-    const result = await NotificationService.markAllNotificationsAsReadInDB(
-      userId,
-    );
+    const result =
+      await NotificationService.markAllNotificationsAsReadInDB(userId);
 
     sendResponse(
       res,
