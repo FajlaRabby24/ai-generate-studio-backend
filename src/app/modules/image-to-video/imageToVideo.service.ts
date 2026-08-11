@@ -28,7 +28,7 @@ const imageToVideo = async (
 
   // 2. Setup Pixazo gateway parameters
   // const webhookUrl = `${envVars.BACKEND_SERVER_URL}/api/v1/image-to-video/webhook/callback`;
-  const webhookUrl = `https://9cd5v0zv-5000.asse.devtunnels.ms/api/v1/image-to-video/webhook/callback`;
+  const webhookUrl = `${envVars.BACKEND_SERVER_URL}/api/v1/image-to-video/webhook/callback`;
   const url = "https://gateway.pixazo.ai/ltx-video/v1/image-to-video";
   const headers = {
     "Content-Type": "application/json",
