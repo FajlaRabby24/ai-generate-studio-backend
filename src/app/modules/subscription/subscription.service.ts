@@ -241,11 +241,24 @@ const handleWebhookEvent = async (event: Stripe.Event) => {
 
         // Sync user table plan and stripe details
         const userPlan = plan === SubscriptionPlan.FREE ? Plan.FREE : Plan.PRO;
+        const isUpgrade = userPlan === Plan.PRO;
         await prisma.user.update({
           where: { id: userId },
           data: {
             plan: userPlan,
             stripeSubId: stripeSubRaw.id,
+            textToImage: isUpgrade ? 5 : 3,
+            aiChatbot: isUpgrade ? 5 : 3,
+            codeChecker: isUpgrade ? 5 : 3,
+            imageBackgroundRemover: isUpgrade ? 5 : 3,
+            imageCaptionGenerator: isUpgrade ? 5 : 3,
+            resumeAnalyzer: isUpgrade ? 5 : 3,
+            languageTranslator: isUpgrade ? 5 : 3,
+            grammarChecker: isUpgrade ? 5 : 3,
+            textToSpeech: isUpgrade ? 25 : 10,
+            speechToText: isUpgrade ? 5 : 3,
+            imageToVideo: isUpgrade ? 3 : 1,
+            textToVideo: isUpgrade ? 3 : 1,
           },
         });
 
@@ -354,11 +367,24 @@ const handleWebhookEvent = async (event: Stripe.Event) => {
             },
           });
 
+          const isUpgrade = userPlan === Plan.PRO;
           await tx.user.update({
             where: { id: subscription.userId },
             data: {
               plan: userPlan,
               stripeSubId: finalSubscriptionId,
+              textToImage: isUpgrade ? 5 : 3,
+              aiChatbot: isUpgrade ? 5 : 3,
+              codeChecker: isUpgrade ? 5 : 3,
+              imageBackgroundRemover: isUpgrade ? 5 : 3,
+              imageCaptionGenerator: isUpgrade ? 5 : 3,
+              resumeAnalyzer: isUpgrade ? 5 : 3,
+              languageTranslator: isUpgrade ? 5 : 3,
+              grammarChecker: isUpgrade ? 5 : 3,
+              textToSpeech: isUpgrade ? 25 : 10,
+              speechToText: isUpgrade ? 5 : 3,
+              imageToVideo: isUpgrade ? 3 : 1,
+              textToVideo: isUpgrade ? 3 : 1,
             },
           });
 
@@ -511,6 +537,18 @@ const handleWebhookEvent = async (event: Stripe.Event) => {
               data: {
                 plan: Plan.FREE,
                 stripeSubId: null,
+                textToImage: 3,
+                aiChatbot: 3,
+                codeChecker: 3,
+                imageBackgroundRemover: 3,
+                imageCaptionGenerator: 3,
+                resumeAnalyzer: 3,
+                languageTranslator: 3,
+                grammarChecker: 3,
+                textToSpeech: 10,
+                speechToText: 3,
+                imageToVideo: 1,
+                textToVideo: 1,
               },
             });
 
@@ -544,7 +582,7 @@ const getUserBillingDetails = async (userId: string) => {
       plan: true,
       textToImage: true,
       textToVideo: true,
-      resumeAnalyzer: true,
+      textToSpeech: true,
       imageBackgroundRemover: true,
     }
   });
@@ -559,34 +597,34 @@ const getUserBillingDetails = async (userId: string) => {
     orderBy: { createdAt: "desc" },
   });
 
-  const limit = user.plan === Plan.FREE ? 3 : 5;
+  const isPro = user.plan === Plan.PRO;
 
   const usages = [
     {
       label: "Images Generated",
-      current: Math.max(0, limit - user.textToImage),
-      limit,
+      current: Math.max(0, (isPro ? 5 : 3) - user.textToImage),
+      limit: isPro ? 5 : 3,
       unit: "images",
       color: "from-violet-500 to-indigo-500",
     },
     {
       label: "Videos Generated",
-      current: Math.max(0, limit - user.textToVideo) ,
-      limit,
+      current: Math.max(0, (isPro ? 3 : 1) - user.textToVideo),
+      limit: isPro ? 3 : 1,
       unit: "videos",
       color: "from-pink-500 to-rose-500",
     },
     {
-      label: "Resume Analyzed",
-      current: Math.max(0, limit - user.resumeAnalyzer),
-      limit,
-      unit: "Resumes",
+      label: "Text-to-Speech",
+      current: Math.max(0, (isPro ? 25 : 10) - user.textToSpeech),
+      limit: isPro ? 25 : 10,
+      unit: "Audio",
       color: "from-sky-500 to-blue-500",
     },
     {
       label: "Background Removes",
-      current: Math.max(0, limit - user.imageBackgroundRemover),
-      limit,
+      current: Math.max(0, (isPro ? 5 : 3) - user.imageBackgroundRemover),
+      limit: isPro ? 5 : 3,
       unit: "images",
       color: "from-emerald-500 to-teal-500",
     },

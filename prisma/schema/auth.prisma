@@ -17,7 +17,7 @@ model User {
   isDeleted        Boolean    @default(false)
   deletedAt        DateTime?
 
-  textToImage            Int @default(2)
+  textToImage            Int @default(3)
   aiChatbot              Int @default(3)
   codeChecker            Int @default(3)
   imageBackgroundRemover Int @default(3)

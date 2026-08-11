@@ -139,6 +139,21 @@ export const checkGenerateAuth = (requiredType: GenerationType) => {
 
         const ONE_DAY_MS = 24 * 60 * 60 * 1000; // 24 hours in milliseconds > 86400000
 
+        const quotaResetLimits: Record<string, { active: number; free: number }> = {
+          textToImage: { active: 5, free: 3 },
+          aiChatbot: { active: 5, free: 3 },
+          codeChecker: { active: 5, free: 3 },
+          imageBackgroundRemover: { active: 5, free: 3 },
+          imageCaptionGenerator: { active: 5, free: 3 },
+          resumeAnalyzer: { active: 5, free: 3 },
+          languageTranslator: { active: 5, free: 3 },
+          grammarChecker: { active: 5, free: 3 },
+          textToSpeech: { active: 25, free: 10 },
+          speechToText: { active: 5, free: 3 },
+          imageToVideo: { active: 3, free: 1 },
+          textToVideo: { active: 3, free: 1 },
+        };
+
         if (timeSinceLastRefresh >= ONE_DAY_MS) {
           // reset count + refresh field for this feature
           const updatedUser = await prisma.user.update({
@@ -146,8 +161,8 @@ export const checkGenerateAuth = (requiredType: GenerationType) => {
             data: {
               [countField]:
                 user?.subscription?.status === SubscriptionStatus.ACTIVE
-                  ? 5
-                  : 3,
+                  ? (quotaResetLimits[countField]?.active ?? 5)
+                  : (quotaResetLimits[countField]?.free ?? 3),
               [refreshField]: now,
             },
             select: {
