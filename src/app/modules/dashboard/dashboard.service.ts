@@ -1,5 +1,5 @@
 import status from "http-status";
-import { GenerationStatus } from "../../../generated/prisma/enums";
+import { GenerationStatus, GenerationType, Plan } from "../../../generated/prisma/enums";
 import { AppError } from "../../errors/AppError";
 import { prisma } from "../../lib/prisma";
 
@@ -17,15 +17,12 @@ const userDashboardStats = async (userId: string) => {
 
   // Get recent generations (last 5)
   const rawRecentGenerations = await prisma.generated.findMany({
-    where: { userId, isDeleted: false },
+    where: { userId, isDeleted: false, type: { in: [GenerationType.TEXT_TO_IMAGE, GenerationType.TEXT_TO_VIDEO, GenerationType.IMAGE_BACKGROUND_REMOVER, GenerationType.IMAGE_TO_VIDEO] } },
     include: {
       textToImages: true,
       textToVideos: true,
       backgroundRemoves: true,
       imageToVideos: true,
-      aichats: true,
-      resumeAnalyzers: true,
-      textToSpeeches: true,
     },
     orderBy: { createdAt: "desc" },
     take: 5,
@@ -33,37 +30,25 @@ const userDashboardStats = async (userId: string) => {
 
   const recentGenerations = rawRecentGenerations.map((item: any) => {
     let prompt = "";
-    let outputUrls = "";
+    let outputUrl = "";
     let status = GenerationStatus.COMPLETED;
 
     if (item.textToImages && item.textToImages[0]) {
       prompt = item.textToImages[0].prompt;
-      outputUrls = item.textToImages[0].outputUrl;
+      outputUrl = item.textToImages[0].outputUrl;
       status = item.textToImages[0].status;
     } else if (item.textToVideos && item.textToVideos[0]) {
       prompt = item.textToVideos[0].prompt;
-      outputUrls = item.textToVideos[0].outputUrl;
+      outputUrl = item.textToVideos[0].outputUrl;
       status = item.textToVideos[0].status;
     } else if (item.backgroundRemoves && item.backgroundRemoves[0]) {
       prompt = "Remove background from uploaded image";
-      outputUrls = item.backgroundRemoves[0].outputUrls;
+      outputUrl = item.backgroundRemoves[0].outputUrls;
       status = item.backgroundRemoves[0].status;
     } else if (item.imageToVideos && item.imageToVideos[0]) {
       prompt = item.imageToVideos[0].prompt;
-      outputUrls = item.imageToVideos[0].outputUrl;
+      outputUrl = item.imageToVideos[0].outputUrl;
       status = item.imageToVideos[0].status;
-    } else if (item.aichats && item.aichats[0]) {
-      prompt = item.aichats[0].input;
-      outputUrls = item.aichats[0].output;
-      status = item.aichats[0].status;
-    } else if (item.resumeAnalyzers && item.resumeAnalyzers[0]) {
-      prompt = "Resume analysis & review";
-      outputUrls = JSON.stringify(item.resumeAnalyzers[0]);
-      status = item.resumeAnalyzers[0].status;
-    } else if (item.textToSpeeches && item.textToSpeeches[0]) {
-      prompt = item.textToSpeeches[0].prompt;
-      outputUrls = item.textToSpeeches[0].audioUrl;
-      status = item.textToSpeeches[0].status;
     }
 
     return {
@@ -74,7 +59,7 @@ const userDashboardStats = async (userId: string) => {
       createdAt: item.createdAt,
       updatedAt: item.updatedAt,
       prompt,
-      outputUrls,
+      outputUrl,
       status,
     };
   });
@@ -120,7 +105,7 @@ const userDashboardStats = async (userId: string) => {
       generations: count,
     });
   }
-  const limit = user.plan === "FREE" ? 3 : 5;
+  const limit = user.plan === Plan.FREE ? 3 : 5;
   // Retrieve limits / quotas configuration
   const quotas = [
     {
