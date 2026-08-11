@@ -51,7 +51,7 @@ const getRecentGeneration = catchAsync(async (req: Request, res: Response) => {
     status.OK,
     true,
     "Recent generations retrieved successfully",
-    result,
+    result[0],
   );
 });
 
