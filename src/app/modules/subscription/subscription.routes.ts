@@ -25,4 +25,10 @@ router.post(
   SubscriptionController.createCustomerPortal,
 );
 
+router.get(
+  "/my-billing",
+  checkAuth(),
+  SubscriptionController.getUserBillingDetails,
+);
+
 export const SubscriptionRoutes = router;

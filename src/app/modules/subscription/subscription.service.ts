@@ -522,9 +522,69 @@ const handleWebhookEvent = async (event: Stripe.Event) => {
   }
 };
 
+const getUserBillingDetails = async (userId: string) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      subscription: true,
+    }
+  });
+
+  if (!user) {
+    throw new AppError(status.NOT_FOUND, "User not found");
+  }
+
+  // Fetch payment/invoice history
+  const payments = await prisma.payment.findMany({
+    where: { userId },
+    orderBy: { createdAt: "desc" },
+  });
+
+  // const limit = user.plan === Plan.FREE ? 3 : 5;
+
+  // const usages = [
+  //   {
+  //     label: "Images Generated",
+  //     current: Math.max(0, limit - user.textToImage),
+  //     limit,
+  //     unit: "images",
+  //     color: "from-violet-500 to-indigo-500",
+  //   },
+  //   {
+  //     label: "AI Video Seconds",
+  //     current: Math.max(0, limit - user.textToVideo) * 60,
+  //     limit: limit * 60,
+  //     unit: "seconds",
+  //     color: "from-pink-500 to-rose-500",
+  //   },
+  //   {
+  //     label: "Text-to-Speech Characters",
+  //     current: Math.max(0, 10 - user.textToSpeech) * 5000,
+  //     limit: 10 * 5000,
+  //     unit: "chars",
+  //     color: "from-sky-500 to-blue-500",
+  //   },
+  //   {
+  //     label: "Background Removes",
+  //     current: Math.max(0, limit - user.imageBackgroundRemover),
+  //     limit,
+  //     unit: "images",
+  //     color: "from-emerald-500 to-teal-500",
+  //   },
+  // ];
+
+  return {
+    subscription: user.subscription,
+    payments,
+    // usages,
+  };
+};
+
 export const SubscriptionService = {
   createCheckoutSession,
   cancelSubscription,
   createCustomerPortalSession,
   handleWebhookEvent,
+  getUserBillingDetails,
 };

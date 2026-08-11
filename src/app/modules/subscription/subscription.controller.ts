@@ -45,8 +45,27 @@ const createCustomerPortal = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, status.OK, true, "Portal session created", result);
 });
 
+const getUserBillingDetails = catchAsync(
+  async (req: Request, res: Response) => {
+    const userId = req.user.id;
+    if (!userId) {
+      return sendResponse(res, status.BAD_REQUEST, false, "User id required!");
+    }
+    const result = await SubscriptionService.getUserBillingDetails(userId);
+
+    sendResponse(
+      res,
+      status.OK,
+      true,
+      "User billing details retrieved successfully",
+      result,
+    );
+  },
+);
+
 export const SubscriptionController = {
   createCheckoutSession,
   cancelSubscription,
   createCustomerPortal,
+  getUserBillingDetails,
 };

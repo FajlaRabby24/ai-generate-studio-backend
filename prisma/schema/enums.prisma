@@ -15,6 +15,7 @@ enum Plan {
 }
 
 enum SubscriptionPlan {
+  FREE
   MONTHLY
   YEARLY
 }
