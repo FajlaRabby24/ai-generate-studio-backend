@@ -37,7 +37,7 @@ const createCheckoutSession = async (
   });
 
   // 6. Check if user already has an active non-free plan
-  if (subscription && subscription.plan !== SubscriptionPlan.FREE) {
+  if (subscription && subscription.plan !== SubscriptionPlan.FREE && subscription.status === SubscriptionStatus.ACTIVE) {
     throw new AppError(
       status.BAD_REQUEST,
       `You already have an active ${subscription.plan} plan. Use Manage Subscription to change it.`,
@@ -191,6 +191,19 @@ const calculatePeriodEnd = (plan: SubscriptionPlan): Date => {
   return now;
 };
 
+const getTimestamp = (val: any): number => {
+  if (!val) return Date.now();
+  if (val instanceof Date) return val.getTime();
+  if (typeof val === "string") {
+    const parsed = Date.parse(val);
+    return isNaN(parsed) ? Date.now() : parsed;
+  }
+  if (typeof val === "number") {
+    return val < 10000000000 ? val * 1000 : val;
+  }
+  return Date.now();
+};
+
 const handleWebhookEvent = async (event: Stripe.Event) => {
   switch (event.type) {
     case "checkout.session.completed": {
@@ -207,8 +220,8 @@ const handleWebhookEvent = async (event: Stripe.Event) => {
         const stripeSubRaw =
           await stripe.subscriptions.retrieve(subscriptionId);
 
-        const periodStart = new Date((stripeSubRaw as any).current_period_start * 1000);
-        const periodEnd = new Date((stripeSubRaw as any).current_period_end * 1000);
+        const periodStart = new Date(getTimestamp((stripeSubRaw as any).current_period_start));
+        const periodEnd = new Date(getTimestamp((stripeSubRaw as any).current_period_end));
 
         const updatedSub = await prisma.subscription.update({
           where: { userId },
@@ -324,8 +337,8 @@ const handleWebhookEvent = async (event: Stripe.Event) => {
         }
 
         const stripeSubRaw = await stripe.subscriptions.retrieve(finalSubscriptionId);
-        const periodStart = new Date((stripeSubRaw as any).current_period_start * 1000);
-        const periodEnd = new Date((stripeSubRaw as any).current_period_end * 1000);
+        const periodStart = new Date(getTimestamp((stripeSubRaw as any).current_period_start));
+        const periodEnd = new Date(getTimestamp((stripeSubRaw as any).current_period_end));
         const userPlan =
           subscription.plan === SubscriptionPlan.FREE ? Plan.FREE : Plan.PRO;
 
@@ -528,6 +541,11 @@ const getUserBillingDetails = async (userId: string) => {
     select: {
       id: true,
       subscription: true,
+      plan: true,
+      textToImage: true,
+      textToVideo: true,
+      resumeAnalyzer: true,
+      imageBackgroundRemover: true,
     }
   });
 
@@ -541,43 +559,43 @@ const getUserBillingDetails = async (userId: string) => {
     orderBy: { createdAt: "desc" },
   });
 
-  // const limit = user.plan === Plan.FREE ? 3 : 5;
+  const limit = user.plan === Plan.FREE ? 3 : 5;
 
-  // const usages = [
-  //   {
-  //     label: "Images Generated",
-  //     current: Math.max(0, limit - user.textToImage),
-  //     limit,
-  //     unit: "images",
-  //     color: "from-violet-500 to-indigo-500",
-  //   },
-  //   {
-  //     label: "AI Video Seconds",
-  //     current: Math.max(0, limit - user.textToVideo) * 60,
-  //     limit: limit * 60,
-  //     unit: "seconds",
-  //     color: "from-pink-500 to-rose-500",
-  //   },
-  //   {
-  //     label: "Text-to-Speech Characters",
-  //     current: Math.max(0, 10 - user.textToSpeech) * 5000,
-  //     limit: 10 * 5000,
-  //     unit: "chars",
-  //     color: "from-sky-500 to-blue-500",
-  //   },
-  //   {
-  //     label: "Background Removes",
-  //     current: Math.max(0, limit - user.imageBackgroundRemover),
-  //     limit,
-  //     unit: "images",
-  //     color: "from-emerald-500 to-teal-500",
-  //   },
-  // ];
+  const usages = [
+    {
+      label: "Images Generated",
+      current: Math.max(0, limit - user.textToImage),
+      limit,
+      unit: "images",
+      color: "from-violet-500 to-indigo-500",
+    },
+    {
+      label: "Videos Generated",
+      current: Math.max(0, limit - user.textToVideo) ,
+      limit,
+      unit: "videos",
+      color: "from-pink-500 to-rose-500",
+    },
+    {
+      label: "Resume Analyzed",
+      current: Math.max(0, limit - user.resumeAnalyzer),
+      limit,
+      unit: "Resumes",
+      color: "from-sky-500 to-blue-500",
+    },
+    {
+      label: "Background Removes",
+      current: Math.max(0, limit - user.imageBackgroundRemover),
+      limit,
+      unit: "images",
+      color: "from-emerald-500 to-teal-500",
+    },
+  ];
 
   return {
     subscription: user.subscription,
     payments,
-    // usages,
+    usages,
   };
 };
 

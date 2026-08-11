@@ -7,6 +7,7 @@ import { SubscriptionService } from "./subscription.service";
 const createCheckoutSession = catchAsync(
   async (req: Request, res: Response) => {
     const { plan } = req.body;
+    console.log("plan", plan);
     const userId = req.user.id;
 
     const result = await SubscriptionService.createCheckoutSession(
