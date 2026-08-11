@@ -151,7 +151,6 @@ const cancelSubscription = async (userId: string) => {
   const updated = await prisma.subscription.update({
     where: { userId },
     data: {
-      status: SubscriptionStatus.CANCELLED,
       cancelAtPeriodEnd: true,
       cancelledAt: new Date(),
     },
