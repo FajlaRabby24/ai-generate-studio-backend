@@ -4,6 +4,7 @@ import status from "http-status";
 import { checkAuth } from "../middleware/checkAuth";
 import { AiChatBotRoutes } from "../modules/ai-chat-bot/aiChatBot.routes";
 import { AuthRoutes } from "../modules/auth/auth.route";
+import { AdminRoutes } from "../modules/admin/admin.routes";
 import { BackgroundRoutes } from "../modules/background-remover/backgroundRemover.routes";
 import { DashboardRoutes } from "../modules/dashboard/dashboard.route";
 import { HistoryRoutes } from "../modules/history/history.routes";
@@ -22,6 +23,7 @@ import { rateLimiters } from "../utils/rate-limit";
 const router = Router();
 
 router.use("/auth", AuthRoutes);
+router.use("/admin", AdminRoutes);
 router.use("/subscription", SubscriptionRoutes);
 router.use("/dashboard", DashboardRoutes);
 router.use("/price-plan", PricePlanRoutes);
