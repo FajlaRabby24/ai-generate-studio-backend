@@ -72,11 +72,12 @@ const updateUserPlan = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllPayments = catchAsync(async (req: Request, res: Response) => {
-  const { page, limit } = req.query;
+  const { page, limit, search } = req.query;
 
   const result = await AdminService.getAllPayments({
     page: page ? Number(page) : undefined,
     limit: limit ? Number(limit) : undefined,
+    search: search ? String(search) : undefined,
   });
 
   sendResponse(

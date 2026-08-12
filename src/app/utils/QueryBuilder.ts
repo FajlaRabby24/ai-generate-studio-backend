@@ -56,6 +56,21 @@ export class QueryBuilder<
 
             if (parts.length === 2) {
               const [relation, nestedField] = parts;
+              const isSingleRelation = this.config.singleRelationFields?.includes(relation as string);
+
+              if (isSingleRelation) {
+                return {
+                  [relation as string]: {
+                    is: {
+                      [nestedField as string]: {
+                        contains: searchTerm,
+                        mode: "insensitive" as const,
+                      },
+                    },
+                  },
+                };
+              }
+
               return {
                 [relation as string]: {
                   [nestedField as string]: {
@@ -138,6 +153,7 @@ export class QueryBuilder<
     const { filterableFields } = this.config;
     const excludedField = [
       "searchTerm",
+      "search",
       "page",
       "limit",
       "sortBy",

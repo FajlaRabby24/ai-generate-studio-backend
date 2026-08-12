@@ -32,10 +32,10 @@ const getDashboardStats = async () => {
   const totalRevenue = revenueAggregation._sum.amount || 0;
 
   // 3. Fetch total platform content generations count
-  const totalGenerations = await prisma.generation.count();
+  const totalGenerations = await prisma.generated.count();
 
   // 4. Group generation logs by type
-  const generationStatsGrouped = await prisma.generation.groupBy({
+  const generationStatsGrouped = await prisma.generated.groupBy({
     by: ["type"],
     _count: {
       _all: true,
@@ -212,6 +212,7 @@ const getAllPayments = async (params: Record<string, any>) => {
 
   const queryBuilder = new QueryBuilder(prisma.payment, queryParams, {
     searchableFields: ["transactionId", "user.name", "user.email"],
+    singleRelationFields: ["user"],
   });
 
   const result = await queryBuilder

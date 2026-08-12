@@ -48,6 +48,7 @@ export interface IQueryParams {
 export interface IQueryConfig {
   searchableFields?: string[];
   filterableFields?: string[];
+  singleRelationFields?: string[];
   someRelationEnumFields?: {
     field: string;
     enumValues: string[];
