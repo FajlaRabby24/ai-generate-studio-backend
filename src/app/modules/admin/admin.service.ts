@@ -3,6 +3,7 @@ import {
   PaymentStatus,
   Plan,
   SubscriptionStatus,
+  UserRole,
   UserStatus,
 } from "../../../generated/prisma/enums";
 import { AppError } from "../../errors/AppError";
@@ -148,7 +149,7 @@ const getAllUsers = async (params: Record<string, any>) => {
     .filter()
     .sort()
     .paginate()
-    .where({ isDeleted: false })
+    .where({ isDeleted: false, role: UserRole.USER })
     .include({ subscription: true })
     .execute();
 
