@@ -16,7 +16,7 @@ import { rateLimiters } from "./app/utils/rate-limit";
 
 const app: Application = express();
 
-// app.set("trust proxy", true);
+app.set("trust proxy", 1);
 
 app.set("query parser", (str: string) => qs.parse(str));
 app.set("view engine", "ejs");
