@@ -4,6 +4,9 @@ import cors from "cors";
 import type { Application, Request, Response } from "express";
 import express from "express";
 import helmet from "helmet";
+import path from "path";
+import qs from "qs";
+import { envVars } from "./app/config/env";
 import { auth } from "./app/lib/auth";
 import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
 import { notFound } from "./app/middleware/notFound";
@@ -13,19 +16,38 @@ import { rateLimiters } from "./app/utils/rate-limit";
 
 const app: Application = express();
 
+// app.set("trust proxy", true);
+
+app.set("query parser", (str: string) => qs.parse(str));
+app.set("view engine", "ejs");
+app.set("views", path.resolve(process.cwd(), `src/app/templates`));
+
 // Security headers and rate limiting
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", "data:", "https:"],
+      },
+    },
+  }),
+);
 app.use(rateLimiters.globalLimiter);
 
 app.use(
   cors({
-    origin: ["https://hoppscotch.io", "http://localhost:3000"], // Allow Hoppscotch web client
-    credentials: true, // Required to allow the browser to accept/send cookies
+    credentials: true,
+    origin: [envVars.FRONTEND_URL, envVars.BETTER_AUTH_URL],
+    methods: ["GET", "POST", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
 
 // Mount better-auth
-app.all("/api/auth", toNodeHandler(auth));
+app.use("/api/auth", toNodeHandler(auth));
 
 // Stripe Webhook Raw Body Parser
 app.use(

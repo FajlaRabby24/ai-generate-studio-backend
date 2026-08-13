@@ -44,4 +44,8 @@ export const envVars = {
   GROQ_API_KEY_RESUME_ANALYZER: process.env
     .GROQ_API_KEY_RESUME_ANALYZER as string,
   GROQ_API_KEY_AI_CHAT: process.env.GROQ_API_KEY_AI_CHAT as string,
+
+  // Google OAuth
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID as string,
+  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET as string,
 };

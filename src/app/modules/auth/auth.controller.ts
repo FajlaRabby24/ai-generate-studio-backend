@@ -151,7 +151,9 @@ const googleLoginSuccess = catchAsync(async (req: Request, res: Response) => {
   const sessionToken = req.cookies[betterAuthSessionCookieName];
 
   if (!sessionToken) {
-    return res.redirect(`${envVars.FRONTEND_URL}/login?error=oauth_failed`);
+    return res.redirect(
+      `${envVars.FRONTEND_URL}/auth/login?error=oauth_failed`,
+    );
   }
 
   // Pass the entire headers object to let better-auth handle prefixes and context
@@ -160,11 +162,15 @@ const googleLoginSuccess = catchAsync(async (req: Request, res: Response) => {
   });
 
   if (!session) {
-    return res.redirect(`${envVars.FRONTEND_URL}/login?error=no_session_found`);
+    return res.redirect(
+      `${envVars.FRONTEND_URL}/auth/login?error=no_session_found`,
+    );
   }
 
   if (session && !session.user) {
-    return res.redirect(`${envVars.FRONTEND_URL}/login?error=no_user_found`);
+    return res.redirect(
+      `${envVars.FRONTEND_URL}/auth/login?error=no_user_found`,
+    );
   }
 
   const result = await AuthService.googleLoginSuccess(session);
@@ -191,7 +197,7 @@ const googleLoginSuccess = catchAsync(async (req: Request, res: Response) => {
 // handle oauth error
 const handleOAuthError = catchAsync(async (req: Request, res: Response) => {
   const error = (req.query.error as string) || "oauth_failed";
-  res.redirect(`${envVars.FRONTEND_URL}/login?error=${error}`);
+  res.redirect(`${envVars.FRONTEND_URL}/auth/login?error=${error}`);
 });
 
 export const AuthController = {

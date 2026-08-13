@@ -2,12 +2,18 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { UserRole, UserStatus } from "../../generated/prisma/enums";
 import { prisma } from "./prisma";
-// If your Prisma file is located elsewhere, you can change the path
+import { envVars } from "../config/env";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql", // or "mysql", "postgresql", ...etc
   }),
+  socialProviders: {
+    google: {
+      clientId: envVars.GOOGLE_CLIENT_ID || "",
+      clientSecret: envVars.GOOGLE_CLIENT_SECRET || "",
+    },
+  },
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: false,

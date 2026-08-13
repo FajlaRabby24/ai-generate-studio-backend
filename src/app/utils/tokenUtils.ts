@@ -52,7 +52,7 @@ const setRefreshTokenCookie = (res: Response, token: string) => {
 
 export const betterAuthSessionCookieName = isProduction
   ? "__Secure-better-auth.session_token"
-  : "__better-auth.session_token";
+  : "better-auth.session_token";
 
 const setBetterAuthSessionCookie = (res: Response, token: string) => {
   cookieUtils.setCookie(res, betterAuthSessionCookieName, token, {
