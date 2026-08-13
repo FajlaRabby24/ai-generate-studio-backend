@@ -20,7 +20,7 @@ const globalLimiter = rateLimit({
 // Auth limiter: strict limiter for login/register/reset password
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  limit: 15, // Limit each IP to 15 attempts per window
+  limit: 10, // Limit each IP to 15 attempts per window
   standardHeaders: true,
   legacyHeaders: false,
   handler: (req, res) => {

@@ -1,10 +1,9 @@
 import type { Request, Response } from "express";
 import { Router } from "express";
 import status from "http-status";
-import { checkAuth } from "../middleware/checkAuth";
+import { AdminRoutes } from "../modules/admin/admin.routes";
 import { AiChatBotRoutes } from "../modules/ai-chat-bot/aiChatBot.routes";
 import { AuthRoutes } from "../modules/auth/auth.route";
-import { AdminRoutes } from "../modules/admin/admin.routes";
 import { BackgroundRoutes } from "../modules/background-remover/backgroundRemover.routes";
 import { DashboardRoutes } from "../modules/dashboard/dashboard.route";
 import { HistoryRoutes } from "../modules/history/history.routes";
@@ -15,26 +14,26 @@ import { ResumeAnalyzerRoutes } from "../modules/resume-analyzer/resumeAnalyzer.
 import { SubscriptionRoutes } from "../modules/subscription/subscription.routes";
 import { TextToImageRoutes } from "../modules/text-to-image/textToImage.route";
 import { TextToSpeechRoutes } from "../modules/text-to-speech/textToSpeech.routes";
-import { TextToVideoOmniRoutes } from "../modules/text-to-video-omni/textToVideo.routes";
 import { TextToVideoRoutes } from "../modules/text-to-video-pixazo/textToVideo.routes";
 import { sendResponse } from "../shared/sendResponse";
 import { rateLimiters } from "../utils/rate-limit";
 
 const router = Router();
 
-router.use("/auth", AuthRoutes);
+router.use("/auth", rateLimiters.authLimiter, AuthRoutes);
 router.use("/admin", AdminRoutes);
 router.use("/subscription", SubscriptionRoutes);
 router.use("/dashboard", DashboardRoutes);
 router.use("/price-plan", PricePlanRoutes);
 router.use("/notification", NotificationRoutes);
-router.use("/history", checkAuth(), HistoryRoutes);
+router.use("/history", HistoryRoutes);
 
 router.use("/text-to-image", rateLimiters.generationLimiter, TextToImageRoutes);
 router.use("/ai-chat-bot", rateLimiters.generationLimiter, AiChatBotRoutes);
 
 router.use(
   "/background-remove",
+  rateLimiters.generationLimiter,
   BackgroundRoutes,
 );
 
@@ -44,16 +43,17 @@ router.use(
   ResumeAnalyzerRoutes,
 );
 
-router.use("/text-to-speech", TextToSpeechRoutes);
-
-router.use("/text-to-video", TextToVideoRoutes);
-router.use("/image-to-video", ImageToVideoRoutes);
-
 router.use(
-  "/text-to-video-omni",
+  "/text-to-speech",
   rateLimiters.generationLimiter,
-  checkAuth(),
-  TextToVideoOmniRoutes,
+  TextToSpeechRoutes,
+);
+
+router.use("/text-to-video", rateLimiters.generationLimiter, TextToVideoRoutes);
+router.use(
+  "/image-to-video",
+  rateLimiters.generationLimiter,
+  ImageToVideoRoutes,
 );
 
 router.post("/validate-profile-image", async (req: Request, res: Response) => {
