@@ -25,7 +25,7 @@ app.use(
 );
 
 // Mount better-auth
-app.all("/api/auth/*splat", toNodeHandler(auth));
+app.all("/api/auth", toNodeHandler(auth));
 
 // Stripe Webhook Raw Body Parser
 app.use(

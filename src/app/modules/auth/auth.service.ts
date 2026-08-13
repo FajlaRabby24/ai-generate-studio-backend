@@ -262,6 +262,41 @@ const getGenerationLeftCount = async (
   return result;
 };
 
+const googleLoginSuccess = async (session: Record<string, any>) => {
+  const isUserExists = await prisma.user.findUnique({
+    where: {
+      id: session?.user?.id,
+    },
+    select: {
+      id: true,
+      status: true,
+    },
+  });
+
+  if (!isUserExists) {
+    throw new AppError(status.NOT_FOUND, "User not found");
+  }
+
+  const tokenInfo = {
+    id: session.user.id,
+    role: session.user.role,
+    name: session.user.name,
+    email: session.user.email,
+    image: session.user.image,
+    status: isUserExists.status,
+    sessionId: session?.session?.id,
+  };
+
+  const accessToken = tokenUtils.getAccessToken(tokenInfo);
+  const refreshToken = tokenUtils.getRefreshToken(tokenInfo);
+
+  return {
+    accessToken,
+    refreshToken,
+    sessionToken: session?.session?.token,
+  };
+};
+
 export const AuthService = {
   registerUser,
   loginUser,
@@ -270,4 +305,5 @@ export const AuthService = {
   getMeFromDB,
   updateProfileInDB,
   getGenerationLeftCount,
+  googleLoginSuccess,
 };

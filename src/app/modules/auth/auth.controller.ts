@@ -1,6 +1,8 @@
 import type { Request, Response } from "express";
 import status from "http-status";
 import type { GenerationType } from "../../../generated/prisma/enums";
+import { envVars } from "../../config/env";
+import { auth } from "../../lib/auth";
 import { catchAsync } from "../../shared/catchAsync";
 import { sendResponse } from "../../shared/sendResponse";
 import type { IRequestUser } from "../../types";
@@ -130,6 +132,68 @@ const getGenerationLeftCount = catchAsync(
   },
 );
 
+const googleLogin = catchAsync(async (req: Request, res: Response) => {
+  const redirectPath = (req.query?.redirect as string) || "/";
+
+  const encodedRedirectPath = encodeURIComponent(redirectPath);
+  const callbackURL = `${envVars.BETTER_AUTH_URL}/api/v1/auth/google/success?redirect=${encodedRedirectPath}`;
+
+  res.render("googleRedirect", {
+    callbackURL,
+    betterAuthUrl: envVars.BETTER_AUTH_URL,
+  });
+});
+
+// google login success
+const googleLoginSuccess = catchAsync(async (req: Request, res: Response) => {
+  const redirectPath = decodeURIComponent(req.query?.redirect as string) || "/";
+
+  const sessionToken = req.cookies[betterAuthSessionCookieName];
+
+  if (!sessionToken) {
+    return res.redirect(`${envVars.FRONTEND_URL}/login?error=oauth_failed`);
+  }
+
+  // Pass the entire headers object to let better-auth handle prefixes and context
+  const session = await auth.api.getSession({
+    headers: req.headers as any,
+  });
+
+  if (!session) {
+    return res.redirect(`${envVars.FRONTEND_URL}/login?error=no_session_found`);
+  }
+
+  if (session && !session.user) {
+    return res.redirect(`${envVars.FRONTEND_URL}/login?error=no_user_found`);
+  }
+
+  const result = await AuthService.googleLoginSuccess(session);
+  const { accessToken, refreshToken, sessionToken: sessionTokenVal } = result;
+
+  tokenUtils.setAccessTokenCookie(res, accessToken);
+  tokenUtils.setRefreshTokenCookie(res, refreshToken);
+  tokenUtils.setBetterAuthSessionCookie(res, sessionTokenVal);
+
+  const isValidRedirectPath =
+    redirectPath.startsWith("/") && !redirectPath.startsWith("//");
+  const finalRedirectPath = isValidRedirectPath ? redirectPath : "/";
+
+  // Redirect to frontend callback page with tokens for cross-domain session sync
+  const callbackUrl = new URL(`${envVars.FRONTEND_URL}/google-callback`);
+  callbackUrl.searchParams.set("accessToken", accessToken);
+  callbackUrl.searchParams.set("refreshToken", refreshToken);
+  callbackUrl.searchParams.set("sessionToken", sessionTokenVal);
+  callbackUrl.searchParams.set("redirectPath", finalRedirectPath);
+
+  res.redirect(callbackUrl.toString());
+});
+
+// handle oauth error
+const handleOAuthError = catchAsync(async (req: Request, res: Response) => {
+  const error = (req.query.error as string) || "oauth_failed";
+  res.redirect(`${envVars.FRONTEND_URL}/login?error=${error}`);
+});
+
 export const AuthController = {
   registerUser,
   loginUser,
@@ -138,4 +202,7 @@ export const AuthController = {
   updateProfile,
   logoutUser,
   getGenerationLeftCount,
+  googleLogin,
+  googleLoginSuccess,
+  handleOAuthError,
 };
