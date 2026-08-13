@@ -127,19 +127,15 @@ export const checkGenerateAuth = (requiredType: GenerationType) => {
 
       let count = (user as any)[countField];
 
-      // console.log("count", count);
+      const lastRefreshAt = (user as any)[refreshField] as Date;
+      const now = new Date();
+      const timeSinceLastRefresh =
+        now.getTime() - new Date(lastRefreshAt).getTime();
 
-      // check count before refresh at
-      if (count <= 0) {
-        const lastRefreshAt = (user as any)[refreshField] as Date;
+      const ONE_DAY_MS = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
-        const now = new Date();
-        const timeSinceLastRefresh =
-          now.getTime() - new Date(lastRefreshAt).getTime();
-
-        const ONE_DAY_MS = 24 * 60 * 60 * 1000; // 24 hours in milliseconds > 86400000
-
-        const quotaResetLimits: Record<string, { active: number; free: number }> = {
+      const quotaResetLimits: Record<string, { active: number; free: number }> =
+        {
           textToImage: { active: 5, free: 3 },
           aiChatbot: { active: 5, free: 3 },
           codeChecker: { active: 5, free: 3 },
@@ -154,33 +150,34 @@ export const checkGenerateAuth = (requiredType: GenerationType) => {
           textToVideo: { active: 3, free: 1 },
         };
 
-        if (timeSinceLastRefresh >= ONE_DAY_MS) {
-          // reset count + refresh field for this feature
-          const updatedUser = await prisma.user.update({
-            where: { id: req.user.id },
-            data: {
-              [countField]:
-                user?.subscription?.status === SubscriptionStatus.ACTIVE
-                  ? (quotaResetLimits[countField]?.active ?? 5)
-                  : (quotaResetLimits[countField]?.free ?? 3),
-              [refreshField]: now,
-            },
-            select: {
-              id: true,
-              [countField]: true,
-            },
-          });
-          count = (updatedUser as any)[countField];
-        } else {
-          console.log("hello, no credit");
-          return sendResponse(
-            res,
-            status.FORBIDDEN,
-            false,
-            `You have run out of generation quota for ${requiredType.toLowerCase().replace(/_/g, " ")}. Please upgrade your plan.`,
-            null,
-          );
-        }
+      if (timeSinceLastRefresh >= ONE_DAY_MS) {
+        // reset count + refresh field for this feature
+        const updatedUser = await prisma.user.update({
+          where: { id: req.user.id },
+          data: {
+            [countField]:
+              user?.subscription?.status === SubscriptionStatus.ACTIVE
+                ? (quotaResetLimits[countField]?.active ?? 5)
+                : (quotaResetLimits[countField]?.free ?? 3),
+            [refreshField]: now,
+          },
+          select: {
+            id: true,
+            [countField]: true,
+          },
+        });
+        count = (updatedUser as any)[countField];
+      }
+
+      if (count <= 0) {
+        // console.log("hello, no credit");
+        return sendResponse(
+          res,
+          status.FORBIDDEN,
+          false,
+          `You have run out of generation quota for ${requiredType.toLowerCase().replace(/_/g, " ")}. Please upgrade your plan.`,
+          null,
+        );
       }
 
       // pass field name to next middleware/controller, use it when decrementing
@@ -188,7 +185,7 @@ export const checkGenerateAuth = (requiredType: GenerationType) => {
 
       next();
     } catch (error) {
-      console.error("Error in checkGenerateAuth middleware:", error);
+      // console.error("Error in checkGenerateAuth middleware:", error);
       next(error);
     }
   };

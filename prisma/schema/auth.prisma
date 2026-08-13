@@ -6,7 +6,6 @@ model User {
   role             UserRole   @default(USER)
   plan             Plan       @default(FREE)
   planExpiresAt    DateTime? // For non-recurring payments
-  lastResetDate    DateTime   @default(now())
   stripeCustomerId String?    @unique
   stripeSubId      String?
   createdAt        DateTime   @default(now())
@@ -43,7 +42,6 @@ model User {
   imageToVideoLastRefreshAT           DateTime @default(now())
   textToVideoLastRefreshAT            DateTime @default(now())
 
-  generations   Generation[]
   payments      Payment[]
   sessions      Session[]
   accounts      Account[]
