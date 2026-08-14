@@ -1,11 +1,13 @@
 import { GoogleGenAI } from "@google/genai";
 import Groq from "groq-sdk";
+import status from "http-status";
 import PDFDocument from "pdfkit";
 import {
   GenerationStatus,
   GenerationType,
 } from "../../../generated/prisma/enums";
 import { envVars } from "../../config/env";
+import { AppError } from "../../errors/AppError";
 import { prisma } from "../../lib/prisma";
 import { PDFUploadToCloudinary } from "../../utils/cloudinary/pdfUpload";
 
@@ -36,31 +38,37 @@ const analyzeResume = async (
   setImmediate(() => {
     (async () => {
       try {
-        const generated = await prisma.generated.create({
-          data: {
-            userId,
-            type: GenerationType.RESUME_ANALYZER,
-          },
-        });
-
-        await prisma.aIChat.create({
-          data: {
-            generatedId: generated.id,
-            status: GenerationStatus.COMPLETED,
-            chatHistory: [],
-          },
-        });
-
-        await prisma.user.update({
-          where: { id: userId },
-          data: {
-            resumeAnalyzer: {
-              decrement: 1,
+        await prisma.$transaction(async (tx) => {
+          const generated = await tx.generated.create({
+            data: {
+              userId,
+              type: GenerationType.RESUME_ANALYZER,
             },
-          },
+          });
+
+          await tx.aIChat.create({
+            data: {
+              generatedId: generated.id,
+              status: GenerationStatus.COMPLETED,
+              chatHistory: [],
+            },
+          });
+
+          await tx.user.update({
+            where: { id: userId },
+            data: {
+              resumeAnalyzer: {
+                decrement: 1,
+              },
+            },
+          });
         });
       } catch (dbError) {
         console.error("[Background DB Error - Resume Analyzer]:", dbError);
+        throw new AppError(
+          status.INTERNAL_SERVER_ERROR,
+          "Failed to process resume analysis database update.",
+        );
       }
     })();
   });

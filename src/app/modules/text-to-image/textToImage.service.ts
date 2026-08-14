@@ -36,34 +36,36 @@ const GenerateTextToImage = async (
   setImmediate(() => {
     (async () => {
       try {
-        // generate history
-        const generated = await prisma.generated.create({
-          data: {
-            userId,
-            type: GenerationType.TEXT_TO_IMAGE,
-          },
-        });
-
-        await prisma.textToImage.create({
-          data: {
-            generatedId: generated.id,
-            status: GenerationStatus.COMPLETED,
-            prompt,
-            outputUrl: uploadImage.secureUrl,
-          },
-        });
-
-        // decrement limit
-        await prisma.user.update({
-          where: {
-            id: userId,
-          },
-          data: {
-            textToImageLastRefreshAT: new Date(),
-            [field]: {
-              decrement: 1,
+        await prisma.$transaction(async (tx) => {
+          // generate history
+          const generated = await tx.generated.create({
+            data: {
+              userId,
+              type: GenerationType.TEXT_TO_IMAGE,
             },
-          },
+          });
+
+          await tx.textToImage.create({
+            data: {
+              generatedId: generated.id,
+              status: GenerationStatus.COMPLETED,
+              prompt,
+              outputUrl: uploadImage.secureUrl,
+            },
+          });
+
+          // decrement limit
+          await tx.user.update({
+            where: {
+              id: userId,
+            },
+            data: {
+              textToImageLastRefreshAT: new Date(),
+              [field]: {
+                decrement: 1,
+              },
+            },
+          });
         });
       } catch (dbError) {
         console.error("[Background DB Error - Text to Image]:", dbError);

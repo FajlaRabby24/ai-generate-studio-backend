@@ -47,21 +47,31 @@ const textToVideoGeneratePixazo = async (
 
   // Save the queued generation record in database
   if (responseJson && responseJson.request_id) {
-    const generated = await prisma.generated.create({
-      data: {
-        userId,
-        type: GenerationType.TEXT_TO_VIDEO,
-      },
-    });
+    setImmediate(() => {
+      (async () => {
+        try {
+          await prisma.$transaction(async (tx) => {
+            const generated = await tx.generated.create({
+              data: {
+                userId,
+                type: GenerationType.TEXT_TO_VIDEO,
+              },
+            });
 
-    await prisma.textToVideo.create({
-      data: {
-        generatedId: generated.id,
-        status: GenerationStatus.QUEUED,
-        prompt,
-        requestId: responseJson.request_id,
-        outputUrl: "", // placeholder until webhook/polling completes
-      },
+            await tx.textToVideo.create({
+              data: {
+                generatedId: generated.id,
+                status: GenerationStatus.QUEUED,
+                prompt,
+                requestId: responseJson.request_id!,
+                outputUrl: "", // placeholder until webhook/polling completes
+              },
+            });
+          });
+        } catch (dbError) {
+          console.error("[Background DB Error - Text to Image]:", dbError);
+        }
+      })();
     });
   }
 
@@ -120,53 +130,65 @@ const updateVideoStatusFromWebhook = async (payload: {
     const videoUrl = output.media_url[0];
     let secureUrl = videoUrl;
 
-    // Update generation state to completed
-    await prisma.textToVideo.update({
-      where: { id: textToVideoRecord.id },
-      data: {
-        status: GenerationStatus.COMPLETED,
-        outputUrl: secureUrl,
-      },
-    });
+    setImmediate(() => {
+      (async () => {
+        await prisma.$transaction(async (tx) => {
+          // Update generation state to completed
+          await tx.textToVideo.update({
+            where: { id: textToVideoRecord.id },
+            data: {
+              status: GenerationStatus.COMPLETED,
+              outputUrl: secureUrl,
+            },
+          });
 
-    // Deduct user limits for the successful generation
-    await prisma.user.update({
-      where: { id: textToVideoRecord.generated.userId },
-      data: {
-        textToVideoLastRefreshAT: new Date(),
-        textToVideo: {
-          decrement: 1,
-        },
-      },
-    });
-    // Create success notification
-    await prisma.notification.create({
-      data: {
-        userId: textToVideoRecord.generated.userId,
-        title: "Video Generation Success",
-        message: `Your generated video for prompt: "${textToVideoRecord.prompt.substring(0, 60)}..." is ready!`,
-        type: NotificationType.SYSTEM,
-      },
+          // Deduct user limits for the successful generation
+          await tx.user.update({
+            where: { id: textToVideoRecord.generated.userId },
+            data: {
+              textToVideoLastRefreshAT: new Date(),
+              textToVideo: {
+                decrement: 1,
+              },
+            },
+          });
+          // Create success notification
+          await tx.notification.create({
+            data: {
+              userId: textToVideoRecord.generated.userId,
+              title: "Video Generation Success",
+              message: `Your generated video for prompt: "${textToVideoRecord.prompt.substring(0, 60)}..." is ready!`,
+              type: NotificationType.SYSTEM,
+            },
+          });
+        });
+      })();
     });
 
     return true;
   } else {
-    // Update generation status to failed
-    await prisma.textToVideo.update({
-      where: { id: textToVideoRecord.id },
-      data: {
-        status: GenerationStatus.FAILED,
-        outputUrl: error || "Generation failed",
-      },
-    });
-    // Create failure notification
-    await prisma.notification.create({
-      data: {
-        userId: textToVideoRecord.generated.userId,
-        title: "Video Generation Failed",
-        message: `Your video generation request for prompt: "${textToVideoRecord.prompt.substring(0, 60)}..." failed. Error: ${error || "Unknown error"}.`,
-        type: NotificationType.ALERT,
-      },
+    setImmediate(() => {
+      (async () => {
+        await prisma.$transaction(async (tx) => {
+          // Update generation status to failed
+          await tx.textToVideo.update({
+            where: { id: textToVideoRecord.id },
+            data: {
+              status: GenerationStatus.FAILED,
+              outputUrl: error || "Generation failed",
+            },
+          });
+          // Create failure notification
+          await tx.notification.create({
+            data: {
+              userId: textToVideoRecord.generated.userId,
+              title: "Video Generation Failed",
+              message: `Your video generation request for prompt: "${textToVideoRecord.prompt.substring(0, 60)}..." failed. Error: ${error || "Unknown error"}.`,
+              type: NotificationType.ALERT,
+            },
+          });
+        });
+      })();
     });
 
     return false;
