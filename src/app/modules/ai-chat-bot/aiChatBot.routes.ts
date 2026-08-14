@@ -5,6 +5,7 @@ import { checkGenerateAuth } from "../../middleware/checkGenerateAuth";
 import { validateRequest } from "../../middleware/validateRequest";
 import { AiChatBotController } from "./aiChatBot.controller";
 import { AiChatBotValidation } from "./aiChatBot.zod";
+import { rateLimiters } from "../../utils/rate-limit";
 
 const router = Router();
 
@@ -17,6 +18,7 @@ const router = Router();
 
 router.post(
   "/stream",
+   rateLimiters.generationLimiter,
   validateRequest(AiChatBotValidation.streamChatValidationSchema),
   checkAuth(),
   checkGenerateAuth(GenerationType.AI_CHATBOT),

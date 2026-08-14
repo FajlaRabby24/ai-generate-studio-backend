@@ -6,11 +6,13 @@ import { checkGenerateAuth } from "../../middleware/checkGenerateAuth";
 import { validateRequest } from "../../middleware/validateRequest";
 import { ImageToVideoController } from "./imageToVideo.controller";
 import { ImageToVideoValidation } from "./imageToVideo.zod";
+import { rateLimiters } from "../../utils/rate-limit";
 
 const router = Router();
 
 router.post(
   "/",
+  rateLimiters.generationLimiter,
   multerUpload.single("singleFile"),
   validateRequest(ImageToVideoValidation.generateVideoSchema),
   checkAuth(),

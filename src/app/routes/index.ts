@@ -16,11 +16,10 @@ import { TextToImageRoutes } from "../modules/text-to-image/textToImage.route";
 import { TextToSpeechRoutes } from "../modules/text-to-speech/textToSpeech.routes";
 import { TextToVideoRoutes } from "../modules/text-to-video-pixazo/textToVideo.routes";
 import { sendResponse } from "../shared/sendResponse";
-import { rateLimiters } from "../utils/rate-limit";
 
 const router = Router();
 
-router.use("/auth", rateLimiters.authLimiter, AuthRoutes);
+router.use("/auth", AuthRoutes);
 router.use("/admin", AdminRoutes);
 router.use("/subscription", SubscriptionRoutes);
 router.use("/dashboard", DashboardRoutes);
@@ -28,33 +27,17 @@ router.use("/price-plan", PricePlanRoutes);
 router.use("/notification", NotificationRoutes);
 router.use("/history", HistoryRoutes);
 
-router.use("/text-to-image", rateLimiters.generationLimiter, TextToImageRoutes);
-router.use("/ai-chat-bot", rateLimiters.generationLimiter, AiChatBotRoutes);
+router.use("/text-to-image", TextToImageRoutes);
+router.use("/ai-chat-bot", AiChatBotRoutes);
 
-router.use(
-  "/background-remove",
-  rateLimiters.generationLimiter,
-  BackgroundRoutes,
-);
+router.use("/background-remove", BackgroundRoutes);
 
-router.use(
-  "/resume-analyzer",
-  rateLimiters.generationLimiter,
-  ResumeAnalyzerRoutes,
-);
+router.use("/resume-analyzer", ResumeAnalyzerRoutes);
 
-router.use(
-  "/text-to-speech",
-  rateLimiters.generationLimiter,
-  TextToSpeechRoutes,
-);
+router.use("/text-to-speech", TextToSpeechRoutes);
 
-router.use("/text-to-video", rateLimiters.generationLimiter, TextToVideoRoutes);
-router.use(
-  "/image-to-video",
-  rateLimiters.generationLimiter,
-  ImageToVideoRoutes,
-);
+router.use("/text-to-video", TextToVideoRoutes);
+router.use("/image-to-video", ImageToVideoRoutes);
 
 router.post("/validate-profile-image", async (req: Request, res: Response) => {
   try {

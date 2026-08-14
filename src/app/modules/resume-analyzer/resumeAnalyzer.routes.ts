@@ -6,6 +6,7 @@ import { checkGenerateAuth } from "../../middleware/checkGenerateAuth";
 import { validateRequest } from "../../middleware/validateRequest";
 import { ResumeAnalyzer } from "./resumeAnalyzer.controller";
 import { ResumeAnalyzerValidation } from "./resumeAnalyzer.zod";
+import { rateLimiters } from "../../utils/rate-limit";
 
 const router = Router();
 
@@ -18,6 +19,7 @@ const router = Router();
 
 router.post(
   "/",
+  rateLimiters.generationLimiter,
   multerUpload.single("single-pdf"),
   validateRequest(ResumeAnalyzerValidation.analyzeValidationSchema),
   checkAuth(),
@@ -27,6 +29,7 @@ router.post(
 
 router.post(
   "/generate-pdf",
+  rateLimiters.generationLimiter,
   validateRequest(ResumeAnalyzerValidation.generatePdfValidationSchema),
   checkAuth(),
   ResumeAnalyzer.generateResumePdfController,
