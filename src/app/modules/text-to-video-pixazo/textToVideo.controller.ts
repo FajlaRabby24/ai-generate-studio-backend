@@ -51,13 +51,11 @@ const getRecentGeneration = catchAsync(async (req: Request, res: Response) => {
     status.OK,
     true,
     "Recent generations retrieved successfully",
-    result[0],
+    result,
   );
 });
 
-// 🎯 নতুন যোগ করা Webhook কন্ট্রোলার
 const handleVideoWebhook = catchAsync(async (req: Request, res: Response) => {
-  // Json2Video থেকে আসা ডেটা পাস করে দেওয়া হচ্ছে সার্ভিসে
   const result = await TextToVideoService.updateVideoStatusFromWebhook(
     req.body,
   );
