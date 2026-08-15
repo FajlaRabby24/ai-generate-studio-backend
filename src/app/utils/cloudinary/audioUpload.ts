@@ -1,4 +1,5 @@
 import cloudinary from "../../config/cloudinary.config";
+import { envVars } from "../../config/env";
 
 const CloudinaryAudioUpload = async (audio: string | Buffer) => {
   if (!audio) {
@@ -19,6 +20,7 @@ const CloudinaryAudioUpload = async (audio: string | Buffer) => {
           {
             folder: "AI Generate Studio/Audio History",
             resource_type: "video", // Cloudinary processes audio files under resource_type 'video'
+            upload_preset: envVars.CLOUDINARY_UPLOAD_PRESET,
           },
           (error, result) => {
             if (error) return reject(error);
@@ -33,6 +35,7 @@ const CloudinaryAudioUpload = async (audio: string | Buffer) => {
       uploadResponse = await cloudinary.uploader.upload(audio, {
         folder: "AI Generate Studio/Audio History",
         resource_type: "video",
+        upload_preset: envVars.CLOUDINARY_UPLOAD_PRESET,
       });
     }
 

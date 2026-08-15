@@ -17,9 +17,13 @@ export const envVars = {
   EMAIL_SENDER_SMTP_PASS: process.env.EMAIL_SENDER_SMTP_PASS as string,
   EMAIL_SENDER_SMTP_FROM: process.env.EMAIL_SENDER_SMTP_FROM as string,
   HP_TOKEN: process.env.HP_TOKEN as string,
+
+  // cloudinary
+  CLOUDINARY_UPLOAD_PRESET: process.env.CLOUDINARY_UPLOAD_PRESET as string,
   CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME as string,
   CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY as string,
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET as string,
+
   GEMINI_API_KEY: process.env.GEMINI_API_KEY as string,
   BACKGROUND_REMOVE_API_KEY: process.env.BACKGROUND_REMOVE_API_KEY as string,
   API_LAYER_API_KEY: process.env.API_LAYER_API_KEY as string,

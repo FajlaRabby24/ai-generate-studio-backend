@@ -1,4 +1,5 @@
 import cloudinary from "../../config/cloudinary.config";
+import { envVars } from "../../config/env";
 
 const CloudinaryVideoUpload = async (video: string) => {
   if (!video) {
@@ -11,6 +12,7 @@ const CloudinaryVideoUpload = async (video: string) => {
   const uploadResponse = await cloudinary.uploader.upload(video, {
     folder: "AI Generate Studio/Video History",
     resource_type: "video",
+    upload_preset: envVars.CLOUDINARY_UPLOAD_PRESET,
   });
 
   return {

@@ -1,4 +1,5 @@
 import cloudinary from "../../config/cloudinary.config";
+import { envVars } from "../../config/env";
 
 export const PDFUploadToCloudinary = async (
   pdfBuffer: Buffer,
@@ -10,6 +11,7 @@ export const PDFUploadToCloudinary = async (
         folder: "AI Generate Studio/Resumes",
         resource_type: "raw", // ⚠️ "auto"-এর জায়গায় অবশ্যই "raw" ব্যবহার করুন
         public_id: `${name}_resume_${Date.now()}.pdf`, // ⚠️ ফাইলের নাম ও .pdf এক্সটেনশন নিশ্চিত করার জন্য
+        upload_preset: envVars.CLOUDINARY_UPLOAD_PRESET,
       },
       (error, result) => {
         if (error) return reject(error);
