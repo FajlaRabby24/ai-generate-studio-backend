@@ -4,6 +4,7 @@ import { HistoryController } from "./history.controller";
 
 const router = Router();
 
+router.get("/recent-media", HistoryController.getRecentMedia);
 router.get("/", checkAuth(), HistoryController.getMyHistory);
 router.delete("/:id", checkAuth(), HistoryController.deleteHistoryItem);
 

@@ -163,7 +163,7 @@ export const analyzeResumeWithGroq = async (
       { role: "system", content: finalSystemMessage },
       { role: "user", content: `Resume Text:\n${resumeText}` },
     ],
-    model: "llama-3.3-70b-versatile",
+    model: "qwen/qwen3-32b",
     response_format: { type: "json_object" },
   });
 

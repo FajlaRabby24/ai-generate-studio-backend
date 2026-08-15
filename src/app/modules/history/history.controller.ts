@@ -33,7 +33,20 @@ const deleteHistoryItem = catchAsync(async (req: Request, res: Response) => {
   );
 });
 
+const getRecentMedia = catchAsync(async (req: Request, res: Response) => {
+  const result = await HistoryService.getRecentMediaFromDB();
+
+  sendResponse(
+    res,
+    status.OK,
+    true,
+    "Recent media generations fetched successfully",
+    result,
+  );
+});
+
 export const HistoryController = {
   getMyHistory,
   deleteHistoryItem,
+  getRecentMedia,
 };

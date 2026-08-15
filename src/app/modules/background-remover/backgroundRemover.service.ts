@@ -71,7 +71,7 @@ const removeBackground = async (
               generatedId: generated.id,
               status: GenerationStatus.COMPLETED,
               imageUrl: inputImageUrl,
-              outputUrls: secureUrl,
+              outputUrl: secureUrl,
             },
           });
 

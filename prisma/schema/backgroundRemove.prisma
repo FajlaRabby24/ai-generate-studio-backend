@@ -3,7 +3,7 @@ model BackgroundRemove {
     generatedId String
     status      GenerationStatus @default(PENDING)
     imageUrl    String
-    outputUrls  String // final result URLs (ModelsLab returns an array)
+    outputUrl   String // final result URLs (ModelsLab returns an array)
     isPublic    Boolean          @default(true) // for community gallery
     isFeatured  Boolean          @default(false) // for landing page showcase
     createdAt   DateTime         @default(now())

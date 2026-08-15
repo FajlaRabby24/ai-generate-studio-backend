@@ -49,7 +49,7 @@ const getMyHistoryFromDB = async (
       userId,
       isDeleted: false,
       type: {
-        not: GenerationType.AI_CHATBOT
+        not: GenerationType.AI_CHATBOT,
       },
       ...(searchConditions.length > 0 ? { AND: searchConditions } : {}),
     })
@@ -140,7 +140,79 @@ const deleteHistoryItemFromDB = async (userId: string, id: string) => {
   return result;
 };
 
+const getRecentMediaFromDB = async () => {
+  const result = await prisma.generated.findMany({
+    where: {
+      isDeleted: false,
+      type: {
+        in: [
+          GenerationType.TEXT_TO_IMAGE,
+          GenerationType.TEXT_TO_VIDEO,
+          GenerationType.IMAGE_TO_VIDEO,
+          GenerationType.IMAGE_BACKGROUND_REMOVER,
+        ],
+      },
+    },
+    select: {
+      textToImages: {
+        select: {
+          id: true,
+          outputUrl: true,
+        },
+      },
+      imageToVideos: {
+        select: {
+          id: true,
+          outputUrl: true,
+        },
+      },
+      textToVideos: {
+        select: {
+          id: true,
+          outputUrl: true,
+        },
+      },
+      backgroundRemoves: {
+        select: {
+          id: true,
+          outputUrl: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 6,
+  });
+
+  interface MediaItem {
+    id: string;
+    outputUrl: string;
+    type: "image" | "video";
+  }
+
+  const updateResult: MediaItem[] = [];
+
+  result.forEach((entry) => {
+    entry.textToImages?.forEach((item: any) =>
+      updateResult.push({ ...item, type: "image" }),
+    );
+    entry.backgroundRemoves?.forEach((item: any) =>
+      updateResult.push({ ...item, type: "image" }),
+    );
+    entry.imageToVideos?.forEach((item: any) =>
+      updateResult.push({ ...item, type: "video" }),
+    );
+    entry.textToVideos?.forEach((item: any) =>
+      updateResult.push({ ...item, type: "video" }),
+    );
+  });
+
+  return updateResult;
+};
+
 export const HistoryService = {
   getMyHistoryFromDB,
   deleteHistoryItemFromDB,
+  getRecentMediaFromDB,
 };
