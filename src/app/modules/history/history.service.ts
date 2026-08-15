@@ -188,23 +188,26 @@ const getRecentMediaFromDB = async () => {
   interface MediaItem {
     id: string;
     outputUrl: string;
-    type: "image" | "video";
+    type: GenerationType;
   }
 
   const updateResult: MediaItem[] = [];
 
   result.forEach((entry) => {
     entry.textToImages?.forEach((item: any) =>
-      updateResult.push({ ...item, type: "image" }),
+      updateResult.push({ ...item, type: GenerationType.TEXT_TO_IMAGE }),
     );
     entry.backgroundRemoves?.forEach((item: any) =>
-      updateResult.push({ ...item, type: "image" }),
+      updateResult.push({
+        ...item,
+        type: GenerationType.IMAGE_BACKGROUND_REMOVER,
+      }),
     );
     entry.imageToVideos?.forEach((item: any) =>
-      updateResult.push({ ...item, type: "video" }),
+      updateResult.push({ ...item, type: GenerationType.IMAGE_TO_VIDEO }),
     );
     entry.textToVideos?.forEach((item: any) =>
-      updateResult.push({ ...item, type: "video" }),
+      updateResult.push({ ...item, type: GenerationType.TEXT_TO_VIDEO }),
     );
   });
 
