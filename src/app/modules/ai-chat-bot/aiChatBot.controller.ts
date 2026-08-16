@@ -47,19 +47,11 @@ const streamChatResponse = catchAsync(async (req: Request, res: Response) => {
     );
   }
 
-  const responseText = await AiChatBot.StreamChatbotService(
+  await AiChatBot.StreamChatbotService(
     res,
     userId,
     message,
     conversationId,
-  );
-
-  sendResponse(
-    res,
-    status.OK,
-    true,
-    "Chat response generated successfully",
-    responseText,
   );
 });
 
