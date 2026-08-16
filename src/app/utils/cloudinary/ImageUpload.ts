@@ -1,4 +1,5 @@
 import cloudinary from "../../config/cloudinary.config";
+import { envVars } from "../../config/env";
 
 const CloudinaryImageUpload = async (image: string | Buffer) => {
   if (!image) {
@@ -19,6 +20,7 @@ const CloudinaryImageUpload = async (image: string | Buffer) => {
             folder: "AI Generate Studio/Image History",
             resource_type: "image",
             format: "png", // ব্যাকগ্রাউন্ড রিমুভড ইমেজের ট্রান্সপারেন্সি ধরে রাখার জন্য
+            upload_preset: envVars.CLOUDINARY_UPLOAD_PRESET,
           },
           (error, result) => {
             if (error) return reject(error);
@@ -33,6 +35,7 @@ const CloudinaryImageUpload = async (image: string | Buffer) => {
       uploadResponse = await cloudinary.uploader.upload(image, {
         folder: "AI Generate Studio/Image History",
         resource_type: "image",
+        upload_preset: envVars.CLOUDINARY_UPLOAD_PRESET,
       });
     }
 
