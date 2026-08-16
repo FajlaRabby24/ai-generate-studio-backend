@@ -42,7 +42,7 @@ app.use(
     credentials: true,
     origin: [envVars.FRONTEND_URL, envVars.BETTER_AUTH_URL],
     methods: ["GET", "POST", "DELETE", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization", "x-session-token"],
   }),
 );
 
