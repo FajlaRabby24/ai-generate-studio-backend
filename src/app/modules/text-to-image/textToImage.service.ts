@@ -25,9 +25,9 @@ const GenerateTextToImage = async (
 
   const arrayBuffer = await (blob as any).arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
-  // const base64Image = `data:image/png;base64,${buffer.toString("base64")}`;
+  const base64Image = `data:image/png;base64,${buffer.toString("base64")}`;
 
-  const uploadImage = await CloudinaryImageUpload(buffer);
+  const uploadImage = await CloudinaryImageUpload(base64Image);
   if (!uploadImage.success || !uploadImage.secureUrl) {
     console.error("[Cloudinary Upload Failed]:", uploadImage);
     throw new Error("Failed to upload text-to-image result to Cloudinary");
