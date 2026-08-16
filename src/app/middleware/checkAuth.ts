@@ -13,11 +13,23 @@ export const checkAuth =
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       console.log("checkAuth middleware called", req.body, req.cookies);
-      const sessionToken = cookieUtils.getCookie(
+      let sessionToken = cookieUtils.getCookie(
         req,
         betterAuthSessionCookieName,
       );
-      const accessToken = cookieUtils.getCookie(req, "accessToken");
+      let accessToken = cookieUtils.getCookie(req, "accessToken");
+
+      // Extract from headers if missing from cookies
+      const authHeader = req.headers.authorization;
+      if (!accessToken && authHeader && authHeader.startsWith("Bearer ")) {
+        accessToken = authHeader.split(" ")[1];
+      }
+
+      const sessionHeader = req.headers["x-session-token"];
+      if (!sessionToken && typeof sessionHeader === "string") {
+        sessionToken = sessionHeader;
+      }
+
       if (!sessionToken && !accessToken) {
         throw new AppError(
           status.UNAUTHORIZED,
