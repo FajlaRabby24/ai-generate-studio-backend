@@ -163,7 +163,7 @@ export const analyzeResumeWithGroq = async (
       { role: "system", content: finalSystemMessage },
       { role: "user", content: `Resume Text:\n${resumeText}` },
     ],
-    model: "qwen/qwen3-32b",
+    model: "openai/gpt-oss-20b",
     response_format: { type: "json_object" },
   });
 
