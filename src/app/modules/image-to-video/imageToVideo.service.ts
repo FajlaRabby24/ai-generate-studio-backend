@@ -16,8 +16,8 @@ const imageToVideo = async (
   frameRate?: number,
 ) => {
   // 1. Upload input image base64 to Cloudinary
-  // const base64ForCloudinary = `data:${mimetype};base64,${fileBuffer.toString("base64")}`;
-  const uploadImage = await CloudinaryImageUpload(fileBuffer);
+  const base64ForCloudinary = `data:${mimetype};base64,${fileBuffer.toString("base64")}`;
+  const uploadImage = await CloudinaryImageUpload(base64ForCloudinary);
 
   if (!uploadImage.success || !uploadImage.secureUrl) {
     console.error("[Cloudinary Upload Failed]:", uploadImage);
