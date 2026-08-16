@@ -587,7 +587,11 @@ const generateResumePdfFromEditedJson = async (
   // const pdfBuffer = await generatePdf(PDFTemplates.MODERN, editedResumeJson);
 
   // 3. Upload PDF file stream to Cloudinary
-  const pdfUrl = await PDFUploadToCloudinary(pdfBuffer, name);
+  const pdf = await PDFUploadToCloudinary(pdfBuffer, name);
+  if (!pdf.success || !pdf.secureUrl) {
+    console.error("[Cloudinary Upload Failed]:", pdf);
+    throw new Error("Failed to upload generated PDF to Cloudinary.");
+  }
 
   setImmediate(() => {
     (async () => {
@@ -596,7 +600,7 @@ const generateResumePdfFromEditedJson = async (
         where: { id: analyzerId },
         data: {
           updatedResumeJson: editedResumeJson,
-          generatedPdfUrl: pdfUrl,
+          generatedPdfUrl: pdf.secureUrl,
           isGenerateResume: true,
           status: GenerationStatus.COMPLETED,
         },
@@ -605,7 +609,7 @@ const generateResumePdfFromEditedJson = async (
   });
 
   return {
-    pdfUrl: pdfUrl,
+    pdfUrl: pdf.secureUrl,
   };
 };
 
