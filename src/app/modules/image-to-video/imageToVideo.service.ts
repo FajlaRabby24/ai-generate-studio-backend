@@ -3,9 +3,7 @@ import {
   GenerationType,
   NotificationType,
 } from "../../../generated/prisma/enums";
-import { envVars } from "../../config/env";
 import { prisma } from "../../lib/prisma";
-import DeleteFromCloudinary from "../../utils/cloudinary/deleteFromCloudinary";
 import CloudinaryImageUpload from "../../utils/cloudinary/ImageUpload";
 
 const imageToVideo = async (
@@ -18,82 +16,85 @@ const imageToVideo = async (
   frameRate?: number,
 ) => {
   // 1. Upload input image base64 to Cloudinary
-  // const base64ForCloudinary = `data:${mimetype};base64,${fileBuffer.toString("base64")}`;
-  const uploadImage = await CloudinaryImageUpload(fileBuffer);
+  const base64ForCloudinary = `data:${mimetype};base64,${fileBuffer.toString("base64")}`;
+  const uploadImage = await CloudinaryImageUpload(base64ForCloudinary);
 
   if (!uploadImage.success || !uploadImage.secureUrl) {
     console.error("[Cloudinary Upload Failed]:", uploadImage);
     throw new Error("Failed to upload input image to Cloudinary");
+  } else {
+    const imageUrl = uploadImage.secureUrl;
+    return imageUrl;
   }
-  const imageUrl = uploadImage.secureUrl;
+  // const imageUrl = uploadImage.secureUrl;
 
-  // 2. Setup Pixazo gateway parameters
+  // // 2. Setup Pixazo gateway parameters
+  // // const webhookUrl = `${envVars.BACKEND_SERVER_URL}/api/v1/image-to-video/webhook/callback`;
   // const webhookUrl = `${envVars.BACKEND_SERVER_URL}/api/v1/image-to-video/webhook/callback`;
-  const webhookUrl = `${envVars.BACKEND_SERVER_URL}/api/v1/image-to-video/webhook/callback`;
-  const url = "https://gateway.pixazo.ai/ltx-video/v1/image-to-video";
-  const headers = {
-    "Content-Type": "application/json",
-    "Ocp-Apim-Subscription-Key": envVars.PIXAZO_SUBSCRIPTION_KEY || "",
-    "X-Webhook-URL": webhookUrl,
-    "X-Webhook-Mode": "sync",
-  };
-  const data = {
-    prompt: prompt,
-    image_url: imageUrl,
-    aspect: aspectRatio,
-    num_frames: numFrames,
-    frame_rate: frameRate,
-    enhance_prompt: true,
-  };
+  // const url = "https://gateway.pixazo.ai/ltx-video/v1/image-to-video";
+  // const headers = {
+  //   "Content-Type": "application/json",
+  //   "Ocp-Apim-Subscription-Key": envVars.PIXAZO_SUBSCRIPTION_KEY || "",
+  //   "X-Webhook-URL": webhookUrl,
+  //   "X-Webhook-Mode": "sync",
+  // };
+  // const data = {
+  //   prompt: prompt,
+  //   image_url: imageUrl,
+  //   aspect: aspectRatio,
+  //   num_frames: numFrames,
+  //   frame_rate: frameRate,
+  //   enhance_prompt: true,
+  // };
 
-  const res = await fetch(url, {
-    method: "POST",
-    headers: headers,
-    body: JSON.stringify(data),
-  });
-  console.log("Image generation result type:", typeof res, res);
+  // const res = await fetch(url, {
+  //   method: "POST",
+  //   headers: headers,
+  //   body: JSON.stringify(data),
+  // });
+  // console.log("Image generation result type:", typeof res, res);
 
-  if (!res.ok) {
-    await DeleteFromCloudinary(uploadImage.publicId, "image");
-    throw new Error(
-      `Pixazo Video API Error: ${res.status} - ${res.statusText}`,
-    );
-  }
+  // if (!res.ok) {
+  //   await DeleteFromCloudinary(uploadImage.publicId, "image");
+  //   throw new Error(
+  //     `Pixazo Video API Error: ${res.status} - ${res.statusText}`,
+  //   );
+  // }
 
-  const responseJson = (await res.json()) as {
-    request_id?: string;
-    status?: string;
-    polling_url?: string;
-  };
+  // const responseJson = (await res.json()) as {
+  //   request_id?: string;
+  //   status?: string;
+  //   polling_url?: string;
+  // };
 
-  // 3. Save the queued generation record in database
-  if (responseJson && responseJson.request_id) {
-    setImmediate(() => {
-      (async () => {
-        await prisma.$transaction(async (tx) => {
-          const generated = await tx.generated.create({
-            data: {
-              userId,
-              type: GenerationType.IMAGE_TO_VIDEO,
-            },
-          });
+  // // 3. Save the queued generation record in database
+  // if (responseJson && responseJson.request_id) {
+  //   setImmediate(() => {
+  //     (async () => {
+  //       await prisma.$transaction(async (tx) => {
+  //         const generated = await tx.generated.create({
+  //           data: {
+  //             userId,
+  //             type: GenerationType.IMAGE_TO_VIDEO,
+  //           },
+  //         });
 
-          await tx.imageToVideo.create({
-            data: {
-              generatedId: generated.id,
-              status: GenerationStatus.QUEUED,
-              prompt,
-              imageUrl,
-              requestId: responseJson.request_id!,
-              outputUrl: "", // placeholder until webhook/polling completes
-            },
-          });
-        });
-      })();
-    });
-  }
+  //         await tx.imageToVideo.create({
+  //           data: {
+  //             generatedId: generated.id,
+  //             status: GenerationStatus.QUEUED,
+  //             prompt,
+  //             imageUrl,
+  //             requestId: responseJson.request_id!,
+  //             outputUrl: "", // placeholder until webhook/polling completes
+  //           },
+  //         });
+  //       });
+  //     })();
+  //   });
+  // }
 
-  return responseJson;
+  // return responseJson;
 };
 
 // Webhook status update
