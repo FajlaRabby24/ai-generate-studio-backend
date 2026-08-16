@@ -170,7 +170,7 @@ export const checkGenerateAuth = (requiredType: GenerationType) => {
       }
 
       if (count <= 0) {
-        // console.log("hello, no credit");
+        // // console.log("hello, no credit");
         return sendResponse(
           res,
           status.FORBIDDEN,
@@ -185,7 +185,7 @@ export const checkGenerateAuth = (requiredType: GenerationType) => {
 
       next();
     } catch (error) {
-      // console.error("Error in checkGenerateAuth middleware:", error);
+      // // console.error("Error in checkGenerateAuth middleware:", error);
       next(error);
     }
   };

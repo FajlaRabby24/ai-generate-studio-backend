@@ -74,7 +74,7 @@ const singleVoiceTTSService = async (
           });
         });
       } catch (dbError) {
-        console.error("[Background DB Error - Text to Speech]:", dbError);
+        // console.error("[Background DB Error - Text to Speech]:", dbError);
       }
     })();
   });
@@ -114,7 +114,7 @@ const textToSpeech = async (
   // Upload to Cloudinary
   const uploadResponse = await CloudinaryAudioUpload(audioBuffer);
   if (!uploadResponse.success || !uploadResponse.secureUrl) {
-    console.error("[Cloudinary Upload Failed]:", uploadResponse);
+    // console.error("[Cloudinary Upload Failed]:", uploadResponse);
     throw new Error("Failed to upload text-to-speech result to Cloudinary");
   }
 

@@ -37,7 +37,11 @@ const createCheckoutSession = async (
   });
 
   // 6. Check if user already has an active non-free plan
-  if (subscription && subscription.plan !== SubscriptionPlan.FREE && subscription.status === SubscriptionStatus.ACTIVE) {
+  if (
+    subscription &&
+    subscription.plan !== SubscriptionPlan.FREE &&
+    subscription.status === SubscriptionStatus.ACTIVE
+  ) {
     throw new AppError(
       status.BAD_REQUEST,
       `You already have an active ${subscription.plan} plan. Use Manage Subscription to change it.`,
@@ -219,8 +223,12 @@ const handleWebhookEvent = async (event: Stripe.Event) => {
         const stripeSubRaw =
           await stripe.subscriptions.retrieve(subscriptionId);
 
-        const periodStart = new Date(getTimestamp((stripeSubRaw as any).current_period_start));
-        const periodEnd = new Date(getTimestamp((stripeSubRaw as any).current_period_end));
+        const periodStart = new Date(
+          getTimestamp((stripeSubRaw as any).current_period_start),
+        );
+        const periodEnd = new Date(
+          getTimestamp((stripeSubRaw as any).current_period_end),
+        );
 
         const updatedSub = await prisma.subscription.update({
           where: { userId },
@@ -293,7 +301,7 @@ const handleWebhookEvent = async (event: Stripe.Event) => {
           }
         }
       } catch (error) {
-        console.error("Error handling checkout.session.completed:", error);
+        // // console.error("Error handling checkout.session.completed:", error);
       }
       break;
     }
@@ -348,9 +356,14 @@ const handleWebhookEvent = async (event: Stripe.Event) => {
           break;
         }
 
-        const stripeSubRaw = await stripe.subscriptions.retrieve(finalSubscriptionId);
-        const periodStart = new Date(getTimestamp((stripeSubRaw as any).current_period_start));
-        const periodEnd = new Date(getTimestamp((stripeSubRaw as any).current_period_end));
+        const stripeSubRaw =
+          await stripe.subscriptions.retrieve(finalSubscriptionId);
+        const periodStart = new Date(
+          getTimestamp((stripeSubRaw as any).current_period_start),
+        );
+        const periodEnd = new Date(
+          getTimestamp((stripeSubRaw as any).current_period_end),
+        );
         const userPlan =
           subscription.plan === SubscriptionPlan.FREE ? Plan.FREE : Plan.PRO;
 
@@ -411,7 +424,7 @@ const handleWebhookEvent = async (event: Stripe.Event) => {
           });
         });
       } catch (error) {
-        console.error("Error handling invoice.payment_succeeded:", error);
+        // console.error("Error handling invoice.payment_succeeded:", error);
       }
       break;
     }
@@ -466,7 +479,7 @@ const handleWebhookEvent = async (event: Stripe.Event) => {
           });
         });
       } catch (error) {
-        console.error("Error handling invoice.payment_failed:", error);
+        // console.error("Error handling invoice.payment_failed:", error);
       }
       break;
     }
@@ -506,7 +519,7 @@ const handleWebhookEvent = async (event: Stripe.Event) => {
           },
         });
       } catch (error) {
-        console.error("Error handling customer.subscription.updated:", error);
+        // console.error("Error handling customer.subscription.updated:", error);
       }
       break;
     }
@@ -555,14 +568,15 @@ const handleWebhookEvent = async (event: Stripe.Event) => {
               data: {
                 userId: subscription.userId,
                 title: "Subscription Cancelled",
-                message: "Your subscription has expired or been cancelled. Your account has reverted to the FREE plan.",
+                message:
+                  "Your subscription has expired or been cancelled. Your account has reverted to the FREE plan.",
                 type: "BILLING",
               },
             });
           });
         }
       } catch (error) {
-        console.error("Error handling customer.subscription.deleted:", error);
+        // console.error("Error handling customer.subscription.deleted:", error);
       }
       break;
     }
@@ -583,7 +597,7 @@ const getUserBillingDetails = async (userId: string) => {
       textToVideo: true,
       textToSpeech: true,
       imageBackgroundRemover: true,
-    }
+    },
   });
 
   if (!user) {

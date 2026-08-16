@@ -3,7 +3,7 @@ import z from "zod";
 
 export const validateRequest = (zodSchema: z.ZodObject) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    // console.log("validateRequest middleware called", req.body);
+    // // console.log("validateRequest middleware called", req.body);
     if (req.body?.data) {
       req.body = JSON.parse(req.body.data);
     }
@@ -16,7 +16,7 @@ export const validateRequest = (zodSchema: z.ZodObject) => {
 
     // sanitizing the data
     req.body = parsedResult.data;
-    // console.log("body", req.body);
+    // // console.log("body", req.body);
     next();
   };
 };

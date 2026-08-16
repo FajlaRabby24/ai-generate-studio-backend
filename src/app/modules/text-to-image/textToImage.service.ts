@@ -20,7 +20,7 @@ const GenerateTextToImage = async (
     inputs: prompt,
     parameters: { num_inference_steps: 5 },
   });
-  console.log("Image generation result type:", typeof image, image);
+  // console.log("Image generation result type:", typeof image, image);
   const blob = image;
 
   const arrayBuffer = await (blob as any).arrayBuffer();
@@ -29,7 +29,7 @@ const GenerateTextToImage = async (
 
   const uploadImage = await CloudinaryImageUpload(base64Image);
   if (!uploadImage.success || !uploadImage.secureUrl) {
-    console.error("[Cloudinary Upload Failed]:", uploadImage);
+    // console.error("[Cloudinary Upload Failed]:", uploadImage);
     throw new Error("Failed to upload text-to-image result to Cloudinary");
   }
 
@@ -69,7 +69,7 @@ const GenerateTextToImage = async (
           });
         });
       } catch (dbError) {
-        console.error("[Background DB Error - Text to Image]:", dbError);
+        // console.error("[Background DB Error - Text to Image]:", dbError);
       }
     })();
   });

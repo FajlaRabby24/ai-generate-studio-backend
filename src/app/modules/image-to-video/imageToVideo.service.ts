@@ -22,7 +22,7 @@ const imageToVideo = async (
   const uploadImage = await CloudinaryImageUpload(base64ForCloudinary);
 
   if (!uploadImage.success || !uploadImage.secureUrl) {
-    console.error("[Cloudinary Upload Failed]:", uploadImage);
+    // // console.error("[Cloudinary Upload Failed]:", uploadImage);
     throw new Error("Failed to upload input image to Cloudinary");
   }
   //  else {
@@ -55,7 +55,7 @@ const imageToVideo = async (
     headers: headers,
     body: JSON.stringify(data),
   });
-  console.log("Image generation result type:", typeof res, res);
+  // // console.log("Image generation result type:", typeof res, res);
 
   if (!res.ok) {
     await DeleteFromCloudinary(uploadImage.publicId, "image");

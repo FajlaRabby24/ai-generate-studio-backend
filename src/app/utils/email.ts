@@ -64,7 +64,7 @@ export const sendEmail = async ({
     const templatePath = path.join(templatesDir, `${templateName}.ejs`);
 
     if (!fs.existsSync(templatePath)) {
-      console.error(`Email template not found at: ${templatePath}`);
+      // console.error(`Email template not found at: ${templatePath}`);
       // Fallback to src if dist fails (for some deployment types)
       const fallbackPath = path.join(
         process.cwd(),
@@ -74,7 +74,7 @@ export const sendEmail = async ({
         `${templateName}.ejs`,
       );
       if (fs.existsSync(fallbackPath)) {
-        console.log(`Using fallback template path: ${fallbackPath}`);
+        // console.log(`Using fallback template path: ${fallbackPath}`);
       } else {
         throw new AppError(
           status.INTERNAL_SERVER_ERROR,
@@ -86,7 +86,13 @@ export const sendEmail = async ({
     const html = await ejs.renderFile(
       fs.existsSync(templatePath)
         ? templatePath
-        : path.join(process.cwd(), "src", "app", "templates", `${templateName}.ejs`),
+        : path.join(
+            process.cwd(),
+            "src",
+            "app",
+            "templates",
+            `${templateName}.ejs`,
+          ),
       templateData,
     );
 
@@ -102,7 +108,7 @@ export const sendEmail = async ({
       })),
     });
   } catch (error: any) {
-    console.error("Email sending error:", error);
+    // console.error("Email sending error:", error);
     throw new AppError(
       status.INTERNAL_SERVER_ERROR,
       `Failed to send email: ${error.message}`,

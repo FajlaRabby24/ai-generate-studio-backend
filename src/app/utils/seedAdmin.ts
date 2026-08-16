@@ -13,7 +13,7 @@ const seedAdmin = async () => {
     });
 
     if (isExists) {
-      console.log("admin already exists");
+      // console.log("admin already exists");
       return;
     }
 
@@ -36,9 +36,9 @@ const seedAdmin = async () => {
       },
     });
 
-    console.log("admin created successfully", adminData);
+    // console.log("admin created successfully", adminData);
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 };
 

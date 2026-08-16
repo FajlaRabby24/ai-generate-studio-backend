@@ -64,7 +64,7 @@ const analyzeResume = async (
           });
         });
       } catch (dbError) {
-        console.error("[Background DB Error - Resume Analyzer]:", dbError);
+        // // console.error("[Background DB Error - Resume Analyzer]:", dbError);
         throw new AppError(
           status.INTERNAL_SERVER_ERROR,
           "Failed to process resume analysis database update.",
@@ -589,7 +589,7 @@ const generateResumePdfFromEditedJson = async (
   // 3. Upload PDF file stream to Cloudinary
   const pdf = await PDFUploadToCloudinary(pdfBuffer, name);
   if (!pdf.success || !pdf.secureUrl) {
-    console.error("[Cloudinary Upload Failed]:", pdf);
+    // // console.error("[Cloudinary Upload Failed]:", pdf);
     throw new Error("Failed to upload generated PDF to Cloudinary.");
   }
 

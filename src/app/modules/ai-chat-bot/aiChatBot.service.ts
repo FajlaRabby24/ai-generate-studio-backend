@@ -77,7 +77,7 @@ import { prisma } from "../../lib/prisma";
 //           },
 //         });
 //       } catch (dbError) {
-//         console.error("[Background DB Error - AI Chatbot]:", dbError);
+//         // console.error("[Background DB Error - AI Chatbot]:", dbError);
 //       }
 //     })();
 //   });

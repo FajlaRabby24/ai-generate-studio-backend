@@ -69,7 +69,7 @@ const textToVideoGeneratePixazo = async (
             });
           });
         } catch (dbError) {
-          console.error("[Background DB Error - Text to Image]:", dbError);
+          // console.error("[Background DB Error - Text to Image]:", dbError);
         }
       })();
     });

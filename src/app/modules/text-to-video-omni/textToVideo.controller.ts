@@ -5,7 +5,7 @@ import { sendResponse } from "../../shared/sendResponse";
 import { textToVideoOmniService } from "./textToVideo.service";
 
 const generateVideo = catchAsync(async (req: Request, res: Response) => {
-  console.log("controller hit", req.body);
+  // console.log("controller hit", req.body);
   const { prompt, ratio } = req.body;
   const userId = req.user?.id;
   const field = req.currentGenerationField;

@@ -107,7 +107,7 @@ const generateTextToVideo = async (
   });
 
   //   {"success":true,"project":"*********f","timestamp":"2026-07-18T07:05:10.315Z"}
-  console.log(project);
+  // console.log(project);
   return project.project;
 };
 
@@ -116,9 +116,9 @@ const updateVideoStatusFromWebhook = async (
 ) => {
   const { project, status, url } = webhookPayload;
 
-  console.log(
-    `[Webhook Event Received] Project: ${project}, Status: ${status}`,
-  );
+  // console.log(
+  //   `[Webhook Event Received] Project: ${project}, Status: ${status}`,
+  // );
 
   if (status === "done") {
     return await prisma.textToVideo.updateMany({

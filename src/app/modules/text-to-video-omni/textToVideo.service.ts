@@ -28,7 +28,7 @@ const textToVideoOmni = async (
   }
 
   const base64Video = `data:video/mp4;base64,${interaction.output_video.data}`;
-  // console.log("base 64 video", base64Video);
+  // // console.log("base 64 video", base64Video);
   const uploadVideo = await CloudinaryVideoUpload(base64Video);
 
   if (!uploadVideo.success || !uploadVideo.secureUrl) {
@@ -70,7 +70,7 @@ const textToVideoOmni = async (
           },
         });
       } catch (dbError) {
-        console.error("[Background DB Error - Text to Video Omni]:", dbError);
+        // console.error("[Background DB Error - Text to Video Omni]:", dbError);
       }
     })();
   });

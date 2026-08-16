@@ -36,7 +36,7 @@ const generateImage = catchAsync(async (req: Request, res: Response) => {
     );
   }
 
-  // console.log("result", result);
+  // // console.log("result", result);
   sendResponse(res, status.OK, true, "Image generated successfully", result);
 });
 

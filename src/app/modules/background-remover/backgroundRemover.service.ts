@@ -32,14 +32,14 @@ const removeBackground = async (
       `Remove.bg API Error: ${response.status} - ${response.statusText}`,
     );
   }
-  // console.log("Image generation result type:", typeof response, response);
+  // // console.log("Image generation result type:", typeof response, response);
 
   const rbgResultData = await response.arrayBuffer();
   const resultBuffer = Buffer.from(rbgResultData);
 
   const uploadImage = await CloudinaryImageUpload(resultBuffer);
   if (!uploadImage.success || !uploadImage.secureUrl) {
-    // console.error("[Cloudinary Upload Failed]:", uploadImage);
+    // // console.error("[Cloudinary Upload Failed]:", uploadImage);
     throw new Error("Failed to upload background-removed image to Cloudinary");
   }
 
