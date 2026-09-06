@@ -25,32 +25,32 @@ The **AI Generate Studio Backend** is built with **Express.js 5**, **TypeScript*
 
 ## 📚 2. AI Services & External Documentation References
 
-| AI Feature / Service | Provider & Model | Purpose | Documentation Link |
-| :--- | :--- | :--- | :--- |
-| **Image to Video** | Pixazo AI (`LTX Video`) | Dynamic video loop synthesis from image + motion prompt | [Pixazo LTX Docs](https://www.pixazo.ai/models/ltx) |
-| **Text to Video** | Pixazo AI (`LTX Video`) | High-definition video generation from descriptive prompts | [Pixazo LTX Docs](https://www.pixazo.ai/models/ltx) |
-| **Background Remover** | Remove.bg REST API | Multipart subject extraction & background removal | [Remove.bg API](https://www.remove.bg/api) |
-| **Text to Speech (TTS)** | Edge TTS Universal | Neural voice synthesis across multiple presets & pitch/rate | [Edge-TTS Docs](https://www.npmjs.com/package/edge-tts-universal) |
-| **AI Chatbot** | Groq Cloud (`gpt-oss-120b` / `Llama`) | Low-latency conversational LLM with SSE streaming | [Groq Overview](https://console.groq.com/docs/overview) |
-| **Text to Image** | Hugging Face (`FLUX.1-schnell`) | High-speed 5-step diffusion image generation | [Hugging Face Docs](https://huggingface.co/) |
-| **Resume Analyzer** | Groq Cloud + `pdf-parse` + `pdfkit` | ATS scoring, keyword extraction, and PDF generation | [Groq Overview](https://console.groq.com/docs/overview) |
-| **Cloud Storage** | Cloudinary SDK | Cloud image/video/audio asset hosting & CDN delivery | [Cloudinary Docs](https://cloudinary.com/documentation) |
-| **Payment Gateway** | Stripe & SSLCommerz | Global & local payment checkouts and webhook processing | [Stripe Docs](https://stripe.com/docs) & [SSLCommerz](https://developer.sslcommerz.com/) |
+| AI Feature / Service     | Provider & Model                      | Purpose                                                     | Documentation Link                                                |
+| :----------------------- | :------------------------------------ | :---------------------------------------------------------- | :---------------------------------------------------------------- |
+| **Image to Video**       | Pixazo AI (`LTX Video`)               | Dynamic video loop synthesis from image + motion prompt     | [Pixazo LTX Docs](https://www.pixazo.ai/models/ltx)               |
+| **Text to Video**        | Pixazo AI (`LTX Video`)               | High-definition video generation from descriptive prompts   | [Pixazo LTX Docs](https://www.pixazo.ai/models/ltx)               |
+| **Background Remover**   | Remove.bg REST API                    | Multipart subject extraction & background removal           | [Remove.bg API](https://www.remove.bg/api)                        |
+| **Text to Speech (TTS)** | Edge TTS Universal                    | Neural voice synthesis across multiple presets & pitch/rate | [Edge-TTS Docs](https://www.npmjs.com/package/edge-tts-universal) |
+| **AI Chatbot**           | Groq Cloud (`gpt-oss-120b` / `Llama`) | Low-latency conversational LLM with SSE streaming           | [Groq Overview](https://console.groq.com/docs/overview)           |
+| **Text to Image**        | Hugging Face (`FLUX.1-schnell`)       | High-speed 5-step diffusion image generation                | [Hugging Face Docs](https://huggingface.co/)                      |
+| **Resume Analyzer**      | Groq Cloud + `pdf-parse` + `pdfkit`   | ATS scoring, keyword extraction, and PDF generation         | [Groq Overview](https://console.groq.com/docs/overview)           |
+| **Cloud Storage**        | Cloudinary SDK                        | Cloud image/video/audio asset hosting & CDN delivery        | [Cloudinary Docs](https://cloudinary.com/documentation)           |
+| **Payment Gateway**      | Stripe                                | Global payment checkouts and webhook processing             | [Stripe Docs](https://stripe.com/docs)                            |
 
 ---
 
 ## 🛠️ 3. Tech Stack & Architecture
 
-| Layer | Technology | Purpose |
-| :--- | :--- | :--- |
-| **Runtime** | Bun | Fast JavaScript / TypeScript runtime & package management |
-| **Web Framework** | Express.js 5 + TypeScript | Clean, modular REST routing with strict typing |
-| **ORM & Database** | Prisma 7 + PostgreSQL | Multi-file schema database modeling with transactions |
-| **Authentication** | Better-Auth + JWT | Secure cookie management, Google OAuth & token signing |
-| **Validation** | Zod | Request body and query parameter validation |
-| **Security** | Helmet, CORS, Rate-Limiting | API security and endpoint throttling |
-| **Document Processing**| `pdf-parse` & `pdfkit` | Resume PDF parsing and dynamic PDF generation |
-| **Emails** | Nodemailer + EJS | Transactional and verification email dispatching |
+| Layer                   | Technology                  | Purpose                                                   |
+| :---------------------- | :-------------------------- | :-------------------------------------------------------- |
+| **Runtime**             | Bun                         | Fast JavaScript / TypeScript runtime & package management |
+| **Web Framework**       | Express.js 5 + TypeScript   | Clean, modular REST routing with strict typing            |
+| **ORM & Database**      | Prisma 7 + PostgreSQL       | Multi-file schema database modeling with transactions     |
+| **Authentication**      | Better-Auth + JWT           | Secure cookie management, Google OAuth & token signing    |
+| **Validation**          | Zod                         | Request body and query parameter validation               |
+| **Security**            | Helmet, CORS, Rate-Limiting | API security and endpoint throttling                      |
+| **Document Processing** | `pdf-parse` & `pdfkit`      | Resume PDF parsing and dynamic PDF generation             |
+| **Emails**              | Nodemailer + EJS            | Transactional and verification email dispatching          |
 
 ---
 
@@ -174,11 +174,13 @@ EMAIL_SENDER_SMTP_FROM="AI Generate Studio <noreply@aistudio.com>"
 ## 🚀 6. Getting Started
 
 ### 1. Install Dependencies
+
 ```bash
 bun install
 ```
 
 ### 2. Database Migration & Prisma Setup
+
 ```bash
 # Generate Prisma Client
 bun run generate
@@ -194,6 +196,7 @@ bun run studio
 ```
 
 ### 3. Start Server
+
 ```bash
 # Development mode with hot-reloading
 bun run dev
@@ -210,37 +213,40 @@ bun run start
 ## 📡 7. Comprehensive API Catalog (`/api/v1`)
 
 ### 7.1 Authentication (`/auth`)
-| Method | Endpoint | Description | Auth Required |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/auth/register` | Register a new user account | No |
-| `POST` | `/auth/login` | Log in and receive JWT / cookie session | No |
-| `GET` | `/auth/me` | Retrieve profile and daily quotas | Yes |
-| `POST` | `/auth/logout` | Clear cookie sessions | Yes |
+
+| Method | Endpoint         | Description                             | Auth Required |
+| :----- | :--------------- | :-------------------------------------- | :------------ |
+| `POST` | `/auth/register` | Register a new user account             | No            |
+| `POST` | `/auth/login`    | Log in and receive JWT / cookie session | No            |
+| `GET`  | `/auth/me`       | Retrieve profile and daily quotas       | Yes           |
+| `POST` | `/auth/logout`   | Clear cookie sessions                   | Yes           |
 
 ### 7.2 AI Generation Endpoints
-| Method | Endpoint | Description | Engine / Model |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/text-to-image/generate` | Generate photorealistic image from text | Hugging Face FLUX.1 |
-| `GET` | `/text-to-image/recent` | Get 5 most recent image generations | Database |
-| `POST` | `/text-to-video/generate` | Queue text-to-video generation | Pixazo LTX Video |
-| `POST` | `/image-to-video/generate` | Upload image & queue video animation | Pixazo LTX Video |
-| `POST` | `/image-to-video/webhook/callback` | Async webhook receiver for completed videos | Pixazo Callback |
-| `POST` | `/background-remove/remove` | Extract subject & remove image background | Remove.bg API |
-| `POST` | `/text-to-speech/generate` | Synthesize neural speech from text | Edge TTS Universal |
-| `POST` | `/ai-chat-bot/chat-stream` | Real-time streaming conversation (SSE) | Groq Cloud |
-| `POST` | `/resume-analyzer/analyze` | Parse PDF resume & calculate ATS score | Groq / Gemini |
-| `POST` | `/resume-analyzer/generate-pdf`| Build structured ATS resume PDF | `pdfkit` |
+
+| Method | Endpoint                           | Description                                 | Engine / Model      |
+| :----- | :--------------------------------- | :------------------------------------------ | :------------------ |
+| `POST` | `/text-to-image/generate`          | Generate photorealistic image from text     | Hugging Face FLUX.1 |
+| `GET`  | `/text-to-image/recent`            | Get 5 most recent image generations         | Database            |
+| `POST` | `/text-to-video/generate`          | Queue text-to-video generation              | Pixazo LTX Video    |
+| `POST` | `/image-to-video/generate`         | Upload image & queue video animation        | Pixazo LTX Video    |
+| `POST` | `/image-to-video/webhook/callback` | Async webhook receiver for completed videos | Pixazo Callback     |
+| `POST` | `/background-remove/remove`        | Extract subject & remove image background   | Remove.bg API       |
+| `POST` | `/text-to-speech/generate`         | Synthesize neural speech from text          | Edge TTS Universal  |
+| `POST` | `/ai-chat-bot/chat-stream`         | Real-time streaming conversation (SSE)      | Groq Cloud          |
+| `POST` | `/resume-analyzer/analyze`         | Parse PDF resume & calculate ATS score      | Groq / Gemini       |
+| `POST` | `/resume-analyzer/generate-pdf`    | Build structured ATS resume PDF             | `pdfkit`            |
 
 ### 7.3 Subscriptions, Dashboard & Admin
-| Method | Endpoint | Description | Role |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/subscription/create-checkout-session` | Create Stripe checkout session | User |
-| `POST` | `/subscription/stripe-webhook` | Ingest Stripe subscription webhooks | Webhook |
-| `POST` | `/subscription/sslcommerz/init` | Initiate SSLCommerz checkout session | User |
-| `GET` | `/dashboard/stats` | Retrieve quota counts and generation summaries | User |
-| `GET` | `/history` | Paginated full generation history | User |
-| `GET` | `/admin/users` | List, manage, and toggle user accounts | Admin |
-| `GET` | `/admin/payments` | Payment logs and revenue records | Admin |
+
+| Method | Endpoint                                | Description                                    | Role    |
+| :----- | :-------------------------------------- | :--------------------------------------------- | :------ |
+| `POST` | `/subscription/create-checkout-session` | Create Stripe checkout session                 | User    |
+| `POST` | `/subscription/stripe-webhook`          | Ingest Stripe subscription webhooks            | Webhook |
+| `POST` | `/subscription/sslcommerz/init`         | Initiate SSLCommerz checkout session           | User    |
+| `GET`  | `/dashboard/stats`                      | Retrieve quota counts and generation summaries | User    |
+| `GET`  | `/history`                              | Paginated full generation history              | User    |
+| `GET`  | `/admin/users`                          | List, manage, and toggle user accounts         | Admin   |
+| `GET`  | `/admin/payments`                       | Payment logs and revenue records               | Admin   |
 
 ---
 
